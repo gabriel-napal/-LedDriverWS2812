@@ -20,7 +20,7 @@ void SPI_init(void){
     UCA0BR1 = 0;
     UCA0MCTLW = 0;                            // No modulation
     UCA0CTLW0 &= ~UCSWRST;                    // **Initialize USCI state machine**
-    UCA0IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+    UCA0IE &= ~UCRXIE;                         // Disable USCI_A0 RX interrupt
 }
 
 // Sends one byte to the LED strip by SPI.
@@ -41,4 +41,31 @@ void sendByte_SPIA (unsigned char b){
       }
       b <<= 1;                      // shift next bit into high-order position
     }
+}
+
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=USCI_A0_VECTOR
+__interrupt void USCI_A0_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+  volatile unsigned int i;
+
+  switch(__even_in_range(UCA0IV,0x04))
+  {
+    case 0: break;                          // Vector 0 - no interrupt
+    case 2:
+           //RXData = UCA0RXBUF;            // Hold the data somewhere (define variable)
+           UCA0IFG &= ~UCRXIFG;
+           __bic_SR_register_on_exit(CPUOFF);// Wake up to setup next TX
+           break;
+    case 4:
+          //UCA0TXBUF = TXData;             // get data from somewhere
+          UCA0IE &= ~UCTXIE;
+          break;
+    default: break;
+  }
 }
