@@ -18,8 +18,10 @@
 #include <msp430.h>
 #include <clock.h>
 #include <uscia0_spi.h>
+#include <timers.h>
 
-#define PIXELS 4
+#define PIXELS 3
+
 
 void lightsOff(void);                                                   //Turns all LEDS OFF
 void sendPixel (unsigned char r, unsigned char g, unsigned char b);
@@ -34,9 +36,10 @@ void visual2(unsigned char LEDS[PIXELS][3]);
 unsigned char RXData =0;
 unsigned char TXData;
 
-unsigned char LEDS[4][3] = {{0x00,0x00,0xFF},{0x00,0xFF,0x00},{0x00,0x3F,0x3F},{0x3F,0x3F,0x00}};
+//unsigned char LEDS[4][3] = {{0xFF,0x00,0x00},{0x00,0xFF,0x00},{0x00,0x00,0xFF},{0xFF,0xA5,0x00}};
+unsigned char LEDS[3][3] = {{0xFF,0x00,0x00},{0x00,0xFF,0x00},{0x00,0x00,0xFF}};
 
-unsigned char auxPixel[3];
+static unsigned char auxPixel[3];
 
 int main(void)
 {
@@ -48,19 +51,24 @@ int main(void)
   SPI_init();
   lightsOff();
 
+ /* initTimerA0();
+  setTimerA0(TIMERA0_1SEC);
+  startTimerA0();
+*/
   while(1){
 
       sendFrame(LEDS);
 
-     /* for(j=0 ; j<5;j++)
+ /*     for(j=0 ; j<5;j++)
           __delay_cycles(65535);
       lightsOff();*/
-      for(j=0 ; j<5;j++)
+      for(j=0 ; j<15;j++)
           __delay_cycles(65535);
 
-      visual2(LEDS);
+      xmasTinsel(LEDS);
+     // __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
   }
-
+/*
   while(1)
   {
     UCA0TXBUF = TXData;
@@ -68,7 +76,7 @@ int main(void)
     __no_operation();                       // Remain in LPM0
     __delay_cycles(20000);                   // Delay before next transmission
   }
-
+*/
 }
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
@@ -132,22 +140,37 @@ void lightsOff(void){
 
 void xmasTinsel (unsigned char LEDS[PIXELS][3]){
 
-    unsigned char auxPixel[3];
-    int j;
 
+    int j;
+    unsigned char foo1;
+    unsigned char foo2;
+    unsigned char foo3;
+    /*
     auxPixel[0] = LEDS[0][0];
     auxPixel[1] = LEDS[0][1];
     auxPixel[2] = LEDS[0][2];
+*/
+    foo1 = LEDS[0][0];
+    foo2 = LEDS[0][1];
+    foo3 = LEDS[0][2];
 
-    for(j=0 ; j<PIXELS ; j++){
+    for(j=0 ; j<PIXELS-1 ; j++){
+
         LEDS[j][0] = LEDS[j+1][0];
         LEDS[j][1] = LEDS[j+1][1];
         LEDS[j][2] = LEDS[j+1][2];
+
     }
 
-    LEDS[PIXELS][0] = auxPixel[0];
+  /*  LEDS[PIXELS][0] = auxPixel[0];
     LEDS[PIXELS][1] = auxPixel[1];
     LEDS[PIXELS][2] = auxPixel[2];
+    */
+    LEDS[PIXELS-1][0] = foo1;
+    LEDS[PIXELS-1][1] = foo2;
+    LEDS[PIXELS-1][2] = foo3;
+
+
 }
 
 
