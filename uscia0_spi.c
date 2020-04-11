@@ -42,7 +42,7 @@ void sendByte_SPIA (unsigned char b){
       b <<= 1;                      // shift next bit into high-order position
     }
 }
-
+/*
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
@@ -68,4 +68,4 @@ void __attribute__ ((interrupt(USCI_A0_VECTOR))) USCI_A0_ISR (void)
           break;
     default: break;
   }
-}
+}*/
