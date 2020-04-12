@@ -82,19 +82,15 @@ void xmasTinsel (unsigned char LEDS[PIXELS][3]);
 void visual1(unsigned char LEDS[PIXELS][3]);
 void visual2(unsigned char LEDS[PIXELS][3]);
 void waterEffect (unsigned char LEDS[PIXELS][3]);
-void setPixel(unsigned char LEDS[PIXELS][3], unsigned char x, unsigned char y, unsigned char r, unsigned char g, unsigned char b);
+void setPixel(unsigned char LedTable[LENGTH][HEIGHT][3], unsigned char x, unsigned char y, unsigned char r, unsigned char g, unsigned char b);
 void game1(unsigned char LEDS[PIXELS][3]);
 void cozy (unsigned char LEDS[PIXELS][3]);
+void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]);
 
 /*
  * GLOBAL VARIABLES AND ARRAYS
  */
 
-//unsigned char LEDS[4][3] = {{0xDC,0x14,0x3C},{0x00,0x64,0x00},{0x00,0xBF,0xFF},{0xFF,0xA5,0x00}};
-//unsigned char LEDS[3][3] = {{0xFF,0x00,0x00},{0x00,0xFF,0x00},{0x00,0x00,0xFF}};
-//unsigned char LEDS[6][3] = {{0xDC,0x14,0x3C},{0x00,0x64,0x00},{0x00,0xBF,0xFF},{0xFF,0xFF,0xFF},{0x7F,0xFF,0xD4},{0x8B,0x00,0x00}};
-//unsigned char LEDS[6][3] = {{0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF}};
-//unsigned char LEDS[24][3] = {{0xDC,0x14,0x3C},{0x00,0x64,0x00},{0x00,0xBF,0xFF},{0xFF,0xFF,0xFF},{0x7F,0xFF,0xD4},{0x8B,0x00,0x00},{0xFF,0x00,0xFF},{0x00,0xFF,0xFF},{0xFF,0xFF,0x00},{0xFF,0x00,0x00},{0x00,0xFF,0x00},{0xFF,0x00,0x00},{0xDC,0x14,0x3C},{0x00,0x64,0x00},{0x00,0xBF,0xFF},{0xFF,0xFF,0xFF},{0x7F,0xFF,0xD4},{0x8B,0x00,0x00},{0xFF,0x00,0xFF},{0x00,0xFF,0xFF},{0xFF,0xFF,0x00},{0xFF,0x00,0x00},{0x00,0xFF,0x00},{0xFF,0x00,0x00}};
 
 unsigned char LEDS[PIXELS][3] = {{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00}};
 
@@ -120,7 +116,7 @@ int main(void)
   initGPIO();
 
   //Set and start Timer
-  setTimerA0(TIMERA0_1SEC/2);
+  setTimerA0(TIMERA0_1SEC/4);
   startTimerA0();
 
   //Begin State Machine
@@ -303,58 +299,112 @@ void cozy (unsigned char LEDS[PIXELS][3]){
 
 void game1(unsigned char LEDS[PIXELS][3]){
 
-    unsigned char exit;
-    unsigned char x;
-    unsigned char y;
+    // Define a matrix that contains the RGB color code for each pair (x,y)
+    unsigned char LedTable[LENGTH][HEIGHT][3];
 
-    static unsigned char userOptionGame1;
-    exit = 0;
+    unsigned int x;
+    unsigned int y;
 
-    x = 4;
+    unsigned char userOption;
+
+    unsigned char exit = 0;
+
+    //Initializes array
+    for (x = 0 ; x < LENGTH ; x++){
+        for (y = 0 ; y < HEIGHT ; y++){
+            LedTable[x][y][0] = 0x00;
+            LedTable[x][y][1] = 0xB0;
+            LedTable[x][y][2] = 0x00;
+        }
+
+    }
+
+    //Start game, place a pixel at (0,0)
+    x = 0;
     y = 0;
+    setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);
 
-    setPixel(LEDS,x,y,255,255,255);
-    sendFrame(LEDS);
+    //Translates the 3D Array into a 2D Array
+    array2Vector(LedTable,LEDS);
 
-   /* while (exit!=1){
+    while (exit!=1){
 
-        userOptionGame1 = readGPIO();
+        userOption = readGPIO();
 
-        switch (userOptionGame1)
-        {
-            case USER_OPTION_S3:
+        switch (userOption){
+            case USER_OPTION_S1:
+                //exit effect / game
                 exit = 1;
                 break;
-            case USER_OPTION_S1:
-                if(( y + 1) <HEIGHT)
-                    ++y;
-                setPixel(LEDS,x,y,255,255,255);
+            case USER_OPTION_S2:
+                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                x = 0;
+                y = 0;
+                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                array2Vector(LedTable,LEDS);
                 sendFrame(LEDS);
                 break;
-            case USER_OPTION_S2:
-                if((x + 1) < LENGTH)
-                    ++x;
-                setPixel(LEDS,x,y,255,255,255);
+            case USER_OPTION_S3:
+                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                if( (x+1) < LENGTH)
+                    x++;
+                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                array2Vector(LedTable,LEDS);
+                sendFrame(LEDS);
+                break;
+            case USER_OPTION_S4:
+                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                if( (y+1) < HEIGHT)
+                    y++;
+                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                array2Vector(LedTable,LEDS);
+                sendFrame(LEDS);
+
+                break;
+            default:
                 sendFrame(LEDS);
                 break;
         }
-        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
 
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
-    */
+
 }
 
+void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]){
+    unsigned int x;
+    unsigned int y;
+    unsigned int l;
 
-void setPixel(unsigned char LEDS[PIXELS][3], unsigned char x, unsigned char y, unsigned char r, unsigned char g, unsigned char b){
-    unsigned char l;
+    // Translate odd columns
+    for(x = 0 ; x < LENGTH ; x++ ){
+        for( y = 0 ; y < HEIGHT ; y++ ){
+            l = y + x * HEIGHT;
+            outputVector[l][0] = inputArray[x][y][0];
+            outputVector[l][1] = inputArray[x][y][1];
+            outputVector[l][2] = inputArray[x][y][2];
+        }
+        x++;
+    }
 
-    // if x coordinate is odd
-    if ((x % 2) == 0 )
-        l = x * HEIGHT + y;
-    else
-        l = x * HEIGHT + (HEIGHT - y - 1);
+    // Translate even columns
+    for(x = 1 ; x < LENGTH ; x++ ){
+        for( y = 0 ; y < HEIGHT ; y++ ){
+            l = HEIGHT - 1 - y + x * HEIGHT;
+            outputVector[l][0] = inputArray[x][y][0];
+            outputVector[l][1] = inputArray[x][y][1];
+            outputVector[l][2] = inputArray[x][y][2];
+        }
+        x++;
+    }
 
-    LEDS[l][0] = r;
-    LEDS[l][1] = g;
-    LEDS[l][2] = b;
+
+}
+
+void setPixel(unsigned char LedTable[LENGTH][HEIGHT][3], unsigned char x, unsigned char y, unsigned char r, unsigned char g, unsigned char b){
+
+    LedTable[x][y][0] = r;
+    LedTable[x][y][1] = g;
+    LedTable[x][y][2] = b;
+
 }
