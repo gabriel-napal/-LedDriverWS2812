@@ -6,6 +6,8 @@ Microcontroller : MSP430FR5739
 
 Current CPU clock : 1 MHz (could be boosted up to 24 MHz)
 
+Test merge plus compliqué
+
 Communications:
 
 The microcontroller uses a 3-wire SPI interface with the WS2812 LEDS. This LEDs are daisy chained to each other. 
@@ -13,3 +15,5 @@ The microcontroller uses a 3-wire SPI interface with the WS2812 LEDS. This LEDs 
 Test Merge - On commence à comprendre
 
 On est sur Bugged2 - Et maintenant une erreur
+
+Et là aussi 
