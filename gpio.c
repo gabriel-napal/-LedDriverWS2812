@@ -93,4 +93,19 @@ unsigned char readGPIO(void){
     return (GPIO_Status & 0x0F);
 }
 
+unsigned char antiAliasGPIO(unsigned char oldOption, unsigned int refreshDelay){
 
+    unsigned int i = 0;
+    unsigned char userOption;
+
+    while (i < refreshDelay) {
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+        userOption = readGPIO();
+        if (oldOption == userOption)
+            i ++;
+        else
+            break;
+    }
+
+    return (userOption);
+}
