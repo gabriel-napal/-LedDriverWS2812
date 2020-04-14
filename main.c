@@ -86,7 +86,7 @@ void setPixel(unsigned char LedTable[LENGTH][HEIGHT][3], unsigned char x, unsign
 void game1(unsigned char LEDS[PIXELS][3]);
 void cozy (unsigned char LEDS[PIXELS][3]);
 void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]);
-
+void wave1(unsigned char LEDS[PIXELS][3]);
 /*
  * GLOBAL VARIABLES AND ARRAYS
  */
@@ -104,9 +104,7 @@ int main(void)
   volatile unsigned int i;
   volatile unsigned int j;
   unsigned char userOption = 0;
- // volatile unsigned int GPIO_Status;
-
-  WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer
+ // volatile unsigned int GPIO_Status;  WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer
 
   //Peripherals initiaization
   CS_init();
@@ -126,6 +124,9 @@ int main(void)
 
           switch (userOption)
           {
+              case USER_OPTION_S1:
+                  wave1(LEDS);
+                  break;
               case USER_OPTION_S3:
                  cozy(LEDS);
                   break;
@@ -369,6 +370,68 @@ void game1(unsigned char LEDS[PIXELS][3]){
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
+}
+
+void wave1(unsigned char LEDS[PIXELS][3]){
+
+    // Define a matrix that contains the RGB color code for each pair (x,y)
+    unsigned char LedTable[LENGTH][HEIGHT][3];
+
+    unsigned int x;
+    unsigned int y;
+
+    unsigned char userOption;
+
+    unsigned char exit = 0;
+
+    //Initializes array
+    // Medium dark
+    for (x = 0 ; x < LENGTH ; x++){
+
+            LedTable[x][0][0] = 0x00;
+            LedTable[x][0][1] = 0xB0;
+            LedTable[x][0][2] = 0xCD;
+    }
+    //Dark
+    for (x = 0 ; x < LENGTH ; x++){
+
+            LedTable[x][1][0] = 0x00;
+            LedTable[x][1][1] = 0x00;
+            LedTable[x][1][2] = 0xFF;
+    }
+    // Medium dark
+    for (x = 0 ; x < LENGTH ; x++){
+
+            LedTable[x][2][0] = 0x00;
+            LedTable[x][2][1] = 0xB0;
+            LedTable[x][2][2] = 0xCD;
+    }
+
+
+    //Light
+    for (x = 0 ; x < LENGTH ; x++){
+        for (y = 3 ; y < HEIGHT ; y++){
+            LedTable[x][y][0] = 0x87;
+            LedTable[x][y][1] = 0xCE;
+            LedTable[x][y][2] = 0xFA;
+        }
+
+    }
+
+    array2Vector(LedTable,LEDS);
+
+    while (exit!=1){
+
+        userOption = readGPIO();
+
+       if(userOption == USER_OPTION_S4)
+           exit = 1;
+       else
+           sendFrame(LEDS);
+
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+    }
+    __no_operation();
 }
 
 void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]){
