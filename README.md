@@ -9,5 +9,3 @@ Current CPU clock : 1 MHz (could be boosted up to 24 MHz)
 Communications:
 
 The microcontroller uses a 3-wire SPI interface with the WS2812 LEDS. This LEDs are daisy chained to each other. 
-
-On va commencer à travailler. 
