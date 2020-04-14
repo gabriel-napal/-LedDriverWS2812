@@ -104,7 +104,9 @@ int main(void)
   volatile unsigned int i;
   volatile unsigned int j;
   unsigned char userOption = 0;
- // volatile unsigned int GPIO_Status;  WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer
+  volatile unsigned int GPIO_Status;
+
+  WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. Its mandatory!
 
   //Peripherals initiaization
   CS_init();
@@ -114,7 +116,7 @@ int main(void)
   initGPIO();
 
   //Set and start Timer
-  setTimerA0(TIMERA0_1SEC/4);
+  setTimerA0(TIMERA0_1SEC/2);
   startTimerA0();
 
   //Begin State Machine
@@ -138,7 +140,7 @@ int main(void)
           }
 
       __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
-      //__no_operation();                       // Equivalent to an assembly NOP
+
   }
 
 }
@@ -255,7 +257,7 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
 void cozy (unsigned char LEDS[PIXELS][3]){
 
     unsigned int j;
-    static unsigned char exit;
+    unsigned char exit;
 
 
     //Initializes the LED Array
@@ -388,32 +390,48 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     // Medium dark
     for (x = 0 ; x < LENGTH ; x++){
 
-            LedTable[x][0][0] = 0x00;
+         /*   LedTable[x][0][0] = 0x00;
             LedTable[x][0][1] = 0xB0;
-            LedTable[x][0][2] = 0xCD;
+            LedTable[x][0][2] = 0xCD;*/
+
+            LedTable[x][0][0] = 0xFF;
+            LedTable[x][0][1] = 0x00;
+            LedTable[x][0][2] = 0x00;
     }
     //Dark
     for (x = 0 ; x < LENGTH ; x++){
 
+           /* LedTable[x][1][0] = 0x00;
+            LedTable[x][1][1] = 0xB0;
+            LedTable[x][1][2] = 0xFF;*/
+
             LedTable[x][1][0] = 0x00;
-            LedTable[x][1][1] = 0x00;
-            LedTable[x][1][2] = 0xFF;
+            LedTable[x][1][1] = 0xFF;
+            LedTable[x][1][2] = 0x00;
     }
     // Medium dark
     for (x = 0 ; x < LENGTH ; x++){
 
-            LedTable[x][2][0] = 0x00;
+          /*  LedTable[x][2][0] = 0x00;
             LedTable[x][2][1] = 0xB0;
-            LedTable[x][2][2] = 0xCD;
+            LedTable[x][2][2] = 0xCD;*/
+
+            LedTable[x][2][0] = 0xFF;
+            LedTable[x][2][1] = 0x00;
+            LedTable[x][2][2] = 0x00;
     }
 
 
     //Light
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 3 ; y < HEIGHT ; y++){
-            LedTable[x][y][0] = 0x87;
-            LedTable[x][y][1] = 0xCE;
-            LedTable[x][y][2] = 0xFA;
+           /* LedTable[x][y][0] = 0x00;
+            LedTable[x][y][1] = 0x10;
+            LedTable[x][y][2] = 0xCD;*/
+
+            LedTable[x][y][0] = 0x00;
+            LedTable[x][y][1] = 0x00;
+            LedTable[x][y][2] = 0xFF;
         }
 
     }
@@ -431,7 +449,7 @@ void wave1(unsigned char LEDS[PIXELS][3]){
 
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
-    __no_operation();
+
 }
 
 void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]){
