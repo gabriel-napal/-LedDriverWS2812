@@ -104,7 +104,7 @@ int main(void)
                  cozy(LEDS);
                   break;
               case USER_OPTION_S4:
-                  game1(LEDS);
+                  preSnake(LEDS);
                   break;
               default:
                   lightsOff(LEDS);
