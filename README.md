@@ -10,6 +10,6 @@ Communications:
 
 The microcontroller uses a 3-wire SPI interface with the WS2812 LEDS. This LEDs are daisy chained to each other. 
 
-Test Merge
+Test Merge - On commence à comprendre
 
 On est sur Bugged2
