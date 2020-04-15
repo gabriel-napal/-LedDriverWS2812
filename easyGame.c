@@ -107,10 +107,15 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
     unsigned char userOption = 0;
     unsigned char exit = 0;
 
+    //Represent x and y for the head of the snake
     unsigned int x;
     unsigned int y;
+    unsigned int i;
+
+    unsigned int snakeLength = 3;
     unsigned int turnCommand = USER_NO_TURN;
     unsigned int direction = DIRECTION_X_INCREASING;
+    unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -123,9 +128,11 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
 
 
     //Start game, place a pixel at (0,0)
-    x = 0;
-    y = 0;
+    x = snake[0][0];
+    y = snake[0][1];
     setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);
+    setPixel(LedTable, snake[1][0] , snake[1][1] , 0xFF, 0x00, 0x00);
+    setPixel(LedTable, snake[2][0] , snake[2][1] , 0xFF, 0x00, 0x00);
 
     //Translates the 3D Array into a 2D Array
     array2Vector(LedTable,LEDS);
@@ -136,7 +143,9 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
         switch (userOption){
         case USER_OPTION_S1:
         //exit effect / game
-            exit = 1;
+            snakeLength = snakeLength + 1;
+            snake[snakeLength][0] = snake[snakeLength-1][0] + 1;
+            snake[snakeLength][1] = snake[snakeLength-1][1];
             break;
         case USER_OPTION_S2:
             //exit effect / game
@@ -183,7 +192,6 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
             }
         }
 
-        setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
         switch (direction){
             case DIRECTION_X_INCREASING:
                 if( (x+1) < LENGTH)
@@ -211,8 +219,19 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
                 break;
         }
 
+        setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0x00, 0xB0, 0x00);   //Erases the old pixel from the snake tail
+
+        for (i = (snakeLength - 1); i > 0; i--){
+            snake[i][0] = snake[i-1][0];
+            snake[i][1] = snake[i-1][1];
+        }
+
+        snake[0][0] = x;
+        snake[0][1] = y;
 
         setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+
+
         array2Vector(LedTable,LEDS);
         sendFrame(LEDS);
         //__bis_SR_register(LPM0_bits + GIE);
