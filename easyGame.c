@@ -177,7 +177,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
         }
 
         setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
-        /*switch (direction){
+        switch (direction){
             case 0:
                 if( (x+1) < LENGTH)
                     x++;
@@ -191,42 +191,17 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
                     y = 0;
                 break;
             case 2:
-                if( (x-1) > 0)
+                if( x > 0)
                     x--;
                 else
-                    x = LENGTH;
+                    x = LENGTH - 1;
                 break;
             case 3:
-                if( (y-1) > 0)
+                if( y > 0)
                     y--;
                 else
-                    y = HEIGHT;
+                    y = HEIGHT - 1;
                 break;
-        }*/
-
-        if (direction == 0) {
-            if( (x+1) < LENGTH)
-                x++;
-            else
-                x = 0;
-        }
-        else if (direction == 1) {
-            if( (y+1) < HEIGHT)
-                 y++;
-            else
-                y = 0;
-        }
-        else if (direction == 2){
-            if( x > 0)
-                x--;
-            else
-                x = LENGTH;
-        }
-        else if (direction == 3){
-            if( y > 0)
-                y--;
-            else
-                y = HEIGHT;
         }
 
 
