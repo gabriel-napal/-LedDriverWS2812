@@ -11,6 +11,15 @@
 #include <LEDInterface.h>
 #include <easyGame.h>
 
+#define DIRECTION_X_INCREASING      0
+#define DIRECTION_Y_INCREASING      1
+#define DIRECTION_X_DECREASING      2
+#define DIRECTION_Y_DECREASING      3
+
+#define USER_NO_TURN      0
+#define USER_TURN_LEFT    1
+#define USER_TURN_RIGHT   2
+
 void game1(unsigned char LEDS[PIXELS][3]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
@@ -100,8 +109,8 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
 
     unsigned int x;
     unsigned int y;
-    unsigned int turnCommand = 0; // if turnCommand = 1, snake is turning left, if turnCommand = 2, snake is turning right, 0 = no change of direction requested)
-    unsigned int direction = 0;   // Represent the direction of the snake in x or y axe (0 = x increasing ; 1 = y increasing ; 2 = x decreasing ; 3 = y decreasing)
+    unsigned int turnCommand = USER_NO_TURN;
+    unsigned int direction = DIRECTION_X_INCREASING;
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -134,69 +143,67 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
             exit = 1;
             break;
         case USER_OPTION_S3: // To go right
-            turnCommand = 1;
+            turnCommand = USER_TURN_RIGHT;
             break;
         case USER_OPTION_S4: // To go left
-            turnCommand = 2;
+            turnCommand = USER_TURN_LEFT;
             break;
         }
 
-        // turn left
-        if (turnCommand == 1) {
+        if (turnCommand == USER_TURN_RIGHT) {
             switch (direction){
-            case 0:
-                direction = 3;
+            case DIRECTION_X_INCREASING:
+                direction = DIRECTION_Y_DECREASING;
                 break;
-            case 1:
-                direction = 0;
+            case DIRECTION_Y_INCREASING:
+                direction = DIRECTION_X_INCREASING;
                 break;
-            case 2:
-                direction = 1;
+            case DIRECTION_X_DECREASING:
+                direction = DIRECTION_Y_INCREASING;
                 break;
-            case 3:
-                direction = 2;
+            case DIRECTION_Y_DECREASING:
+                direction = DIRECTION_X_DECREASING;
                 break;
             }
         }
-        // turn right
-        else if (turnCommand == 2) {
+        else if (turnCommand == USER_TURN_LEFT) {
             switch (direction){
-            case 0:
-                direction = 1;
+            case DIRECTION_X_INCREASING:
+                direction = DIRECTION_Y_INCREASING;
                 break;
-            case 1:
-                direction = 2;
+            case DIRECTION_Y_INCREASING:
+                direction = DIRECTION_X_DECREASING;
                 break;
-            case 2:
-                direction = 3;
+            case DIRECTION_X_DECREASING:
+                direction = DIRECTION_Y_DECREASING;
                 break;
-            case 3:
-                direction = 0;
+            case DIRECTION_Y_DECREASING:
+                direction = DIRECTION_X_INCREASING;
                 break;
             }
         }
 
         setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
         switch (direction){
-            case 0:
+            case DIRECTION_X_INCREASING:
                 if( (x+1) < LENGTH)
                     x++;
                 else
                     x = 0;
                 break;
-            case 1:
+            case DIRECTION_Y_INCREASING:
                 if( (y+1) < HEIGHT)
                      y++;
                 else
                     y = 0;
                 break;
-            case 2:
+            case DIRECTION_X_DECREASING:
                 if( x > 0)
                     x--;
                 else
                     x = LENGTH - 1;
                 break;
-            case 3:
+            case DIRECTION_Y_DECREASING:
                 if( y > 0)
                     y--;
                 else
@@ -210,7 +217,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
         sendFrame(LEDS);
         //__bis_SR_register(LPM0_bits + GIE);
         userOption = antiAliasGPIO(userOption, 5);
-        turnCommand = 0;
+        turnCommand = USER_NO_TURN;
     }
 
 }
