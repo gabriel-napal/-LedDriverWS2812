@@ -65,6 +65,9 @@
  * GLOBAL VARIABLES AND ARRAYS
  */
 
+#define INIT      0
+#define VISUALEFFECTS    1
+#define GAMES   2
 
 unsigned char LEDS[PIXELS][3] = {{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00}};
 
@@ -73,6 +76,7 @@ unsigned char LEDS[PIXELS][3] = {{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x
 int main(void)
 {
   volatile unsigned int i;
+  unsigned int menu = INIT;
   volatile unsigned int j;
   unsigned char userOption = 0;
   volatile unsigned int GPIO_Status;
@@ -93,25 +97,56 @@ int main(void)
   //Begin State Machine
 
   while(1){
-     userOption = readGPIO();
+     menu = INIT ;
+     userOption = waveInit(LEDS, INIT);
+     switch (userOption){
+     case USER_OPTION_S3:
+         userOption = waveInit(LEDS, VISUALEFFECTS);
+         menu = VISUALEFFECTS;
+         break;
+     case USER_OPTION_S4:
+         userOption = waveInit(LEDS, GAMES);
+         menu = GAMES;
+         break;
+     default:
+         menu = INIT ;
+         break;
+     }
 
-          switch (userOption)
-          {
-              case USER_OPTION_S1:
-                  wave1(LEDS);
-                  break;
-              case USER_OPTION_S3:
-                 cozy(LEDS);
-                  break;
-              case USER_OPTION_S4:
-                  preSnake(LEDS);
-                  break;
-              default:
-                  lightsOff(LEDS);
-          }
+     if (menu==VISUALEFFECTS){
+        switch (userOption){
+        case USER_OPTION_S1:
+            menu = INIT;
+            break;
+        case USER_OPTION_S2:
+            cozy(LEDS);
+            break;
+        case USER_OPTION_S3:
+            waterEffect(LEDS);
+            break;
+        case USER_OPTION_S4:
+            menu = INIT;
+            break;
+        }
+     }
+     else if (menu==GAMES){
+        switch (userOption){
+        case USER_OPTION_S1:
+            menu = INIT;
+            break;
+        case USER_OPTION_S2:
+            game1(LEDS);
+            break;
+        case USER_OPTION_S3:
+            preSnake(LEDS);
+            break;
+        case USER_OPTION_S4:
+            menu = INIT;
+            break;
+        }
+     }
 
       __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
-
   }
 
 }

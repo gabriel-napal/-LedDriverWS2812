@@ -49,7 +49,7 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
 
         LEDS[j][0] = 0x00;
         LEDS[j][1] = 0x00;
-        LEDS[j][2] = 0x80;
+        LEDS[j][2] = 0x70;
 
     }
     //Set some random blue pixels
@@ -59,11 +59,24 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
 
     LEDS[14][0] = 0x00;
     LEDS[14][1] = 0x00;
-    LEDS[14][2] = 0x8B;
+    LEDS[14][2] = 0x9B;
 
     LEDS[24][0] = 0x00;
     LEDS[24][1] = 0x00;
-    LEDS[24][2] = 0x8B;
+    LEDS[24][2] = 0x9B;
+
+    //Set some random blue pixels
+    LEDS[9][0] = 0x2c;
+    LEDS[9][1] = 0x6f;
+    LEDS[9][2] = 0x98;
+
+    LEDS[22][0] = 0x2c;
+    LEDS[22][1] = 0x6f;
+    LEDS[22][2] = 0x98;
+
+    LEDS[29][0] = 0x2c;
+    LEDS[29][1] = 0x6f;
+    LEDS[29][2] = 0x98;
 
     exit = 0;
 
@@ -71,7 +84,7 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
 
         //userOptionWater = readGPIO();
 
-        if(readGPIO() == USER_OPTION_S4){
+        if(readGPIO() == USER_OPTION_S1){
             //exit waterEffect
             exit = 1;
 
@@ -117,7 +130,7 @@ void cozy (unsigned char LEDS[PIXELS][3]){
 
         //userOptionWater = readGPIO();
 
-        if(readGPIO() == USER_OPTION_S4){
+        if(readGPIO() == USER_OPTION_S1){
             //exit waterEffect
             exit = 1;
 
@@ -208,5 +221,44 @@ void wave1(unsigned char LEDS[PIXELS][3]){
 
 }
 
+unsigned int waveInit(unsigned char LEDS[PIXELS][3], unsigned int theme){
 
+    // Define a matrix that contains the RGB color code for each pair (x,y)
+    unsigned int j;
+    unsigned char userOption = 0;
+
+    //Initializes the LED Array
+       for(j=0 ; j<PIXELS ; j++){
+           LEDS[j][0] = 0x00;
+           LEDS[j][1] = 0x00;
+           LEDS[j][2] = 0x00;
+       }
+
+       // Set color in function of the theme
+       for(j=0 ; j<PIXELS ; j++){
+           LEDS[j][theme] = 0x80;
+       }
+
+       //Set some random pixels
+       LEDS[5][theme] = 0xB8;
+       LEDS[14][theme] = 0xB8;
+       LEDS[24][theme] = 0xB8;
+
+    while (1){
+
+       userOption = antiAliasGPIO(userOption, 4);
+       if(userOption != USER_NO_OPTION){
+           //exit waveInit
+           return userOption;
+           //exit = 1;
+       }
+       else{
+           xmasTinsel(LEDS);
+           sendFrame(LEDS);
+       }
+
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+    }
+
+}
 

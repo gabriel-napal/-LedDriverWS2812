@@ -12,6 +12,7 @@ void xmasTinsel (unsigned char LEDS[PIXELS][3]);
 void waterEffect (unsigned char LEDS[PIXELS][3]);
 void cozy (unsigned char LEDS[PIXELS][3]);
 void wave1(unsigned char LEDS[PIXELS][3]);
+unsigned int waveInit(unsigned char LEDS[PIXELS][3], unsigned int theme);
 
 
 #endif /* VISUALEFFECTS_H_ */
