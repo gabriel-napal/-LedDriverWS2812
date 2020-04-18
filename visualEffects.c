@@ -216,3 +216,30 @@ unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme){
 
 }
 
+void looser(color_t LEDS[PIXELS]){
+
+    unsigned int j;
+    unsigned int i;
+
+    for (i = 0; i<3; i++){
+        for(j=0 ; j<PIXELS ; j++){
+            LEDS[j] = red_dark_1;
+        }
+
+        sendFrame(LEDS);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+
+        for(j=0 ; j<PIXELS ; j++){
+            LEDS[j] = color_off;
+        }
+
+        sendFrame(LEDS);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+    }
+}
+
+
