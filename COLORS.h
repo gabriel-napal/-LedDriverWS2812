@@ -27,15 +27,25 @@ static const color_t red_dark_1 = {0xFF,0x07,0x07};
 static const color_t red_dark_2 = {0xFF,0x05,0x05};
 static const color_t red_dark_3 = {0xFF,0x00,0x00};
 
-static const color_t blue_bright_1 = {0x00,0xA6,0xA9};
+/*static const color_t blue_bright_1 = {0x00,0xA6,0xA9};
 static const color_t blue_bright_2 = {0x2c, 0x6f, 0x98};
-//static const color_t blue_bright_3 = {};
-static const color_t blue_medium_1 = {0x41,0x69,0xe1};
-static const color_t blue_medium_2 = {0x00,0x00,0x70};
-//static const color_t blue_medium_3 = {0};
-static const color_t blue_dark_1 = {0x00,0x00,0x9B};
-//static const color_t blue_dark_2 = {};
-static const color_t blue_dark_3 = {0x00,0x00,0xFF};
+static const color_t blue_bright_3 = {0xad, 0xd8, 0xe6};
+static const color_t blue_medium_1 = {0x1e,0x90,0xff};
+static const color_t blue_medium_2 = {0x41,0x69,0xe1};
+static const color_t blue_medium_3 = {0x00,0x00,0x70};
+static const color_t blue_dark_1 = {0x00,0x00,0xFF};
+static const color_t blue_dark_2 = {0x00,0x00,0x9B};
+static const color_t blue_dark_3 = {0x19,0x19,0x70};*/
+
+static const color_t blue_bright_1 = {0x41,0x69,0xe1};
+static const color_t blue_bright_2 = {0x15,0x15,0xFF};
+static const color_t blue_bright_3 = {0x5,0x5,0xFF};
+static const color_t blue_medium_1 = {0x00,0x00,0xFF};
+static const color_t blue_medium_2 = {0x00,0x00,0xcd};
+static const color_t blue_medium_3 = {0x00,0x00,0x60};
+static const color_t blue_dark_1 = {0x00,0x00,0x50};
+static const color_t blue_dark_2 = {0x00,0x00,0x45};
+static const color_t blue_dark_3 = {0x00,0x00,0x40};
 
 static const color_t green_bright_1 = {0x7f, 0xfc, 0x00};
 static const color_t green_medium_1 = {0x00, 0xB0, 0x00};
