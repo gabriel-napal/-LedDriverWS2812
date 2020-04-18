@@ -13,5 +13,6 @@
 #define PRNG_C 11
 #define PRNG_M 99
 
+unsigned int pseudoRandom ( unsigned int maxNumber);
 
 #endif /* PSEUDORANDOM_H_ */
