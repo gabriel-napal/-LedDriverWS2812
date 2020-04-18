@@ -11,7 +11,7 @@
 #include <COLORS.h>
 
 void game1(color_t LEDS[PIXELS]);
-void preSnake(color_t LEDS[PIXELS]);
+void snake(color_t LEDS[PIXELS]);
 
 
 #endif /* EASYGAME_H_ */
