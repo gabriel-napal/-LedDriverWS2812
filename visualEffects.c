@@ -11,34 +11,24 @@
 #include <LEDInterface.h>
 #include <visualEffects.h>
 
-void xmasTinsel (unsigned char LEDS[PIXELS][3]){
-
+void xmasTinsel (color_t LEDS[PIXELS]){
 
     unsigned int j;
-    unsigned char auxPixel[3];
+    color_t auxPixel;
 
     //Buffers the last pixel
-    auxPixel[0] = LEDS[PIXELS-1][0];
-    auxPixel[1] = LEDS[PIXELS-1][1];
-    auxPixel[2] = LEDS[PIXELS-1][2];
+    auxPixel = LEDS[PIXELS-1];
 
     for(j = PIXELS-1 ; j>0 ; j--){
-
-        LEDS[j][0] = LEDS[j-1][0];
-        LEDS[j][1] = LEDS[j-1][1];
-        LEDS[j][2] = LEDS[j-1][2];
-
+        LEDS[j] = LEDS[j-1];
     }
 
-    LEDS[0][0] = auxPixel[0];
-    LEDS[0][1] = auxPixel[1];
-    LEDS[0][2] = auxPixel[2];
+    LEDS[0] = auxPixel;
 
 }
 
 
-
-void waterEffect (unsigned char LEDS[PIXELS][3]){
+void waterEffect (color_t LEDS[PIXELS]){
 
     unsigned int j;
     static unsigned char exit;
@@ -46,43 +36,22 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
 
     //Initializes the LED Array
     for(j=0 ; j<PIXELS ; j++){
-
-        LEDS[j][0] = 0x00;
-        LEDS[j][1] = 0x00;
-        LEDS[j][2] = 0x70;
-
+        LEDS[j] = blue_medium_2;
     }
-    //Set some random blue pixels
-    LEDS[5][0] = 0x00;
-    LEDS[5][1] = 0x00;
-    LEDS[5][2] = 0x8B;
-
-    LEDS[14][0] = 0x00;
-    LEDS[14][1] = 0x00;
-    LEDS[14][2] = 0x9B;
-
-    LEDS[24][0] = 0x00;
-    LEDS[24][1] = 0x00;
-    LEDS[24][2] = 0x9B;
 
     //Set some random blue pixels
-    LEDS[9][0] = 0x2c;
-    LEDS[9][1] = 0x6f;
-    LEDS[9][2] = 0x98;
+    LEDS[5] = blue_dark_1;
+    LEDS[14] = blue_dark_1;
+    LEDS[24] = blue_dark_1;
 
-    LEDS[22][0] = 0x2c;
-    LEDS[22][1] = 0x6f;
-    LEDS[22][2] = 0x98;
-
-    LEDS[29][0] = 0x2c;
-    LEDS[29][1] = 0x6f;
-    LEDS[29][2] = 0x98;
+    //Set some random blue pixels
+    LEDS[9] = blue_bright_2;
+    LEDS[22] = blue_bright_2;
+    LEDS[29] = blue_bright_2;
 
     exit = 0;
 
     while (exit!=1){
-
-        //userOptionWater = readGPIO();
 
         if(readGPIO() == USER_OPTION_S1){
             //exit waterEffect
@@ -97,7 +66,7 @@ void waterEffect (unsigned char LEDS[PIXELS][3]){
     }
 }
 
-void cozy (unsigned char LEDS[PIXELS][3]){
+void cozy (color_t LEDS[PIXELS]){
 
     unsigned int j;
     unsigned char exit;
@@ -105,33 +74,20 @@ void cozy (unsigned char LEDS[PIXELS][3]){
 
     //Initializes the LED Array
     for(j=0 ; j<PIXELS ; j++){
-
-        LEDS[j][0] = 0xFF;
-        LEDS[j][1] = 0x8C;
-        LEDS[j][2] = 0x00;
-
+        LEDS[j] = orange_dark_1;
     }
+
     //Set some random blue pixels
-    LEDS[5][0] = 0x00;
-    LEDS[5][1] = 0x00;
-    LEDS[5][2] = 0x8B;
-
-    LEDS[14][0] = 0x00;
-    LEDS[14][1] = 0x00;
-    LEDS[14][2] = 0x8B;
-
-    LEDS[24][0] = 0x00;
-    LEDS[24][1] = 0x00;
-    LEDS[24][2] = 0x8B;
+    LEDS[5] = blue_dark_1;
+    LEDS[14]= blue_dark_1;
+    LEDS[24]= blue_dark_1;
 
     exit = 0;
 
     while (exit!=1){
 
-        //userOptionWater = readGPIO();
-
         if(readGPIO() == USER_OPTION_S1){
-            //exit waterEffect
+            //exit cozy
             exit = 1;
 
         }
@@ -143,6 +99,7 @@ void cozy (unsigned char LEDS[PIXELS][3]){
     }
 }
 
+/* TO BE UPDATED
 void wave1(unsigned char LEDS[PIXELS][3]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
@@ -159,9 +116,9 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     // Medium dark
     for (x = 0 ; x < LENGTH ; x++){
 
-         /*   LedTable[x][0][0] = 0x00;
+            LedTable[x][0][0] = 0x00;
             LedTable[x][0][1] = 0xB0;
-            LedTable[x][0][2] = 0xCD;*/
+            LedTable[x][0][2] = 0xCD;
 
             LedTable[x][0][0] = 0xFF;
             LedTable[x][0][1] = 0x00;
@@ -170,9 +127,9 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     //Dark
     for (x = 0 ; x < LENGTH ; x++){
 
-           /* LedTable[x][1][0] = 0x00;
+            LedTable[x][1][0] = 0x00;
             LedTable[x][1][1] = 0xB0;
-            LedTable[x][1][2] = 0xFF;*/
+            LedTable[x][1][2] = 0xFF;
 
             LedTable[x][1][0] = 0x00;
             LedTable[x][1][1] = 0xFF;
@@ -181,9 +138,9 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     // Medium dark
     for (x = 0 ; x < LENGTH ; x++){
 
-          /*  LedTable[x][2][0] = 0x00;
+            LedTable[x][2][0] = 0x00;
             LedTable[x][2][1] = 0xB0;
-            LedTable[x][2][2] = 0xCD;*/
+            LedTable[x][2][2] = 0xCD;
 
             LedTable[x][2][0] = 0xFF;
             LedTable[x][2][1] = 0x00;
@@ -194,9 +151,9 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     //Light
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 3 ; y < HEIGHT ; y++){
-           /* LedTable[x][y][0] = 0x00;
+            LedTable[x][y][0] = 0x00;
             LedTable[x][y][1] = 0x10;
-            LedTable[x][y][2] = 0xCD;*/
+            LedTable[x][y][2] = 0xCD;
 
             LedTable[x][y][0] = 0x00;
             LedTable[x][y][1] = 0x00;
@@ -220,36 +177,33 @@ void wave1(unsigned char LEDS[PIXELS][3]){
     }
 
 }
+*/
 
-unsigned int waveInit(unsigned char LEDS[PIXELS][3], unsigned int theme){
+unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     unsigned int j;
-    unsigned char userOption = 0;
+    unsigned char userOption [KEYBOARD_BUFFER]  = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
 
-    //Initializes the LED Array
-       for(j=0 ; j<PIXELS ; j++){
-           LEDS[j][0] = 0x00;
-           LEDS[j][1] = 0x00;
-           LEDS[j][2] = 0x00;
-       }
+    color_t optionTheme[3][3] =  {{red_bright_1, red_medium_1, red_dark_1}, {green_bright_1, green_medium_1, green_dark_1}, {blue_bright_1, blue_medium_1, blue_dark_1}};
 
-       // Set color in function of the theme
+        // Set color in function of the theme
        for(j=0 ; j<PIXELS ; j++){
-           LEDS[j][theme] = 0x80;
+           LEDS[j] = optionTheme[theme][2];
        }
 
        //Set some random pixels
-       LEDS[5][theme] = 0xB8;
-       LEDS[14][theme] = 0xB8;
-       LEDS[24][theme] = 0xB8;
+       LEDS[5]  = optionTheme[theme][0];
+       LEDS[14] = optionTheme[theme][0];
+       LEDS[24] = optionTheme[theme][1];
+       LEDS[9] = optionTheme[theme][1];
 
     while (1){
 
-       userOption = antiAliasGPIO(userOption, 4);
-       if(userOption != USER_NO_OPTION){
+       antiAliasGPIO(userOption, 2);
+       if(userOption[0] != USER_NO_OPTION){
            //exit waveInit
-           return userOption;
+           return userOption[0];
            //exit = 1;
        }
        else{

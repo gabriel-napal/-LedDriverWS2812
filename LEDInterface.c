@@ -17,18 +17,18 @@
  */
 
 // send the full frame
-void sendFrame (unsigned char LEDS[PIXELS][3]){
+void sendFrame (color_t LEDS[PIXELS]){
     unsigned int i;
     for ( i=PIXELS; i> 0 ;i--)              // Using a count down pixel to reduce the number of assembly instructions
-        sendPixel(LEDS[PIXELS-i][0], LEDS[PIXELS-i][1],LEDS[PIXELS-i][2]);
+        sendPixel(LEDS[PIXELS-i]);
 }
 
 
 // Send a single pixel worth of information.  Turn interrupts off while using.
-void sendPixel (unsigned char r, unsigned char g, unsigned char b){
-    sendByte_SPIA (g);        // NeoPixel wants colors in green-then-red-then-blue order
-    sendByte_SPIA (r);
-    sendByte_SPIA (b);
+void sendPixel (color_t LED){
+    sendByte_SPIA (LED.G);        // NeoPixel wants colors in green-then-red-then-blue order
+    sendByte_SPIA (LED.R);
+    sendByte_SPIA (LED.B);
 }
 
 
@@ -36,21 +36,19 @@ void sendPixel (unsigned char r, unsigned char g, unsigned char b){
  * VISUAL FUNCTION DEFINITIONS
  */
 
-void lightsOff(unsigned char LEDS[PIXELS][3]){
+void lightsOff(color_t LEDS[PIXELS]){
 
     unsigned int i;
 
     for (i = 0 ; i < PIXELS ; i++){
-        LEDS[i][0] = 0x00;
-        LEDS[i][1] = 0x00;
-        LEDS[i][2] = 0x00;
+        LEDS[i] = color_off;
     }
 
     sendFrame(LEDS);
 }
 
 
-void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char outputVector[PIXELS][3]){
+void array2Vector (color_t inputArray[LENGTH][HEIGHT], color_t outputVector[PIXELS]){
     unsigned int x;
     unsigned int y;
     unsigned int l;
@@ -59,9 +57,7 @@ void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char ou
     for(x = 0 ; x < LENGTH ; x++ ){
         for( y = 0 ; y < HEIGHT ; y++ ){
             l = y + x * HEIGHT;
-            outputVector[l][0] = inputArray[x][y][0];
-            outputVector[l][1] = inputArray[x][y][1];
-            outputVector[l][2] = inputArray[x][y][2];
+            outputVector[l] = inputArray[x][y];
         }
         x++;
     }
@@ -70,9 +66,7 @@ void array2Vector (unsigned char inputArray[LENGTH][HEIGHT][3], unsigned char ou
     for(x = 1 ; x < LENGTH ; x++ ){
         for( y = 0 ; y < HEIGHT ; y++ ){
             l = HEIGHT - 1 - y + x * HEIGHT;
-            outputVector[l][0] = inputArray[x][y][0];
-            outputVector[l][1] = inputArray[x][y][1];
-            outputVector[l][2] = inputArray[x][y][2];
+            outputVector[l] = inputArray[x][y];
         }
         x++;
     }

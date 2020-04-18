@@ -11,7 +11,7 @@
 #include <msp430.h>
 
 unsigned char readGPIO(void);
-unsigned char antiAliasGPIO(unsigned char oldOption, unsigned int refreshDelay);
+void antiAliasGPIO(unsigned char optionsBuffer[5], unsigned int refreshDelay);
 void initGPIO(void);
 
 

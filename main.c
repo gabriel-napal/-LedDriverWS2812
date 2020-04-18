@@ -60,7 +60,6 @@
 #include <easyGame.h>
 #include <LEDInterface.h>
 
-
 /*
  * GLOBAL VARIABLES AND ARRAYS
  */
@@ -69,17 +68,16 @@
 #define VISUALEFFECTS    1
 #define GAMES   2
 
-unsigned char LEDS[PIXELS][3] = {{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00},{0x00,0x00,0x00}};
-
-
-
 int main(void)
 {
+  color_t LEDS[PIXELS] = {color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off};
   volatile unsigned int i;
   unsigned int menu = INIT;
   volatile unsigned int j;
   unsigned char userOption = 0;
   volatile unsigned int GPIO_Status;
+
+
 
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. Its mandatory!
 
@@ -97,6 +95,7 @@ int main(void)
   //Begin State Machine
 
   while(1){
+
      menu = INIT ;
      userOption = waveInit(LEDS, INIT);
      switch (userOption){
@@ -119,9 +118,11 @@ int main(void)
             menu = INIT;
             break;
         case USER_OPTION_S2:
+            menu = INIT;
             cozy(LEDS);
             break;
         case USER_OPTION_S3:
+            menu = INIT;
             waterEffect(LEDS);
             break;
         case USER_OPTION_S4:
@@ -135,6 +136,7 @@ int main(void)
             menu = INIT;
             break;
         case USER_OPTION_S2:
+            menu = INIT;
             game1(LEDS);
             break;
         case USER_OPTION_S3:

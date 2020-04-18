@@ -8,8 +8,10 @@
 #ifndef EASYGAME_H_
 #define EASYGAME_H_
 
-void game1(unsigned char LEDS[PIXELS][3]);
-void preSnake(unsigned char LEDS[PIXELS][3]);
+#include <COLORS.h>
+
+void game1(color_t LEDS[PIXELS]);
+void preSnake(color_t LEDS[PIXELS]);
 
 
 #endif /* EASYGAME_H_ */

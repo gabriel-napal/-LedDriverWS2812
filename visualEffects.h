@@ -8,11 +8,13 @@
 #ifndef VISUALEFFECTS_H_
 #define VISUALEFFECTS_H_
 
-void xmasTinsel (unsigned char LEDS[PIXELS][3]);
-void waterEffect (unsigned char LEDS[PIXELS][3]);
-void cozy (unsigned char LEDS[PIXELS][3]);
-void wave1(unsigned char LEDS[PIXELS][3]);
-unsigned int waveInit(unsigned char LEDS[PIXELS][3], unsigned int theme);
+#include <COLORS.h>
+
+void xmasTinsel (color_t LEDS[PIXELS]);
+void waterEffect (color_t LEDS[PIXELS]);
+void cozy (color_t LEDS[PIXELS]);
+//void wave1(unsigned char LEDS[PIXELS][3]);
+unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme);
 
 
 #endif /* VISUALEFFECTS_H_ */

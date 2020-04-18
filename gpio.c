@@ -6,6 +6,7 @@
  */
 
 #include <gpio.h>
+#include <constant.h>
 
 /*
  * initMSP_LEDS function
@@ -93,19 +94,31 @@ unsigned char readGPIO(void){
     return (GPIO_Status & 0x0F);
 }
 
-unsigned char antiAliasGPIO(unsigned char oldOption, unsigned int refreshDelay){
+/*
+ * optionsBuffer[5] = {OPTION_S1, OPTION_S3, USER_NO_OPTION , USER_NO_OPTION , USER_NO_OPTION}
+ */
 
-    unsigned int i = 0;
+void antiAliasGPIO(unsigned char optionsBuffer[KEYBOARD_BUFFER], unsigned int refreshDelay){
+
+    unsigned int i;
     unsigned char userOption;
+    unsigned char userOldOption = 0;
+    unsigned int bufferIndex = 0;
 
-    while (i < refreshDelay) {
+    for (i = 0; i< refreshDelay; i++) {
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
-        userOption = readGPIO();
-        if (oldOption == userOption)
-            i ++;
-        else
-            break;
+
+        while(bufferIndex < KEYBOARD_BUFFER){
+            if(optionsBuffer[bufferIndex] == USER_NO_OPTION){
+                userOption = readGPIO();
+                if (userOption != userOldOption) {
+                    optionsBuffer[bufferIndex] = userOption;
+                    userOldOption = userOption;
+                }
+                break;
+            }
+            bufferIndex++;
+        }
     }
 
-    return (userOption);
 }

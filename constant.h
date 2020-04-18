@@ -19,5 +19,7 @@
 #define USER_OPTION_S3      0x04
 #define USER_OPTION_S4      0x08
 
+#define KEYBOARD_BUFFER     5
+
 
 #endif /* CONSTANT_H_ */

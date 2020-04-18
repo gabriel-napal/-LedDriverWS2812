@@ -23,24 +23,23 @@
 #define GREEN_APPLE      0
 #define RED_APPLE    1
 
-void game1(unsigned char LEDS[PIXELS][3]){
+void game1(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
-    unsigned char LedTable[LENGTH][HEIGHT][3];
+    color_t LedTable[LENGTH][HEIGHT];
 
     unsigned int x;
     unsigned int y;
+    unsigned int i;
 
-    unsigned char userOption;
+    unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
 
     unsigned char exit = 0;
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 0 ; y < HEIGHT ; y++){
-            LedTable[x][y][0] = 0x00;
-            LedTable[x][y][1] = 0xB0;
-            LedTable[x][y][2] = 0x00;
+            LedTable[x][y] = green_medium_1;
         }
 
     }
@@ -48,44 +47,44 @@ void game1(unsigned char LEDS[PIXELS][3]){
     //Start game, place a pixel at (0,0)
     x = 0;
     y = 0;
-    setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);
+    LedTable[x][y] = red_dark_3;
 
     //Translates the 3D Array into a 2D Array
     array2Vector(LedTable,LEDS);
-    userOption = readGPIO();
+    userOption[0] = readGPIO();
 
     while (exit!=1){
 
-        switch (userOption){
+        switch (userOption[0]){
             case USER_OPTION_S1:
                 //exit effect / game
                 exit = 1;
                 break;
             case USER_OPTION_S2:
-                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                LedTable[x][y] = green_medium_1;   //Erases the old pixel
                 x = 0;
                 y = 0;
-                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                LedTable[x][y] = red_dark_3;  //Paints a new pixel
                 array2Vector(LedTable,LEDS);
                 sendFrame(LEDS);
                 break;
             case USER_OPTION_S3:
-                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                LedTable[x][y] = green_medium_1;   //Erases the old pixel
                 if( (x+1) < LENGTH)
                     x++;
                 else
                     x = 0;
-                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                LedTable[x][y] = red_dark_3;   //Paints a new pixel
                 array2Vector(LedTable,LEDS);
                 sendFrame(LEDS);
                 break;
             case USER_OPTION_S4:
-                setPixel(LedTable, x , y , 0x00, 0xB0, 0x00);   //Erases the old pixel
+                LedTable[x][y] = green_medium_1;   //Erases the old pixel
                 if( (y+1) < HEIGHT)
                     y++;
                 else
                     y = 0;
-                setPixel(LedTable, x , y , 0xFF, 0x00, 0x00);   //Paints a new pixel
+                LedTable[x][y] = red_dark_3;   //Paints a new pixel
                 array2Vector(LedTable,LEDS);
                 sendFrame(LEDS);
 
@@ -95,19 +94,23 @@ void game1(unsigned char LEDS[PIXELS][3]){
                 break;
         }
 
-        userOption = antiAliasGPIO(userOption, 5);
+        // Erases the used option (shift left the buffer)
+        for (i = 0; i < KEYBOARD_BUFFER-1 ; i++)
+            userOption[i]=userOption[i+1];
+        userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
+        antiAliasGPIO(userOption, 2);
 
     }
 
 }
 
-//Main objectif of this game : make move a small snake (do not integrate the apple eating process)
+//Main objectif of this game : make move a small snake
 
-void preSnake(unsigned char LEDS[PIXELS][3]){
+void preSnake(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
-    unsigned char LedTable[LENGTH][HEIGHT][3];
-    unsigned char userOption = 0;
+    color_t LedTable[LENGTH][HEIGHT];
+    unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
     unsigned char exit = 0;
 
     //Represent x and y for the head of the snake
@@ -125,9 +128,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 0 ; y < HEIGHT ; y++){
-            LedTable[x][y][0] = 0x00;
-            LedTable[x][y][1] = 0xA6;
-            LedTable[x][y][2] = 0xA9;
+            LedTable[x][y] = blue_bright_1;
         }
     }
 
@@ -135,12 +136,12 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
     //Start game, place a pixel at (0,0)
     x = snake[0][0];
     y = snake[0][1];
-    setPixel(LedTable, x , y , 0x2F, 0x29, 0xFF);
-    setPixel(LedTable, snake[1][0] , snake[1][1] , 0x2F, 0x29, 0xFF);
-    setPixel(LedTable, snake[2][0] , snake[2][1] , 0x2F, 0x29, 0xFF);
+    LedTable[x][y] = purple_medium_1;
+    LedTable[snake[1][0]][snake[1][1]] = purple_medium_1;
+    LedTable[snake[2][0]][snake[2][1]] = purple_medium_1;
 
     //Start game, place the first apple
-    setPixel(LedTable, apple[0] , apple[1] , 0xFF, 0x00, 0x00);
+    LedTable[apple[0]][apple[1]] = red_dark_3;
 
     //Translates the 3D Array into a 2D Array
     array2Vector(LedTable,LEDS);
@@ -148,7 +149,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
 
     while (exit!=1){
 
-        switch (userOption){
+        switch (userOption[0]){
         case USER_OPTION_S1:
         //exit effect / game
             exit = 1;
@@ -164,6 +165,12 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
             turnCommand = USER_TURN_LEFT;
             break;
         }
+
+        // Erases the used option (shift left the buffer)
+        for (i = 0; i < KEYBOARD_BUFFER-1 ; i++){
+            userOption[i]=userOption[i+1];
+        }
+        userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
 
         if (turnCommand == USER_TURN_RIGHT) {
             switch (direction){
@@ -198,6 +205,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
             }
         }
 
+        // change the position of the snake head
         switch (direction){
             case DIRECTION_X_INCREASING:
                 if( (x+1) < LENGTH)
@@ -231,9 +239,9 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
                 snakeLength = snakeLength + 1;
             }
             else {
-                setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0x00, 0xA6, 0xA9);   //Erases the old pixel from the snake tail
+                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
                 snakeLength = snakeLength - 1;
-                setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0x00, 0xA6, 0xA9);   //Make one pixel smaller the snake
+                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Make one pixel smaller the snake
             }
             // Run aleatory number function to set the new apple, for now it's just a fix position.
                 if (nbApple%2 == 0){
@@ -247,22 +255,22 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
 
                 if (nbApple%4 == 0){
                     apple[2] = GREEN_APPLE ;
-                    setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0x00, 0xB0, 0x00);
+                    LedTable [apple[0]][apple[1]] =  green_medium_1;
                 }
                 else {
                     apple[2] = RED_APPLE ;
-                    setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0xFF, 0x00, 0x00);
+                    LedTable[apple[0]][apple[1]] =  red_dark_3;
                 }
             nbApple ++;
         }
         else
-            setPixel(LedTable, snake[snakeLength-1][0] , snake[snakeLength-1][1] , 0x00, 0xA6, 0xA9);   //Erases the old pixel from the snake tail
+            LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
 
         for (i = (snakeLength - 1); i > 0; i--){
             snake[i][0] = snake[i-1][0];
             snake[i][1] = snake[i-1][1];
         }
-        setPixel(LedTable, x , y , 0x2F, 0x29, 0xFF);   //Paints a new pixel
+        LedTable[x][y] = purple_medium_1;   //Paints a new pixel
 
         snake[0][0] = x;
         snake[0][1] = y;
@@ -270,7 +278,7 @@ void preSnake(unsigned char LEDS[PIXELS][3]){
 
         array2Vector(LedTable,LEDS);
         sendFrame(LEDS);
-        userOption = antiAliasGPIO(userOption, 5);
+        antiAliasGPIO(userOption, 5);
         turnCommand = USER_NO_TURN;
     }
 
