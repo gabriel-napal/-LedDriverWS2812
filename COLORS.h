@@ -45,5 +45,9 @@ static const color_t purple_medium_1 = {0x2F,0x29,0xFF};
 
 static const color_t orange_dark_1 = {0xff,0x8c,0x00};
 
+static const color_t grey_medium_1 = {0x69,0x69,0x69};
+
+static const color_t brow_dark_1 = {0xA0,0x52,0x2D};
+
 
 #endif /* COLORS_H_ */

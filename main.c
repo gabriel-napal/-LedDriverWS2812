@@ -59,7 +59,7 @@
 #include <visualEffects.h>
 #include <easyGame.h>
 #include <LEDInterface.h>
-
+#include "race.h"
 /*
  * GLOBAL VARIABLES AND ARRAYS
  */
@@ -95,7 +95,9 @@ int main(void)
   //Begin State Machine
 
   while(1){
+      race(LEDS);
 
+      /*
      menu = INIT ;
      userOption = waveInit(LEDS, INIT);
      switch (userOption){
@@ -149,6 +151,7 @@ int main(void)
      }
 
       __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+      */
   }
 
 }
