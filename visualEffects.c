@@ -9,6 +9,7 @@
 #include <msp430.h>
 #include <gpio.h>
 #include <LEDInterface.h>
+#include <pseudoRandom.h>
 #include <visualEffects.h>
 
 void xmasTinsel (color_t LEDS[PIXELS]){
@@ -31,23 +32,9 @@ void xmasTinsel (color_t LEDS[PIXELS]){
 void waterEffect (color_t LEDS[PIXELS]){
 
     unsigned int j;
+    unsigned int index = 0;
     static unsigned char exit;
-
-
-    //Initializes the LED Array
-    for(j=0 ; j<PIXELS ; j++){
-        LEDS[j] = blue_medium_2;
-    }
-
-    //Set some random blue pixels
-    LEDS[5] = blue_dark_1;
-    LEDS[14] = blue_dark_1;
-    LEDS[24] = blue_dark_1;
-
-    //Set some random blue pixels
-    LEDS[9] = blue_bright_2;
-    LEDS[22] = blue_bright_2;
-    LEDS[29] = blue_bright_2;
+    color_t blue_range[9] = {blue_bright_1, blue_bright_2, blue_bright_3,blue_medium_1,blue_medium_2,blue_medium_2,blue_dark_1,blue_dark_2,blue_dark_3};
 
     exit = 0;
 
@@ -56,10 +43,29 @@ void waterEffect (color_t LEDS[PIXELS]){
         if(readGPIO() == USER_OPTION_S1){
             //exit waterEffect
             exit = 1;
-
         }
         else{
-            xmasTinsel(LEDS);
+            for(j=0 ; j<PIXELS ; j++){
+                index = pseudoRandom(100);
+                if (index < 2)
+                    LEDS[j]=blue_range[0];
+                else if ((index >= 2) && (index <7))
+                    LEDS[j]=blue_range[1];
+                else if ((index >= 7) && (index <15))
+                    LEDS[j]=blue_range[2];
+                else if ((index >= 15) && (index <30))
+                    LEDS[j]=blue_range[3];
+                else if ((index >= 30) && (index <70))
+                    LEDS[j]=blue_range[4];
+                else if ((index >= 70) && (index <85))
+                    LEDS[j]=blue_range[5];
+                else if ((index >= 85) && (index <92))
+                    LEDS[j]=blue_range[6];
+                else if ((index >= 92) && (index <98))
+                    LEDS[j]=blue_range[7];
+                else if (index >= 98)
+                    LEDS[j]=blue_range[8];
+            }
             sendFrame(LEDS);
         }
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
@@ -215,4 +221,31 @@ unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme){
     }
 
 }
+
+void looser(color_t LEDS[PIXELS]){
+
+    unsigned int j;
+    unsigned int i;
+
+    for (i = 0; i<3; i++){
+        for(j=0 ; j<PIXELS ; j++){
+            LEDS[j] = red_dark_1;
+        }
+
+        sendFrame(LEDS);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+
+        for(j=0 ; j<PIXELS ; j++){
+            LEDS[j] = color_off;
+        }
+
+        sendFrame(LEDS);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+        __bis_SR_register(LPM0_bits + GIE);
+    }
+}
+
 

@@ -140,7 +140,7 @@ int main(void)
             game1(LEDS);
             break;
         case USER_OPTION_S3:
-            preSnake(LEDS);
+            snake(LEDS);
             break;
         case USER_OPTION_S4:
             menu = INIT;

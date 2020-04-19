@@ -13,6 +13,7 @@
 #define PRNG_C 11
 #define PRNG_M 99
 
+unsigned int pseudoRandom ( unsigned int maxNumber);
 
 unsigned int wyhash16() ;
 unsigned int rand_range16(const unsigned int s);

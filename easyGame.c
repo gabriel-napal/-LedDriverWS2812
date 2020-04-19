@@ -10,6 +10,8 @@
 #include <gpio.h>
 #include <LEDInterface.h>
 #include <easyGame.h>
+#include <visualEffects.h>
+#include <pseudoRandom.h>
 
 #define DIRECTION_X_INCREASING      0
 #define DIRECTION_Y_INCREASING      1
@@ -104,9 +106,9 @@ void game1(color_t LEDS[PIXELS]){
 
 }
 
-//Main objectif of this game : make move a small snake
+//Main objectif of this game : make move a small snake and eat apples
 
-void preSnake(color_t LEDS[PIXELS]){
+void snake(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     color_t LedTable[LENGTH][HEIGHT];
@@ -117,9 +119,10 @@ void preSnake(color_t LEDS[PIXELS]){
     unsigned int x;
     unsigned int y;
     unsigned int i;
+    unsigned int newApple = 0;
+    unsigned int testApple = 0;
 
     unsigned int snakeLength = 3;
-    unsigned int nbApple = 1;
     unsigned int turnCommand = USER_NO_TURN;
     unsigned int direction = DIRECTION_X_INCREASING;
     unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};
@@ -233,6 +236,14 @@ void preSnake(color_t LEDS[PIXELS]){
                 break;
         }
 
+        // Check if the snake is eating itself
+        for (i = 0; i< snakeLength; i++){
+            if ((snake[i][0]== x) && (snake[i][1] == y)){
+                looser(LEDS);
+                exit = 1;
+            }
+        }
+
         //Check if the snake is eating an apple and check the color of the apple
         if ((x == apple[0]) && (y == apple[1])){
             if (apple [2] == RED_APPLE){
@@ -243,25 +254,7 @@ void preSnake(color_t LEDS[PIXELS]){
                 snakeLength = snakeLength - 1;
                 LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Make one pixel smaller the snake
             }
-            // Run aleatory number function to set the new apple, for now it's just a fix position.
-                if (nbApple%2 == 0){
-                    apple[0] = 0;
-                    apple[1] = 0;
-                }
-                else {
-                    apple[0] = 4;
-                    apple[1] = 4;
-                }
-
-                if (nbApple%4 == 0){
-                    apple[2] = GREEN_APPLE ;
-                    LedTable [apple[0]][apple[1]] =  green_medium_1;
-                }
-                else {
-                    apple[2] = RED_APPLE ;
-                    LedTable[apple[0]][apple[1]] =  red_dark_3;
-                }
-            nbApple ++;
+            newApple = 1;
         }
         else
             LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
@@ -275,15 +268,38 @@ void preSnake(color_t LEDS[PIXELS]){
         snake[0][0] = x;
         snake[0][1] = y;
 
+        // Run aleatory number function to set the new apple.
+        if (newApple == 1){
+            testApple = 0;
+            while (testApple == 0){
+                testApple = 1;
+                apple[0] = pseudoRandom(LENGTH);
+                apple[1] = pseudoRandom(HEIGHT);
+                for (i = 0; i< snakeLength; i++){
+                    if ((snake[i][0]== apple[0]) && (snake[i][1] == apple[1])){
+                       testApple = 0;
+                       break;
+                    }
+                }
+            }
 
-        array2Vector(LedTable,LEDS);
-        sendFrame(LEDS);
-        antiAliasGPIO(userOption, 5);
-        turnCommand = USER_NO_TURN;
+            if (pseudoRandom(100)>75){
+                apple[2] = GREEN_APPLE;
+                LedTable [apple[0]][apple[1]] =  green_medium_1;
+            }
+            else {
+                apple[2] = RED_APPLE;
+                LedTable[apple[0]][apple[1]] =  red_dark_3;
+            }
+            newApple = 0 ;
+        }
+        if (exit != 1){
+            array2Vector(LedTable,LEDS);
+            sendFrame(LEDS);
+            antiAliasGPIO(userOption, 5);
+            turnCommand = USER_NO_TURN;
+        }
     }
 
 }
-
-
-
 
