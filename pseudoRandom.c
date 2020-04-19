@@ -32,3 +32,37 @@ unsigned int pseudoRandom ( unsigned int maxNumber){
 
 }
 
+
+/*
+ * Implementations from Daniel Lemire.
+ *
+ * wyhash16() : random number of 16bit
+ * unsigned int rand_range16(const unsigned int s) : random number from 0 to s
+ */
+
+unsigned int wyhash16() {
+
+  static unsigned int wyhash16_x = 0;
+  unsigned long int hash = wyhash16_x * 0x2ab;
+
+  wyhash16_x += 0xfc15;
+
+  return (((hash >> 16) ^ hash) & 0xFFFF);
+}
+
+unsigned int rand_range16(const unsigned int s) {
+    unsigned int x = wyhash16();
+    unsigned long int m = (unsigned long int)x * (unsigned long int)s;
+    unsigned int l = (unsigned long int)m;
+    if (l < s) {
+        unsigned int t = -s % s;
+        while (l < t) {
+            x = wyhash16();
+            m = (unsigned long int)x * (unsigned long int)s;
+            l = (unsigned int)m;
+        }
+    }
+    return m >> 16;
+}
+
+
