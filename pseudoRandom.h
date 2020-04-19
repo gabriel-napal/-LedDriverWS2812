@@ -15,4 +15,10 @@
 
 unsigned int pseudoRandom ( unsigned int maxNumber);
 
+unsigned int wyhash16() ;
+unsigned int rand_range16(const unsigned int s);
+unsigned int pseudoRandom ( unsigned int maxNumber);
+
+
+
 #endif /* PSEUDORANDOM_H_ */
