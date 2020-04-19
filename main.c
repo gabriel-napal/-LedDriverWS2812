@@ -71,6 +71,7 @@
 int main(void)
 {
   color_t LEDS[PIXELS] = {color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off};
+
   volatile unsigned int i;
   unsigned int menu = INIT;
   volatile unsigned int j;
@@ -96,6 +97,11 @@ int main(void)
 
   while(1){
 
+      /*color_t blue_range[9] = {blue_bright_1, blue_bright_2, blue_bright_3,blue_medium_1,blue_medium_2,blue_medium_2,blue_dark_1,blue_dark_2,blue_dark_3};
+      for (i=0; i<9; i++){
+         LEDS[i] = blue_range[i];
+      }
+      sendFrame(LEDS);*/
      menu = INIT ;
      userOption = waveInit(LEDS, INIT);
      switch (userOption){

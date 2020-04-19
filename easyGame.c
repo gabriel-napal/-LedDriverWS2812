@@ -131,7 +131,7 @@ void snake(color_t LEDS[PIXELS]){
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 0 ; y < HEIGHT ; y++){
-            LedTable[x][y] = blue_bright_1;
+            LedTable[x][y] = cyan_bright_1;
         }
     }
 
@@ -250,14 +250,14 @@ void snake(color_t LEDS[PIXELS]){
                 snakeLength = snakeLength + 1;
             }
             else {
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
+                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Erases the old pixel from the snake tail
                 snakeLength = snakeLength - 1;
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Make one pixel smaller the snake
+                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Make one pixel smaller the snake
             }
             newApple = 1;
         }
         else
-            LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
+            LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Erases the old pixel from the snake tail
 
         for (i = (snakeLength - 1); i > 0; i--){
             snake[i][0] = snake[i-1][0];
