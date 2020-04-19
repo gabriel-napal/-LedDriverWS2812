@@ -97,11 +97,6 @@ int main(void)
 
   while(1){
 
-      /*color_t blue_range[9] = {blue_bright_1, blue_bright_2, blue_bright_3,blue_medium_1,blue_medium_2,blue_medium_2,blue_dark_1,blue_dark_2,blue_dark_3};
-      for (i=0; i<9; i++){
-         LEDS[i] = blue_range[i];
-      }
-      sendFrame(LEDS);*/
      menu = INIT ;
      userOption = waveInit(LEDS, INIT);
      switch (userOption){
