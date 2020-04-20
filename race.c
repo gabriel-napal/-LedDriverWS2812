@@ -12,9 +12,8 @@
 
 
 
-#define USER_NO_TURN      0
-#define USER_TURN_LEFT    1
-#define USER_TURN_RIGHT   2
+
+
 
 
 void race(color_t LEDS[PIXELS]){
@@ -31,12 +30,13 @@ void race(color_t LEDS[PIXELS]){
     unsigned int x;
     unsigned int y;
 
-    //Represent the player's car position
-    unsigned int xCar;
+    //Players car properties
+    unsigned int xPlayerCar;
+    color_t playerColor = green_dark_1;
 
     //First opponent position
     unsigned int xOpponent1;
-    unsigned int yOpponent1;
+
     //unsigned int yCar;
     unsigned int i;
 
@@ -66,13 +66,12 @@ void race(color_t LEDS[PIXELS]){
 
 
     //Start game, place the car at  pixel at (2,0)
-    xCar = 2;
-    LedTable[xCar][Y_CAR] = blue_medium_1;
+    xPlayerCar = 2;
+    LedTable[xPlayerCar][Y_CAR] = playerColor;
 
     //Start game, place the first opponent
     xOpponent1 = 2;
-    yOpponent1 = HEIGHT-1;
-    LedTable[xOpponent1][yOpponent1] = red_dark_3;
+    LedTable[xOpponent1][Y_OPPONENT] = red_dark_3;
 
     //Translates the 3D Array into a 2D Array
     array2Vector(LedTable,LEDS);
@@ -107,145 +106,48 @@ void race(color_t LEDS[PIXELS]){
         switch (turnCommand)
         {
             case USER_TURN_RIGHT:
-                if( (xCar + 1) < LENGTH-1){
-                    LedTable[xCar][Y_CAR] = grey_medium_1;  //Erases the car
-                    xCar++;
+                if( (xPlayerCar + 1) < LENGTH-1){
+                    LedTable[xPlayerCar][Y_CAR] = grey_medium_1;  //Erases the car
+                    xPlayerCar++;
                 }
                 break;
             case USER_TURN_LEFT:
-                if( xCar > 1 ){
-                    LedTable[xCar][Y_CAR] = grey_medium_1;  //Erases the car
-                    xCar--;
+                if( xPlayerCar > 1 ){
+                    LedTable[xPlayerCar][Y_CAR] = grey_medium_1;  //Erases the car
+                    xPlayerCar--;
                 }
                 break;
         }
-        LedTable[xCar][Y_CAR] = blue_medium_1; //Paints the car in its new position
+
 
         //Car goes forward = the road goes downward
         //Back Up the road corner
         roadLeftCorner = LedTable[0][0];
         roadRightCorner = LedTable[LENGTH-1][0];
 
-        //Paint the new road corners
+        //Paint the new road lower corners
         LedTable[0][0]= LedTable[0][1];
         LedTable[LENGTH-1][0] = LedTable[LENGTH-1][1];
 
-        for ( y = 2; y < HEIGHT ; y++){
+        // Let the rest of the road go "down"
+        for ( y = 1; y < HEIGHT ; y++){
             for(x = 0 ; x < LENGTH ;x++)
                 LedTable[x][y-1] = LedTable[x][y];
         }
 
-        //Paint the end of the road
+        //Paint the upper corners of the road
         LedTable[0][HEIGHT-1]        = roadLeftCorner;
         LedTable[LENGTH-1][HEIGHT-1] = roadRightCorner;
 
         for( x = 1 ; x < LENGTH - 2 ; x++)
             LedTable[x][HEIGHT - 1] = grey_medium_1;
 
-/*
-        if (turnCommand == USER_TURN_RIGHT) {
-            switch (direction){
-            case DIRECTION_X_INCREASING:
-                direction = DIRECTION_Y_DECREASING;
-                break;
-            case DIRECTION_Y_INCREASING:
-                direction = DIRECTION_X_INCREASING;
-                break;
-            case DIRECTION_X_DECREASING:
-                direction = DIRECTION_Y_INCREASING;
-                break;
-            case DIRECTION_Y_DECREASING:
-                direction = DIRECTION_X_DECREASING;
-                break;
-            }
-        }
-        else if (turnCommand == USER_TURN_LEFT) {
-            switch (direction){
-            case DIRECTION_X_INCREASING:
-                direction = DIRECTION_Y_INCREASING;
-                break;
-            case DIRECTION_Y_INCREASING:
-                direction = DIRECTION_X_DECREASING;
-                break;
-            case DIRECTION_X_DECREASING:
-                direction = DIRECTION_Y_DECREASING;
-                break;
-            case DIRECTION_Y_DECREASING:
-                direction = DIRECTION_X_INCREASING;
-                break;
-            }
-        }
 
-        // change the position of the snake head
-        switch (direction){
-            case DIRECTION_X_INCREASING:
-                if( (x+1) < LENGTH)
-                    x++;
-                else
-                    x = 0;
-                break;
-            case DIRECTION_Y_INCREASING:
-                if( (y+1) < HEIGHT)
-                     y++;
-                else
-                    y = 0;
-                break;
-            case DIRECTION_X_DECREASING:
-                if( x > 0)
-                    x--;
-                else
-                    x = LENGTH - 1;
-                break;
-            case DIRECTION_Y_DECREASING:
-                if( y > 0)
-                    y--;
-                else
-                    y = HEIGHT - 1;
-                break;
-        }
-
-        //Check if the snake is eating an apple and check the color of the apple
-        if ((x == apple[0]) && (y == apple[1])){
-            if (apple [2] == RED_APPLE){
-                snakeLength = snakeLength + 1;
-            }
-            else {
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
-                snakeLength = snakeLength - 1;
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Make one pixel smaller the snake
-            }
-            // Run aleatory number function to set the new apple, for now it's just a fix position.
-                if (nbApple%2 == 0){
-                    apple[0] = 0;
-                    apple[1] = 0;
-                }
-                else {
-                    apple[0] = 4;
-                    apple[1] = 4;
-                }
-
-                if (nbApple%4 == 0){
-                    apple[2] = GREEN_APPLE ;
-                    LedTable [apple[0]][apple[1]] =  green_medium_1;
-                }
-                else {
-                    apple[2] = RED_APPLE ;
-                    LedTable[apple[0]][apple[1]] =  red_dark_3;
-                }
-            nbApple ++;
-        }
+        if( checkCollision(LedTable,xPlayerCar,Y_CAR,red_dark_3 ) == COLLISION)
+            exit = 1;
         else
-            LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = blue_bright_1;   //Erases the old pixel from the snake tail
+            LedTable[xPlayerCar][Y_CAR] = playerColor; //Paints the car in its new position
 
-        for (i = (snakeLength - 1); i > 0; i--){
-            snake[i][0] = snake[i-1][0];
-            snake[i][1] = snake[i-1][1];
-        }
-        LedTable[x][y] = purple_medium_1;   //Paints a new pixel
-
-        snake[0][0] = x;
-        snake[0][1] = y;
-*/
 
         array2Vector(LedTable,LEDS);
         sendFrame(LEDS);
@@ -255,6 +157,26 @@ void race(color_t LEDS[PIXELS]){
 
 }
 
+/*
+ * checkCollision
+ *
+ * Inputs : 2-D led table color array, the current coordinates of the car
+ * Output
+ *
+ * NO_COLLISION : no collision occurred
+ * COLLISION: car crash occurred
+ *
+ *
+ */
+unsigned char checkCollision( color_t LedTable[LENGTH][HEIGHT], unsigned char xCar, unsigned char yCar, color_t opponentColor){
+
+   // __no_operation();
+    if( (LedTable[xCar][yCar].R == opponentColor.R ) &&  (LedTable[xCar][yCar].G == opponentColor.G ) &&  (LedTable[xCar][yCar].B == opponentColor.B ) )
+        return COLLISION;
+    else
+        return NO_COLLISION;
+
+}
 
 
 
