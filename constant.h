@@ -21,5 +21,8 @@
 
 #define KEYBOARD_BUFFER     5
 
+#define TRUE    1
+#define FALSE   0
+
 
 #endif /* CONSTANT_H_ */
