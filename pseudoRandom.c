@@ -10,6 +10,15 @@
  *
  * Generates a random number using a Linear Congruential Generator.
  * Formula is Xn+1 = (a*Xn + c )mod m
+ *
+ * Best results have been obtained using Matlab random0 parameters:
+ *
+ * m = 134456
+ * a = 8121
+ * c = 28411
+ *
+ *
+ *
  * As a raw output, the values are between 0 and m-1. The function takes an input to re-scale its random output.
  *
  * Inputs :
@@ -22,9 +31,10 @@
  *
  *
  */
-unsigned int pseudoRandom ( unsigned int maxNumber){
 
-    static unsigned int Xn = 1; // Seed is set to 1, then Xn is refreshed every time the function is called.
+unsigned int pseudoRandomLCG ( unsigned long int maxNumber){
+
+    static unsigned long int Xn = 1; // Seed is set to 1, then Xn is refreshed every time the function is called.
 
     Xn = ( PRNG_A * Xn + PRNG_C ) % PRNG_M;
 
