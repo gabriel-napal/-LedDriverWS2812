@@ -28,6 +28,6 @@ void snake(color_t LEDS[PIXELS]);
 void tetris(color_t LEDS[PIXELS]);
 void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, signed int movX, signed int movY, color_t* background);
 void RotateTetrisObject(objectTetris* block, int randomObject);
-
+unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, int yCoordinate, color_t *background,objectTetris *block );
 
 #endif /* EASYGAME_H_ */

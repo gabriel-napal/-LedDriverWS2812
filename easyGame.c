@@ -610,16 +610,7 @@ void RotateTetrisObject(objectTetris* block, int randomObject){
             tempY = (*tempPoint).y - block->point1.y ;
             tempXforCheck = tempY + block->point1.x ;  //Rotates and displaces to absolute coordinates
             tempYforCheck = -tempX + block->point1.y ;
-            if (tempYforCheck < HEIGHT) {
-                if ((LedTable[tempXforCheck][tempYforCheck].R != background.R) || (LedTable[tempXforCheck][tempYforCheck].B != background.B) || (LedTable[tempXforCheck][tempYforCheck].G != background.G)) {
-                    if (((((*tempPoint).x) == block.point1.x) && (((*tempPoint).y - 1) == block.point1.y)) || ((((*tempPoint).x) == block.point2.x) && (((*tempPoint).y - 1) == block.point2.y)) || ((((*tempPoint).x) == block.point3.x) && (((*tempPoint).y - 1) == block.point3.y)) ||  ((((*tempPoint).x) == block.point4.x) && (((*tempPoint).y - 1) == block.point4.y)))
-                                                   checkNextBlock = checkNextBlock;
-                                               else {
-                                                   checkNextBlock = FALSE;
-                                                   break;
-                                               }
-                                           }
-                                       }
+
             tempPoint = (++tempPoint);
         }
 
@@ -636,3 +627,44 @@ void RotateTetrisObject(objectTetris* block, int randomObject){
 
 }
 
+/*
+ * checkCollision
+ *
+ * INPUTS:
+ * color_t LedTable : 2-D Matrix of the led table
+ * int xCoordinate : one of the coordinates of the point to be checked.
+ * int yCoordinate : one of the coordinates of the point to be checked
+ * color_t background : RGB of the board background
+ * objectTetris *block : address containing the information of the origin block being rotated.
+ *
+ * OUTPUTS:
+ *
+ * FALSE : rotation cannot be performed
+ * TRUE : rotation can be done
+ *
+ */
+
+unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, int yCoordinate, color_t *background,objectTetris *block ){
+
+    //First check, the coordinates must be inside the table, but it could be higher than HEIGHT
+if ( (yCoordinate > 0) && (xCoordinate >= 0) && (xCoordinate < LENGTH )) {
+    //Second check, see if the desired is not empty
+    if ((LedTable[xCoordinate][yCoordinate].R != (*background).R) ||
+        (LedTable[xCoordinate][yCoordinate].B != (*background).B) ||
+        (LedTable[xCoordinate][yCoordinate].G != (*background).G)) {
+
+        // If the coordinate is not empty, check if the coordinate is occupied by the block itself.
+        if ( (( xCoordinate == (*block).point1.x) && ( yCoordinate == (*block).point1.y)) ||
+             (( xCoordinate == (*block).point2.x) && ( yCoordinate == (*block).point2.y)) ||
+             (( xCoordinate == (*block).point3.x) && ( yCoordinate == (*block).point3.y)) ||
+             (( xCoordinate == (*block).point4.x) && ( yCoordinate == (*block).point4.y) ))
+           return TRUE; //If it matches with a coordinate of the block, the rotation can be done
+        else
+            return FALSE;
+    }
+    else
+        return TRUE; // If its empty, the rotation can be done
+ }
+else // Rotation lays outside the x-Space, or below the floor. It cannot be done.
+    return FALSE;
+}
