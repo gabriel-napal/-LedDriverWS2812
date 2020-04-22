@@ -33,7 +33,6 @@ void game1(color_t LEDS[PIXELS]){
 
     unsigned int x;
     unsigned int y;
-    unsigned int y_delete;
     unsigned int i;
 
     unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
@@ -390,7 +389,7 @@ void tetris(color_t LEDS[PIXELS]){
                    // Before creating the new object, check if the space is available, if not, the player loses
                    tempPoint = &block.point1;
                    for (i = 0; i < 4; i++){
-                       if (checkColision(LedTable, block, (*tempPoint).x, (*tempPoint).y, background) == TRUE){
+                       if (checkCollision(LedTable, (*tempPoint).x, (*tempPoint).y, &background, &block) == FALSE){
                            looser(LEDS);
                            exit = 1;
                            break;
@@ -441,76 +440,48 @@ void tetris(color_t LEDS[PIXELS]){
                if (turnCommand != USER_NO_OPTION){
                    switch (turnCommand){
                    case USER_GO_LEFT :
-                       if ((block.point1.x != 0) && (block.point2.x != 0) && (block.point3.x != 0) && (block.point4.x != 0)){  //Check if the block is not at the floor
-                           checkNextBlock = TRUE;
-                           tempPoint = &block.point1;
-                           for (i = 0; i < 4; i++){
-                               if ((*tempPoint).y < HEIGHT) {
-                                   if ((LedTable[(*tempPoint).x-1][(*tempPoint).y].R != background.R) || (LedTable[(*tempPoint).x-1][(*tempPoint).y].B != background.B) || (LedTable[(*tempPoint).x-1][(*tempPoint).y].G != background.G)) {
-                                       if (((((*tempPoint).x - 1) == block.point1.x) && (((*tempPoint).y) == block.point1.y)) || ((((*tempPoint).x - 1) == block.point2.x) && (((*tempPoint).y) == block.point2.y)) || ((((*tempPoint).x - 1) == block.point3.x) && (((*tempPoint).y) == block.point3.y)) ||  ((((*tempPoint).x - 1) == block.point4.x) && (((*tempPoint).y) == block.point4.y)))
-                                           checkNextBlock = checkNextBlock;
-                                       else {
-                                           checkNextBlock = FALSE;
-                                           break;
-                                       }
-                                   }
-                               }
-                               tempPoint = (++tempPoint);
+                       checkNextBlock = TRUE;
+                       tempPoint = &block.point1;
+                       for (i = 0; i < 4; i++){
+                           if (checkCollision(LedTable,(*tempPoint).x - 1, (*tempPoint).y, &background, &block) == FALSE){
+                               checkNextBlock = FALSE;
+                               break;
                            }
-                           if (checkNextBlock==TRUE){
-                               //Movement is valid, then erase the old block position
-                               moveTetrisObject(LedTable, &block, -1, 0, &background);
-                           }
+                           tempPoint = (++tempPoint);
                        }
+                       if (checkNextBlock==TRUE) //Movement is valid, then erase the old block position
+                           moveTetrisObject(LedTable, &block, -1, 0, &background);
                        break;
                    case USER_GO_RIGHT :
-                       if ((block.point1.x < LENGTH - 1) && (block.point2.x < LENGTH - 1) && (block.point3.x < LENGTH - 1) && (block.point4.x < LENGTH - 1)) {
-                           checkNextBlock = TRUE;
-                           tempPoint = &block.point1;
-                           for (i = 0; i < 4; i++){
-                               if ((*tempPoint).y < HEIGHT) {
-                                   if ((LedTable[(*tempPoint).x + 1][(*tempPoint).y].R != background.R) || (LedTable[(*tempPoint).x + 1][(*tempPoint).y].B != background.B) || (LedTable[(*tempPoint).x + 1][(*tempPoint).y].G != background.G)) {
-                                       if (((((*tempPoint).x + 1) == block.point1.x) && (((*tempPoint).y) == block.point1.y)) || ((((*tempPoint).x + 1) == block.point2.x) && (((*tempPoint).y) == block.point2.y)) || ((((*tempPoint).x + 1) == block.point3.x) && (((*tempPoint).y) == block.point3.y)) ||  ((((*tempPoint).x + 1) == block.point4.x) && (((*tempPoint).y) == block.point4.y)))
-                                           checkNextBlock = checkNextBlock;
-                                       else {
-                                           checkNextBlock = FALSE;
-                                           break;
-                                       }
-                                   }
-                               }
-                               tempPoint = (++tempPoint);
+                       checkNextBlock = TRUE;
+                       tempPoint = &block.point1;
+                       for (i = 0; i < 4; i++){
+                           if (checkCollision(LedTable,(*tempPoint).x + 1, (*tempPoint).y, &background, &block) == FALSE){
+                               checkNextBlock = FALSE;
+                               break;
                            }
-                           if (checkNextBlock==TRUE){
-                               //Movement is valid, then erase the old block position
-                               moveTetrisObject(LedTable, &block, 1, 0, &background);
-                           }
+                           tempPoint = (++tempPoint);
                        }
+                       if (checkNextBlock==TRUE) //Movement is valid, then erase the old block position
+                           moveTetrisObject(LedTable, &block, 1, 0, &background);
                        break;
                    case USER_TURN_OBJECT :
-                       nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation));
+                       nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
                        break;
                    }
                }
 
                if (time_count == speed){
-                   checkNextBlock = FALSE ;
-                   if ((block.point1.y !=0) && (block.point2.y !=0) && (block.point3.y !=0) && (block.point4.y !=0)){
-                       checkNextBlock = TRUE ;
-                       tempPoint = &block.point1;
-                       for (i = 0; i < 4; i++){
-                           if ((*tempPoint).y < HEIGHT) {
-                               if ((LedTable[(*tempPoint).x][(*tempPoint).y - 1].R != background.R) || (LedTable[(*tempPoint).x][(*tempPoint).y - 1].B != background.B) || (LedTable[(*tempPoint).x][(*tempPoint).y - 1].G != background.G)) {
-                                   if (((((*tempPoint).x) == block.point1.x) && (((*tempPoint).y - 1) == block.point1.y)) || ((((*tempPoint).x) == block.point2.x) && (((*tempPoint).y - 1) == block.point2.y)) || ((((*tempPoint).x) == block.point3.x) && (((*tempPoint).y - 1) == block.point3.y)) ||  ((((*tempPoint).x) == block.point4.x) && (((*tempPoint).y - 1) == block.point4.y)))
-                                       checkNextBlock = checkNextBlock;
-                                   else {
-                                       checkNextBlock = FALSE;
-                                       break;
-                                   }
-                               }
-                           }
-                           tempPoint = (++tempPoint);
+                   checkNextBlock = TRUE ;
+                   tempPoint = &block.point1;
+                   for (i = 0; i < 4; i++){
+                       if (checkCollision(LedTable,(*tempPoint).x, (*tempPoint).y - 1, &background, &block) == FALSE){
+                           checkNextBlock = FALSE;
+                           break;
+                        }
+                       tempPoint = (++tempPoint);
                        }
-                   }
+
                    if (checkNextBlock==TRUE){
                        //Movement is valid, then erase the old block position
                        moveTetrisObject(LedTable, &block, 0, -1, &background);
@@ -545,7 +516,7 @@ void tetris(color_t LEDS[PIXELS]){
                            exit = 1;
                        }
                        // if not create a new object
-                       else :
+                       else
                            newObject = TRUE;
                    }
                    time_count = 0;
@@ -604,7 +575,7 @@ void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, sig
  *      newY = -tempX + pivot_y
  *
  */
-unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, int randomObject, color_t* background, unsigned int nbOfRotation){
+unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, int randomObject, color_t* background, unsigned int nbOfRotation) {
 
     unsigned int i;
     unsigned int j;
@@ -614,7 +585,7 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
     int tempXforCheck;
     int tempYforCheck;
     coordinates *tempPoint;
-    int matriceRotationi [4][2] = {{-1,2},{0,1},{1,0},{2,-1}}
+    int matriceRotationi [4][2] = {{-1,2},{0,1},{1,0},{2,-1}};
 
     // o_block
     if  (randomObject == 0){
@@ -624,11 +595,11 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
     // i_block
     else if (randomObject == 1){
         // All points of the object shall rotate, first step is to know which rotation to be used.
-        for (i=0; i=nbOfRotation; i++){
+        for (i=0; i<nbOfRotation; i++){
             for (j=0; j<4; j++){
                 matriceRotationi [j][0] = tempX;
                 matriceRotationi [j][0] = matriceRotationi [j][1];
-                matriceRotationi [j][1] = -tempX
+                matriceRotationi [j][1] = -tempX;
             }
         }
 
@@ -637,7 +608,7 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
         for (i = 0; i<4 ; i++) {
             tempXforCheck = (*tempPoint).x + matriceRotationi[i][0];
             tempYforCheck = (*tempPoint).y + matriceRotationi[i][0];
-            if (checkColision(LedTable, block,tempXforCheck,tempYforCheck,background) == TRUE){
+            if (checkCollision(LedTable,tempXforCheck,tempYforCheck, background, block) == FALSE){
                 canRotate = FALSE;
                 break;
             }
@@ -673,7 +644,7 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
             tempY = (*tempPoint).y - block->point1.y ;
             tempXforCheck = tempY + block->point1.x ;  //Rotates and displaces to absolute coordinates
             tempYforCheck = -tempX + block->point1.y ;
-            if (checkColision(LedTable, tempXforCheck, tempYforCheck, &background, &block) == FALSE){
+            if (checkCollision(LedTable,tempXforCheck,tempYforCheck, background, block) == FALSE){
                 canRotate = FALSE;
                 break;
             }
@@ -724,20 +695,24 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
 unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, int yCoordinate, color_t *background,objectTetris *block ){
 
     //First check, the coordinates must be inside the table, but it could be higher than HEIGHT
-if ( (yCoordinate > 0) && (xCoordinate >= 0) && (xCoordinate < LENGTH )) {
-    //Second check, see if the desired is not empty
-    if ((LedTable[xCoordinate][yCoordinate].R != (*background).R) ||
-        (LedTable[xCoordinate][yCoordinate].B != (*background).B) ||
-        (LedTable[xCoordinate][yCoordinate].G != (*background).G)) {
+if ((yCoordinate >= 0) && (xCoordinate >= 0) && (xCoordinate < LENGTH )) {
+    if (yCoordinate < HEIGHT){
+        //Second check, see if the desired is not empty
+        if ((LedTable[xCoordinate][yCoordinate].R != (*background).R) ||
+            (LedTable[xCoordinate][yCoordinate].B != (*background).B) ||
+            (LedTable[xCoordinate][yCoordinate].G != (*background).G)) {
 
-        // If the coordinate is not empty, check if the coordinate is occupied by the block itself.
-        if ( (( xCoordinate == (*block).point1.x) && ( yCoordinate == (*block).point1.y)) ||
-             (( xCoordinate == (*block).point2.x) && ( yCoordinate == (*block).point2.y)) ||
-             (( xCoordinate == (*block).point3.x) && ( yCoordinate == (*block).point3.y)) ||
-             (( xCoordinate == (*block).point4.x) && ( yCoordinate == (*block).point4.y) ))
-           return TRUE; //If it matches with a coordinate of the block, the rotation can be done
+            // If the coordinate is not empty, check if the coordinate is occupied by the block itself.
+            if ( (( xCoordinate == (*block).point1.x) && ( yCoordinate == (*block).point1.y)) ||
+                 (( xCoordinate == (*block).point2.x) && ( yCoordinate == (*block).point2.y)) ||
+                 (( xCoordinate == (*block).point3.x) && ( yCoordinate == (*block).point3.y)) ||
+                 (( xCoordinate == (*block).point4.x) && ( yCoordinate == (*block).point4.y) ))
+               return TRUE; //If it matches with a coordinate of the block, the rotation can be done
+            else
+                return FALSE;
+        }
         else
-            return FALSE;
+            return TRUE; // If its empty, the rotation can be done
     }
     else
         return TRUE; // If its empty, the rotation can be done
