@@ -35,9 +35,13 @@
 //EVENT CONSTANTS
 #define COLLISION           1
 #define NO_COLLISION        0
+#define NO_CAR_CREATED      LENGTH
+#define MIN_ROAD_REFRESH    10
 
 //FUNCTION DECLARATIONS
 void race(color_t LEDS[PIXELS]);
 unsigned char checkCollision( color_t LedTable[LENGTH][HEIGHT], unsigned char xCar, unsigned char yCar, color_t opponentColor);
+unsigned int newOpponent(void);
+
 
 #endif /* RACE_H_ */

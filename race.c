@@ -14,8 +14,6 @@
 
 
 
-
-
 void race(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
@@ -37,20 +35,21 @@ void race(color_t LEDS[PIXELS]){
     //First opponent position
     unsigned int xOpponent1;
 
-    //unsigned int yCar;
     unsigned int i;
 
-    //unsigned int snakeLength = 3;
-    //unsigned int nbApple = 1;
+
     unsigned int turnCommand = USER_NO_TURN;
-    //unsigned int direction = DIRECTION_X_INCREASING;
-   // unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};
-    //unsigned int apple[3] = {(LENGTH-1),(HEIGHT-1),RED_APPLE};
+
+    //Event Variables
+    unsigned int timeCount = 0; //Counts the number of elapsed time
+    volatile unsigned int roadRefreshRatio = MIN_ROAD_REFRESH;
+
 
     color_t roadLeftCorner;
     color_t roadRightCorner;
 
-    //Initializes array. Paints the road
+    //Initializes array.
+    //Paints the road
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 0 ; y < HEIGHT ; y++){
             LedTable[x][y] = grey_medium_1;
@@ -65,12 +64,16 @@ void race(color_t LEDS[PIXELS]){
     //LedTable[LENGTH-1][0] = brow_dark_1;
 
 
-    //Start game, place the car at  pixel at (2,0)
-    xPlayerCar = 2;
+    //Start game, place the car at  pixel at the center of the board (2,0)
+    if( LENGTH % 2 == 0)                //For odd length boards
+        xPlayerCar = LENGTH /2;
+    else
+        xPlayerCar = (LENGTH - 1)/2;    //If the board length is even
+
     LedTable[xPlayerCar][Y_CAR] = playerColor;
 
     //Start game, place the first opponent
-    xOpponent1 = 2;
+    xOpponent1 = xPlayerCar;
     LedTable[xOpponent1][Y_OPPONENT] = red_dark_3;
 
     //Translates the 3D Array into a 2D Array
@@ -78,6 +81,11 @@ void race(color_t LEDS[PIXELS]){
     sendFrame(LEDS);
 
     while (exit!=1){
+
+
+
+
+
 
         switch (userOption[0]){
         case USER_OPTION_S1:
@@ -120,39 +128,52 @@ void race(color_t LEDS[PIXELS]){
         }
 
 
-        //Car goes forward = the road goes downward
-        //Back Up the road corner
-        roadLeftCorner = LedTable[0][0];
-        roadRightCorner = LedTable[LENGTH-1][0];
+        if(( timeCount % roadRefreshRatio ) == 0){
 
-        //Paint the new road lower corners
-        LedTable[0][0]= LedTable[0][1];
-        LedTable[LENGTH-1][0] = LedTable[LENGTH-1][1];
+            //Car goes forward = the road goes downward
+            //Back Up the road lower corners
+            roadLeftCorner = LedTable[0][0];
+            roadRightCorner = LedTable[LENGTH-1][0];
 
-        // Let the rest of the road go "down"
-        for ( y = 1; y < HEIGHT ; y++){
-            for(x = 0 ; x < LENGTH ;x++)
-                LedTable[x][y-1] = LedTable[x][y];
+            //Paint the new road lower corners
+            LedTable[0][0]= LedTable[0][1];
+            LedTable[LENGTH-1][0] = LedTable[LENGTH-1][1];
+
+            // Let the rest of the road go "down"
+            for ( y = 1; y < HEIGHT ; y++){
+                for(x = 0 ; x < LENGTH ;x++)
+                    LedTable[x][y-1] = LedTable[x][y];
+            }
+
+            //Paint the upper corners of the road
+            LedTable[0][HEIGHT-1]        = roadLeftCorner;
+            LedTable[LENGTH-1][HEIGHT-1] = roadRightCorner;
+
+            for( x = 1 ; x < LENGTH - 1 ; x++)
+                LedTable[x][HEIGHT - 1] = grey_medium_1;
+
+            //Random generator of opponents
+            xOpponent1 = newOpponent();
+            if(xOpponent1 != NO_CAR_CREATED)
+                LedTable[xOpponent1][Y_OPPONENT] = red_dark_3;
+
         }
 
-        //Paint the upper corners of the road
-        LedTable[0][HEIGHT-1]        = roadLeftCorner;
-        LedTable[LENGTH-1][HEIGHT-1] = roadRightCorner;
-
-        for( x = 1 ; x < LENGTH - 2 ; x++)
-            LedTable[x][HEIGHT - 1] = grey_medium_1;
-
-
+        //Check collision
         if( checkCollision(LedTable,xPlayerCar,Y_CAR,red_dark_3 ) == COLLISION)
             exit = 1;
         else
             LedTable[xPlayerCar][Y_CAR] = playerColor; //Paints the car in its new position
 
-
         array2Vector(LedTable,LEDS);
         sendFrame(LEDS);
-        antiAliasGPIO(userOption, 2);
+        antiAliasGPIO(userOption, 3);
         turnCommand = USER_NO_TURN;
+        timeCount++;
+
+        if( ((timeCount % ( 60 * (MIN_ROAD_REFRESH -roadRefreshRatio+1))) == 0) && (roadRefreshRatio > 1) )
+                roadRefreshRatio--;
+
     }
 
 }
@@ -175,6 +196,65 @@ unsigned char checkCollision( color_t LedTable[LENGTH][HEIGHT], unsigned char xC
         return COLLISION;
     else
         return NO_COLLISION;
+
+}
+
+unsigned int newOpponent(void){
+    static unsigned char opponentClearance = 0;
+    unsigned int position =  pseudoRandomLCG(3) + 1 ;
+    unsigned int probability = pseudoRandomLCG(100);
+
+    switch (opponentClearance)
+    {
+    case 0:
+        opponentClearance++;        // No opponent creation if clearance is 0
+        return NO_CAR_CREATED;
+        break;
+    case 1:
+        if( probability > 80){
+            opponentClearance = 0;
+            return position;
+        }
+        else{
+            opponentClearance++;
+            return NO_CAR_CREATED;
+        }
+        break;
+    case 2:
+        if( probability > 70){
+            opponentClearance = 0;
+            return position;
+        }
+        else{
+            opponentClearance++;
+            return NO_CAR_CREATED;
+        }
+        break;
+    case 3:
+        if( probability > 50){
+            opponentClearance = 0;
+            return position;
+        }
+        else{
+            opponentClearance++;
+            return NO_CAR_CREATED;
+        }
+    case 4:
+        if( probability > 50){
+            opponentClearance = 0;
+            return position;
+        }
+        else{
+            opponentClearance++;
+            return NO_CAR_CREATED;
+        }
+    default:
+        opponentClearance = 0;      //Another car created, no clearance between the last one
+        return 2;
+
+    }
+
+
 
 }
 
