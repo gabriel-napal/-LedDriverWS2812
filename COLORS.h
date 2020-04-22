@@ -27,7 +27,7 @@ static const color_t red_dark_1 = {0xFF,0x07,0x07};
 static const color_t red_dark_2 = {0xFF,0x05,0x05};
 static const color_t red_dark_3 = {0xFF,0x00,0x00};
 
-static const color_t cyan_bright_1 = {0x66,0xff,0xcc;
+static const color_t cyan_bright_1 = {0x66,0xff,0xcc};
 
 static const color_t blue_bright_1 = {0x41,0x69,0xe1};
 static const color_t blue_bright_2 = {0x15,0x15,0xFF};
@@ -46,6 +46,8 @@ static const color_t green_dark_1 = {0x00, 0xFF, 0x00};
 static const color_t purple_medium_1 = {0x2F,0x29,0xFF};
 
 static const color_t orange_dark_1 = {0xff,0x8c,0x00};
+
+static const color_t yellow_dark_1 = {0xfd,0xfd,0x02};
 
 
 #endif /* COLORS_H_ */
