@@ -34,7 +34,6 @@ void waterEffect (color_t LEDS[PIXELS]){
     unsigned int j;
     unsigned int index = 0;
     static unsigned char exit;
-    color_t blue_range[9] = {blue_bright_1, blue_bright_2, blue_bright_3,blue_medium_1,blue_medium_2,blue_medium_2,blue_dark_1,blue_dark_2,blue_dark_3};
 
     exit = 0;
 
@@ -46,25 +45,25 @@ void waterEffect (color_t LEDS[PIXELS]){
         }
         else{
             for(j=0 ; j<PIXELS ; j++){
-                index = pseudoRandom(100);
+                index = rand_range16(100);
                 if (index < 2)
-                    LEDS[j]=blue_range[0];
+                    LEDS[j]=blue_bright_1;
                 else if ((index >= 2) && (index <7))
-                    LEDS[j]=blue_range[1];
+                    LEDS[j]=blue_bright_2;
                 else if ((index >= 7) && (index <15))
-                    LEDS[j]=blue_range[2];
+                    LEDS[j]=blue_bright_3;
                 else if ((index >= 15) && (index <30))
-                    LEDS[j]=blue_range[3];
+                    LEDS[j]=blue_medium_1;
                 else if ((index >= 30) && (index <70))
-                    LEDS[j]=blue_range[4];
+                    LEDS[j]=blue_medium_2;
                 else if ((index >= 70) && (index <85))
-                    LEDS[j]=blue_range[5];
+                    LEDS[j]=blue_medium_3;
                 else if ((index >= 85) && (index <92))
-                    LEDS[j]=blue_range[6];
+                    LEDS[j]=blue_dark_1;
                 else if ((index >= 92) && (index <98))
-                    LEDS[j]=blue_range[7];
+                    LEDS[j]=blue_dark_2;
                 else if (index >= 98)
-                    LEDS[j]=blue_range[8];
+                    LEDS[j]=blue_dark_3;
             }
             sendFrame(LEDS);
         }
