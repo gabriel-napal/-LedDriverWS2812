@@ -27,7 +27,7 @@ void game1(color_t LEDS[PIXELS]);
 void snake(color_t LEDS[PIXELS]);
 void tetris(color_t LEDS[PIXELS]);
 void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, signed int movX, signed int movY, color_t* background);
-void RotateTetrisObject(objectTetris* block, int randomObject);
+unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, int randomObject, color_t* background, unsigned int nbOfRotation);
 
 
 #endif /* EASYGAME_H_ */
