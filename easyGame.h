@@ -23,7 +23,6 @@ typedef struct coordinates {
         color_t color;
     } objectTetris;
 
-void game1(color_t LEDS[PIXELS]);
 void snake(color_t LEDS[PIXELS]);
 void tetris(color_t LEDS[PIXELS]);
 void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, signed int movX, signed int movY, color_t* background);
