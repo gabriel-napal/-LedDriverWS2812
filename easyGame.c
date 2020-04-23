@@ -439,19 +439,21 @@ void tetris(color_t LEDS[PIXELS]){
 
                if (turnCommand != USER_NO_OPTION){
                    switch (turnCommand){
+
                    case USER_GO_LEFT :
-                       checkNextBlock = TRUE;
-                       tempPoint = &block.point1;
+                       checkNextBlock = TRUE;       //By default, the block movement is doable
+                       tempPoint = &block.point1;   //Pointer created to sweep al four points
                        for (i = 0; i < 4; i++){
                            if (checkCollision(LedTable,(*tempPoint).x - 1, (*tempPoint).y, &background, &block) == FALSE){
-                               checkNextBlock = FALSE;
+                               checkNextBlock = FALSE;  // I a collision occurs, movement is no valid.
                                break;
                            }
                            tempPoint = (++tempPoint);
                        }
-                       if (checkNextBlock==TRUE) //Movement is valid, then erase the old block position
+                       if (checkNextBlock==TRUE)        //Movement is valid, then erase the old block position
                            moveTetrisObject(LedTable, &block, -1, 0, &background);
                        break;
+
                    case USER_GO_RIGHT :
                        checkNextBlock = TRUE;
                        tempPoint = &block.point1;
@@ -465,6 +467,7 @@ void tetris(color_t LEDS[PIXELS]){
                        if (checkNextBlock==TRUE) //Movement is valid, then erase the old block position
                            moveTetrisObject(LedTable, &block, 1, 0, &background);
                        break;
+
                    case USER_TURN_OBJECT :
                        nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
                        break;
@@ -533,9 +536,23 @@ void tetris(color_t LEDS[PIXELS]){
 
 }
 
+/*
+ * moveTetrisObject:
+ * Moves a tetris block (down, right or left)
+ *
+ * INPUTS:
+ *
+ * color_t LedTable     : Led Table RGB array
+ * objectTetris* block  : tetris block to be moved
+ * signed int movX      : x-displacement (could be negative)
+ * signed int movY      : x-displacement (could be negative)
+ * color_t* background  : background color
+ *
+ */
 
 void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, signed int movX, signed int movY, color_t* background){
 
+    //Erases the old block
     if ((*block).point1.y < HEIGHT)
         LedTable[(*block).point1.x][(*block).point1.y] = *background;
     if ((*block).point2.y < HEIGHT)
@@ -545,6 +562,7 @@ void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, sig
     if ((*block).point4.y < HEIGHT)
         LedTable[(*block).point4.x][(*block).point4.y] = *background;
 
+    // Recalculate each point
     (*block).point1.x = (*block).point1.x + movX;
     (*block).point2.x = (*block).point2.x + movX;
     (*block).point3.x = (*block).point3.x + movX;
@@ -554,6 +572,7 @@ void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, sig
     (*block).point3.y = (*block).point3.y + movY;
     (*block).point4.y = (*block).point4.y + movY;
 
+    //RE draw the block in the Led Table array
     if ((*block).point1.y < HEIGHT)
         LedTable[(*block).point1.x][(*block).point1.y] = (*block).color;
     if ((*block).point2.y < HEIGHT)
@@ -585,6 +604,7 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
     int tempXforCheck;
     int tempYforCheck;
     coordinates *tempPoint;
+    objectTetris rotatedBlock;
     int matriceRotationi [4][2] = {{-1,2},{0,1},{1,0},{2,-1}};
 
     // o_block
@@ -633,46 +653,61 @@ unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* 
         else
             return nbOfRotation;
     }
-    // anything else
-    else {
-        //Sets a pointer at point 2. Point 1 is the pivot, then it does not rotate
+
+    /*
+    *       All other blocks rotates with :
+    *      newX = tempY + pivot_x
+    *      newY = -tempX + pivot_y
+    */
+    else
+    {
+
         // First, only check if it can rotate
-        tempPoint = &((*block).point2);
+        //Assign the block to the rotated block, then set the pointer to the rotated block
+        rotatedBlock = *block;
+        tempPoint = &(rotatedBlock.point2);
+
         canRotate = TRUE;
-        for (i = 0; i<3 ; i++) {
-            tempX = (*tempPoint).x - block->point1.x ;  //Obtains the relative coordinates
-            tempY = (*tempPoint).y - block->point1.y ;
-            tempXforCheck = tempY + block->point1.x ;  //Rotates and displaces to absolute coordinates
-            tempYforCheck = -tempX + block->point1.y ;
-            if (checkCollision(LedTable,tempXforCheck,tempYforCheck, background, block) == FALSE){
+        for (i = 0; i < 3; i++){
+            tempX = (*tempPoint).x - block->point1.x;   //Obtains the relative coordinates
+            tempY = (*tempPoint).y - block->point1.y;
+
+            (*tempPoint).x = tempY + block->point1.x;   //Calculate the rotated point, then check if the rotation is possible
+            (*tempPoint).y = -tempX + block->point1.y;
+
+            if (checkCollision(LedTable, (*tempPoint).x, (*tempPoint).y, background, block) == FALSE){
                 canRotate = FALSE;
                 break;
             }
             tempPoint = (++tempPoint);
         }
 
-        // if it's ok, then makes the block rotate
-        if (canRotate==TRUE){
-            tempPoint = &((*block).point2);
-            for (i = 0; i<3 ; i++) {
+        // If the rotation is possible, then the rotated coordinates are already calculated at rotatedBlock
+        if (canRotate == TRUE)
+        {
+
+            tempPoint = &((*block).point1);
+            //Erase the old block
+            for (i = 0; i < 4; i++){
                 //First deletes the last pixel
                 if ((*tempPoint).y < HEIGHT)
-                        LedTable[(*tempPoint).x][(*tempPoint).y] = *background;
+                    LedTable[(*tempPoint).x][(*tempPoint).y] = *background;
+                tempPoint = (++tempPoint);
+            }
+            //Assign  the rotated block to the current block
+            (*block) = rotatedBlock;
 
-                tempX = (*tempPoint).x - block->point1.x ;  //Obtains the relative coordinates
-                tempY = (*tempPoint).y - block->point1.y ;
-                (*tempPoint).x = tempY + block->point1.x ;  //Rotates and displaces to absolute coordinates
-                (*tempPoint).y = -tempX + block->point1.y ;
-
-                // Displays the new pixel if it's on the display
+            tempPoint = &((*block).point1);
+            //Draw the new block, rotated
+            for (i = 0; i < 4; i++){
+                // Draws the new block if it lays on the display
                 if ((*tempPoint).y < HEIGHT)
                     LedTable[(*tempPoint).x][(*tempPoint).y] = (*block).color;
                 tempPoint = (++tempPoint);
             }
         }
-        return 0;
     }
-
+    return 0;
 }
 
 /*

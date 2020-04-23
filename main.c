@@ -138,7 +138,7 @@ int main(void)
             break;
         case USER_OPTION_S2:
             menu = INIT;
-            game1(LEDS);
+            tetris(LEDS);
             break;
         case USER_OPTION_S3:
             snake(LEDS);
