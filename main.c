@@ -70,8 +70,8 @@
 
 int main(void)
 {
-  color_t LEDS[PIXELS] = {color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off,color_off};
 
+  color_t LEDS[PIXELS] ;
   volatile unsigned int i;
   unsigned int menu = INIT;
   volatile unsigned int j;
@@ -83,8 +83,8 @@ int main(void)
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. Its mandatory!
 
   //Peripherals initiaization
-  CS_init();
-  SPI_init();
+  ucsInit();
+  spiInit();
   lightsOff(LEDS);
   initTimerA0();
   initGPIO();

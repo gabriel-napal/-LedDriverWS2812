@@ -9,8 +9,8 @@
 #define CONSTANT_H_
 
 
-#define HEIGHT  6
-#define LENGTH  5
+#define HEIGHT  15
+#define LENGTH  10
 #define PIXELS  HEIGHT * LENGTH
 
 #define USER_NO_OPTION      0
