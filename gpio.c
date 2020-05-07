@@ -34,15 +34,20 @@ void initMSP_LEDS (void){
 
 void initGPIO(void){
 
-    P4IE = 0x00;
-    P4DIR &= (BIT0 + BIT1);                            //Set P4.0 and P4.1 to input direction, pull up resistor
-    P4REN |= BIT0 + BIT1;
-    P4OUT |= BIT0 + BIT1;
 
-    P1IE = 0x00;
+
+    P1DIR &= ~(BIT2 + BIT3 + BIT4 + BIT5) ;             //Ports 1.2, 1.3, 1.4, 1.5 to OUTPUT
+    P1SEL &= ~(BIT2 + BIT3 + BIT4 + BIT5) ;
+
+    P1REN |= (BIT2 + BIT3 + BIT4 + BIT5) ;             //Configure pull up resitors
+    P1OUT |= (BIT2 + BIT3 + BIT4 + BIT5) ;
+
+/*
+//    P1IE = 0x00;
     P1DIR &= (BIT0 + BIT1);                            //Set P1.0 and P1.1 to input direction, pull up resistor
     P1REN |= BIT0 + BIT1;
     P1OUT |= BIT0 + BIT1;
+    */
 }
 
 /*
@@ -70,22 +75,22 @@ unsigned char readGPIO(void){
     //GPIO_Status = (P4IN & BIT0) + ( P4IN & BIT1 ) + (P1IN & BIT0)<<2 +  (P1IN & BIT1)<<3;
 
 
-    if (P4IN & BIT0)
+    if (P1IN & BIT2)
         GPIO_Status &= ~BIT0;
     else
         GPIO_Status |= BIT0;
 
-    if (P4IN & BIT1)
+    if (P1IN & BIT3)
         GPIO_Status &= ~BIT1;
     else
         GPIO_Status |= BIT1;
 
-    if (P1IN & BIT0)
+    if (P1IN & BIT4)
         GPIO_Status &= ~BIT2;
     else
         GPIO_Status |= BIT2;
 
-    if (P1IN & BIT1)
+    if (P1IN & BIT5)
         GPIO_Status &= ~BIT3;
     else
         GPIO_Status |= BIT3;

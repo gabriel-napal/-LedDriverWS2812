@@ -1,7 +1,7 @@
 /*
  * timers.h
  *
- *  Created on: Apr 8, 2020
+ *  Created on: May 7, 2020
  *      Author: Gabriel
  */
 
@@ -10,13 +10,10 @@
 
 #include <msp430.h>
 
-#define TIMERA0_1SEC 8420 // Timer will "tick" every second if the clock source is set to VLOCKL
-
+#define TIMERA0_1SEC 8420
 void initTimerA0 (void);
 void setTimerA0 (unsigned int counts);
 void startTimerA0(void);
-void stopTimerA0(void);
-unsigned int readTimerA0(void);
 
 
 #endif /* TIMERS_H_ */
