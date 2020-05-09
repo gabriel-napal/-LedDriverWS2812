@@ -14,10 +14,12 @@
 #define PIXELS  HEIGHT * LENGTH
 
 #define USER_NO_OPTION      0
-#define USER_OPTION_S1      0x01
-#define USER_OPTION_S2      0x02
-#define USER_OPTION_S3      0x04
-#define USER_OPTION_S4      0x08
+
+
+#define P1_RED              0x01
+#define P1_BLUE             0x02
+#define P1_YELLOW           0x04
+#define P1_GREEN            0x08
 
 #define KEYBOARD_BUFFER     5
 

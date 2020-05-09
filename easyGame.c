@@ -75,18 +75,18 @@ void snake(color_t LEDS[PIXELS]){
     while (exit!=1){
 
         switch (userOption[0]){
-        case USER_OPTION_S1:
+        case P1_RED:
         //exit effect / game
             exit = 1;
             break;
-        case USER_OPTION_S2:
+        case P1_GREEN:
             //exit effect / game
             exit = 1;
             break;
-        case USER_OPTION_S3: // To go right
+        case P1_YELLOW: // To go right
             turnCommand = USER_GO_RIGHT;
             break;
-        case USER_OPTION_S4: // To go left
+        case P1_BLUE: // To go left
             turnCommand = USER_GO_LEFT;
             break;
         }
@@ -272,12 +272,13 @@ void tetris(color_t LEDS[PIXELS]){
     unsigned int turnCommand = USER_NO_TURN;
 
     //Initializes array
-    for (x = 0 ; x < LENGTH ; x++){
-        for (y = 0 ; y < HEIGHT ; y++){
-            LedTable[x][y] = background;
-        }
+
+    for (x = LENGTH; x > 0 ; x--){
+        for (y = HEIGHT ; y > 0 ; y--)
+            LedTable[LENGTH - x][HEIGHT - y] = background;
     }
 
+    // Begin the game
     while (exit!=1){
         // Creates object
         if (newObject == TRUE) {
@@ -337,18 +338,18 @@ void tetris(color_t LEDS[PIXELS]){
         }
         else if (newObject == FALSE){
                 switch (userOption[0]){
-                case USER_OPTION_S1:
+                case P1_YELLOW:
                     //To turn the position of the object
                     turnCommand = USER_TURN_OBJECT;
                     break;
-                case USER_OPTION_S2:
+                case P1_BLUE:
                     //exit effect / game
                     exit = 1;
                     break;
-                case USER_OPTION_S3: // To go right
+                case P1_GREEN: // To go right
                     turnCommand = USER_GO_RIGHT;
                     break;
-                case USER_OPTION_S4: // To go left
+                case P1_RED: // To go left
                     turnCommand = USER_GO_LEFT;
                     break;
                 }

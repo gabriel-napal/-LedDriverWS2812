@@ -98,13 +98,13 @@ int main(void)
   while(1){
 
      menu = INIT ;
-     userOption = waveInit(LEDS, INIT);
+     userOption = waveInit(LEDS, INIT); // waveInit() shows and animation screen and gets the current keyboard status.
      switch (userOption){
-     case USER_OPTION_S3:
+     case P1_BLUE:
          userOption = waveInit(LEDS, VISUALEFFECTS);
          menu = VISUALEFFECTS;
          break;
-     case USER_OPTION_S4:
+     case P1_YELLOW:
          userOption = waveInit(LEDS, GAMES);
          menu = GAMES;
          break;
@@ -115,35 +115,35 @@ int main(void)
 
      if (menu==VISUALEFFECTS){
         switch (userOption){
-        case USER_OPTION_S1:
+        case P1_RED:
             menu = INIT;
             break;
-        case USER_OPTION_S2:
+        case P1_BLUE:
             menu = INIT;
             cozy(LEDS);
             break;
-        case USER_OPTION_S3:
+        case P1_YELLOW:
             menu = INIT;
             waterEffect(LEDS);
             break;
-        case USER_OPTION_S4:
+        case P1_GREEN:
             menu = INIT;
             break;
         }
      }
      else if (menu==GAMES){
         switch (userOption){
-        case USER_OPTION_S1:
+        case P1_RED:
             menu = INIT;
             break;
-        case USER_OPTION_S2:
+        case P1_BLUE:
             menu = INIT;
             tetris(LEDS);
             break;
-        case USER_OPTION_S3:
+        case P1_YELLOW:
             snake(LEDS);
             break;
-        case USER_OPTION_S4:
+        case P1_GREEN:
             menu = INIT;
             break;
         }

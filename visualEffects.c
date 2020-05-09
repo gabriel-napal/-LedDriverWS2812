@@ -39,7 +39,7 @@ void waterEffect (color_t LEDS[PIXELS]){
 
     while (exit!=1){
 
-        if(readGPIO() == USER_OPTION_S1){
+        if(readGPIO() == P1_RED){
             //exit waterEffect
             exit = 1;
         }
@@ -91,7 +91,7 @@ void cozy (color_t LEDS[PIXELS]){
 
     while (exit!=1){
 
-        if(readGPIO() == USER_OPTION_S1){
+        if(readGPIO() == P1_RED){
             //exit cozy
             exit = 1;
 
