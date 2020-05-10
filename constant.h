@@ -14,7 +14,7 @@
 #define PIXELS  HEIGHT * LENGTH
 
 #define USER_NO_OPTION      0
-#define ANTI_BOUNCE   8
+#define ANTI_BOUNCE         25
 
 #define P1_RED              0x01
 #define P1_BLUE             0x02
