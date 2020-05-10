@@ -15,7 +15,11 @@ void waterEffect (color_t LEDS[PIXELS]);
 void cozy (color_t LEDS[PIXELS]);
 //void wave1(unsigned char LEDS[PIXELS][3]);
 unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme);
+
+// to be replace by displayText
 void looser(color_t LEDS[PIXELS]);
+
+unsigned char displayText(color_t LEDS[PIXELS], char* text, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor);
 
 
 #endif /* VISUALEFFECTS_H_ */

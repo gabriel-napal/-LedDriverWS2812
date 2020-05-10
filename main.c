@@ -77,8 +77,6 @@ int main(void){
   unsigned char userOption = 0;
   volatile unsigned int GPIO_Status;
 
-
-
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. Its mandatory!
 
   //Peripherals initiaization
@@ -96,15 +94,18 @@ int main(void){
 
   while(1){
 
+     userOption = displayText(LEDS, "BONJOUR  ", 9, 5, red_medium_1, yellow_dark_1);
      menu = INIT ;
-     userOption = waveInit(LEDS, INIT); // waveInit() shows and animation screen and gets the current keyboard status.
+     //userOption = waveInit(LEDS, INIT); // waveInit() shows and animation screen and gets the current keyboard status.
      switch (userOption){
      case P1_BLUE:
-         userOption = waveInit(LEDS, VISUALEFFECTS);
+         userOption = displayText(LEDS, "VISUAL EFFECTS  ", 16, 5, green_medium_1, orange_dark_1);
+         //userOption = waveInit(LEDS, VISUALEFFECTS);
          menu = VISUALEFFECTS;
          break;
      case P1_YELLOW:
-         userOption = waveInit(LEDS, GAMES);
+         userOption = displayText(LEDS, "GAMES  ", 7, 5, blue_dark_3, cyan_bright_1);
+         //userOption = waveInit(LEDS, GAMES);
          menu = GAMES;
          break;
      default:

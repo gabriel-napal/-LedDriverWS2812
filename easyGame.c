@@ -149,7 +149,8 @@ void snake(color_t LEDS[PIXELS]){
         // Check if the snake is eating itself
         for (i = 0; i< snakeLength; i++){
             if ((snake[i][0]== x) && (snake[i][1] == y)){
-                looser(LEDS);
+                userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
+                //looser(LEDS);
                 exit = 1;
             }
         }
@@ -300,7 +301,8 @@ void tetris(color_t LEDS[PIXELS]){
                    tempPoint = &block.point1;
                    for (i = 0; i < 4; i++){
                        if (checkCollision(LedTable, (*tempPoint).x, (*tempPoint).y, &background, &block) == FALSE){
-                           looser(LEDS);
+                           userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
+                           //looser(LEDS);
                            exit = 1;
                            break;
                        }
@@ -438,7 +440,8 @@ void tetris(color_t LEDS[PIXELS]){
                        }
                        // Check if the player loses
                        if ((block.point1.y == HEIGHT) || (block.point2.y == HEIGHT) ||(block.point3.y == HEIGHT) ||(block.point4.y == HEIGHT)){
-                           looser(LEDS);
+                           userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
+                           //looser(LEDS);
                            exit = 1;
                        }
                        // if not create a new object
