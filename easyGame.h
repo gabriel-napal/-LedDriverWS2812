@@ -29,4 +29,22 @@ void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, sig
 unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, int randomObject, color_t* background, unsigned int nbOfRotation);
 unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, int yCoordinate, color_t *background,objectTetris *block);
 
+#define DIRECTION_X_INCREASING      0
+#define DIRECTION_Y_INCREASING      1
+#define DIRECTION_X_DECREASING      2
+#define DIRECTION_Y_DECREASING      3
+
+#define USER_NO_TURN                0
+#define USER_GO_LEFT                1
+#define USER_GO_RIGHT               2
+#define USER_TURN_OBJECT            3
+#define USER_GO_DOWN                4
+
+#define NEXT_LEVEL_TH               5
+
+
+#define GREEN_APPLE                 0
+#define RED_APPLE                   1
+
+
 #endif /* EASYGAME_H_ */

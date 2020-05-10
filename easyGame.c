@@ -13,18 +13,6 @@
 #include <visualEffects.h>
 #include <pseudoRandom.h>
 
-#define DIRECTION_X_INCREASING      0
-#define DIRECTION_Y_INCREASING      1
-#define DIRECTION_X_DECREASING      2
-#define DIRECTION_Y_DECREASING      3
-
-#define USER_NO_TURN      0
-#define USER_GO_LEFT    1
-#define USER_GO_RIGHT   2
-#define USER_TURN_OBJECT   3
-
-#define GREEN_APPLE      0
-#define RED_APPLE    1
 
 
 
@@ -262,7 +250,7 @@ void tetris(color_t LEDS[PIXELS]){
     // To be used for choosing the next object
     unsigned int randomObject = 0;
 
-    unsigned int speed = 10;
+    unsigned int speed = 2;
     unsigned int time_count = 0;
     unsigned int nbObject = 0;
     unsigned int nbRotation = 0;
@@ -283,7 +271,7 @@ void tetris(color_t LEDS[PIXELS]){
         // Creates object
         if (newObject == TRUE) {
             nbRotation = 0;
-            randomObject = rand_range16(7);
+            randomObject = pseudoRandomLCG(7);
                    switch(randomObject){
                        case 0:
                            block = o_block;
@@ -330,8 +318,8 @@ void tetris(color_t LEDS[PIXELS]){
 
                    nbObject ++;
                    // Increase speed after few blocks
-                   if (nbObject%10 == 0){
-                       if (speed > 3)
+                   if (nbObject % NEXT_LEVEL_TH == 0){
+                       if (speed > 2)
                            speed--;
                    }
                    newObject = FALSE;
@@ -343,8 +331,7 @@ void tetris(color_t LEDS[PIXELS]){
                     turnCommand = USER_TURN_OBJECT;
                     break;
                 case P1_BLUE:
-                    //exit effect / game
-                    exit = 1;
+                    turnCommand = USER_GO_DOWN;
                     break;
                 case P1_GREEN: // To go right
                     turnCommand = USER_GO_RIGHT;
@@ -393,9 +380,23 @@ void tetris(color_t LEDS[PIXELS]){
                    case USER_TURN_OBJECT :
                        nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
                        break;
+
+                   case USER_GO_DOWN:
+                       checkNextBlock = TRUE;
+                       tempPoint = &block.point1;
+                       for (i = 0; i < 4; i++){
+                           if (checkCollision(LedTable,(*tempPoint).x , (*tempPoint).y - 1, &background, &block) == FALSE){
+                               checkNextBlock = FALSE;
+                               break;
+                           }
+                           tempPoint = (++tempPoint);
+                       }
+                       if (checkNextBlock==TRUE) //Movement is valid, then erase the old block position
+                           moveTetrisObject(LedTable, &block, 0, -1, &background);
+                       break;
                    }
                }
-
+               // If it's time, the screen is refreshed
                if (time_count == speed){
                    checkNextBlock = TRUE ;
                    tempPoint = &block.point1;
@@ -450,7 +451,7 @@ void tetris(color_t LEDS[PIXELS]){
         if (exit != 1){
             array2Vector(LedTable,LEDS);
             sendFrame(LEDS);
-            antiAliasGPIO(userOption, 2);
+            antiAliasGPIO(userOption, ANTI_BOUNCE);
             time_count++;
             turnCommand = USER_NO_TURN;
         }
@@ -677,3 +678,4 @@ if ((yCoordinate >= 0) && (xCoordinate >= 0) && (xCoordinate < LENGTH )) {
 else // Rotation lays outside the x-Space, or below the floor. It cannot be done.
     return FALSE;
 }
+
