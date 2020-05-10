@@ -68,8 +68,7 @@
 #define VISUALEFFECTS    1
 #define GAMES   2
 
-int main(void)
-{
+int main(void){
 
   color_t LEDS[PIXELS] ;
   volatile unsigned int i;
@@ -90,7 +89,7 @@ int main(void)
   initGPIO();
 
   //Set and start Timer
-  setTimerA0(TIMERA0_1SEC/10);
+  setTimerA0(TIMERA0_1SEC/40);
   startTimerA0();
 
   //Begin State Machine
