@@ -205,7 +205,7 @@ unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme){
 
     while (1){
 
-       antiAliasGPIO(userOption, 2);
+       antiAliasGPIO(userOption, ANTI_BOUNCE);
        if(userOption[0] != USER_NO_OPTION){
            //exit waveInit
            return userOption[0];
