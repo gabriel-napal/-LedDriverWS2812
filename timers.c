@@ -25,7 +25,7 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) TIMER0_A0_ISR (void)
 void initTimerA0 (void){
 
     TA0CCTL0 = CCIE;                          // CCR0 interrupt enabled
-    TA0CTL = TASSEL_1 + TACLR;         // SMCLK, upmode, clear TAR
+    TA0CTL = TASSEL_1 + TACLR;         // ACLK, upmode, clear TAR
 
 }
 
