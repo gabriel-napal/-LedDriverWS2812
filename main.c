@@ -6,40 +6,28 @@
  *              L. Innocente
  *              G. Napal
  *
- * Connections:
- *
- *   LaunchPad      LED Strip
- *   ---------      ---------
- *   3V3            5VDC (it works with 3V3)s
- *   P2.0(MOSI)     DIN
- *   GND            GND
- *
- *   Program Flow :
- *
- * 1) Initialization of clocks, SPI, LED Table and Timer
- * 2) Timer starts
- * 3) Sends First Frame
- * 4) Next LED composition is calculated (but not sent)
- * 5) CPU goes to LPM (Low Power Mode), nothing is executed.
- * 6) When the TimerA0 "ticks", CPU is woke up, the main execution loop proceeds (Back to step 3)
- *
  *
  *  General configuration :
  *
- *  CPU : working at 4 Mhz
+ *  CPU : working at 12 Mhz
  *  SPI : CLK is set to 6 MHz
  *
- *                   MSP430FR5739
+ * * Connections:
+ *                   MSP430F5529
 //                 -----------------
 //             /|\|                 |
 //              | |                 |
 //              --|RST              |
 //                |                 |
-//                |             P2.0|-> Data Out (UCA0SIMO)
+//                |             P3.3|-> Data Out (UCA0SIMO)
 //                |                 |
-//                |             P2.1|<- Data In (UCA0SOMI)  NOT USED
+//                |             P1.2|<- P1_RED
 //                |                 |
-//                |             P1.5|-> Serial Clock Out (UCA0CLK)  NOT USED
+//                |             P1.3|<- P1_BLUE
+//                |                 |
+//                |             P1.4|<- P1_YELLOW
+//                |                 |
+//                |             P1.5|<- P1_GREEN
  *
  *
  *
@@ -96,16 +84,14 @@ int main(void){
 
      userOption = displayText(LEDS, "BONJOUR  ", 9, 5, red_medium_1, yellow_dark_1);
      menu = INIT ;
-     //userOption = waveInit(LEDS, INIT); // waveInit() shows and animation screen and gets the current keyboard status.
+
      switch (userOption){
      case P1_BLUE:
          userOption = displayText(LEDS, "VISUAL EFFECTS  ", 16, 5, green_medium_1, orange_dark_1);
-         //userOption = waveInit(LEDS, VISUALEFFECTS);
          menu = VISUALEFFECTS;
          break;
      case P1_YELLOW:
          userOption = displayText(LEDS, "GAMES  ", 7, 5, blue_dark_3, cyan_bright_1);
-         //userOption = waveInit(LEDS, GAMES);
          menu = GAMES;
          break;
      default:
