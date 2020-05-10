@@ -288,165 +288,198 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
     unsigned char letterZ [16][2]= {{3,12},{4,12},{5,12},{6,12},{3,4},{4,4},{5,4},{6,4},{6,11},{6,10},{5,10},{5,9},{4,8},{4,7},{3,6},{3,5}};
     unsigned char exclamation [7][2]= {{4,12},{4,11},{4,10},{4,9},{4,8},{4,7},{4,4}};
 
+    while(1){
+        for (i = 0; i < textLength; i++)
+        {
+            // sets the screen frame
+            for (x = 0; x < LENGTH; x++)
+            {
+                for (y = 0; y < HEIGHT; y++)
+                {
+                    LedTable[x][y] = frameColor;
+                }
+            }
 
-    for (i = 0; i<textLength; i++){
-        // sets the screen frame
-        for(x=0 ; x<LENGTH ; x++){
-            for(y=0 ; y<HEIGHT ; y++){
-                LedTable[x][y] = frameColor;
+            switch (texte[i])
+            {
+            case 'A':
+                for (l = 0; l < 22; l++)
+                {
+                    LedTable[letterA[l][0]][letterA[l][1]] = textColor;
+                }
+                break;
+            case 'B':
+                for (l = 0; l < 21; l++)
+                {
+                    LedTable[letterB[l][0]][letterB[l][1]] = textColor;
+                }
+                break;
+            case 'C':
+                for (l = 0; l < 15; l++)
+                {
+                    LedTable[letterC[l][0]][letterC[l][1]] = textColor;
+                }
+                break;
+            case 'D':
+                for (l = 0; l < 20; l++)
+                {
+                    LedTable[letterD[l][0]][letterD[l][1]] = textColor;
+                }
+                break;
+            case 'E':
+                for (l = 0; l < 17; l++)
+                {
+                    LedTable[letterE[l][0]][letterE[l][1]] = textColor;
+                }
+                break;
+            case 'F':
+                for (l = 0; l < 14; l++)
+                {
+                    LedTable[letterF[l][0]][letterF[l][1]] = textColor;
+                }
+                break;
+            case 'G':
+                for (l = 0; l < 20; l++)
+                {
+                    LedTable[letterG[l][0]][letterG[l][1]] = textColor;
+                }
+                break;
+            case 'H':
+                for (l = 0; l < 20; l++)
+                {
+                    LedTable[letterH[l][0]][letterH[l][1]] = textColor;
+                }
+                break;
+            case 'I':
+                for (l = 0; l < 7; l++)
+                {
+                    LedTable[letterI[l][0]][letterI[l][1]] = textColor;
+                }
+                break;
+            case 'J':
+                for (l = 0; l < 13; l++)
+                {
+                    LedTable[letterJ[l][0]][letterJ[l][1]] = textColor;
+                }
+                break;
+            case 'K':
+                for (l = 0; l < 18; l++)
+                {
+                    LedTable[letterK[l][0]][letterK[l][1]] = textColor;
+                }
+                break;
+            case 'L':
+                for (l = 0; l < 12; l++)
+                {
+                    LedTable[letterL[l][0]][letterL[l][1]] = textColor;
+                }
+                break;
+            case 'M':
+                for (l = 0; l < 21; l++)
+                {
+                    LedTable[letterM[l][0]][letterM[l][1]] = textColor;
+                }
+                break;
+            case 'N':
+                for (l = 0; l < 22; l++)
+                {
+                    LedTable[letterN[l][0]][letterN[l][1]] = textColor;
+                }
+                break;
+            case 'O':
+                for (l = 0; l < 22; l++)
+                {
+                    LedTable[letterO[l][0]][letterO[l][1]] = textColor;
+                }
+                break;
+            case 'P':
+                for (l = 0; l < 18; l++)
+                {
+                    LedTable[letterP[l][0]][letterP[l][1]] = textColor;
+                }
+                break;
+            case 'Q':
+                for (l = 0; l < 24; l++)
+                {
+                    LedTable[letterQ[l][0]][letterQ[l][1]] = textColor;
+                }
+                break;
+            case 'R':
+                for (l = 0; l < 22; l++)
+                {
+                    LedTable[letterR[l][0]][letterR[l][1]] = textColor;
+                }
+                break;
+            case 'S':
+                for (l = 0; l < 14; l++)
+                {
+                    LedTable[letterS[l][0]][letterS[l][1]] = textColor;
+                }
+                break;
+            case 'T':
+                for (l = 0; l < 13; l++)
+                {
+                    LedTable[letterT[l][0]][letterT[l][1]] = textColor;
+                }
+                break;
+            case 'U':
+                for (l = 0; l < 20; l++)
+                {
+                    LedTable[letterU[l][0]][letterU[l][1]] = textColor;
+                }
+                break;
+            case 'V':
+                for (l = 0; l < 18; l++)
+                {
+                    LedTable[letterV[l][0]][letterV[l][1]] = textColor;
+                }
+                break;
+            case 'W':
+                for (l = 0; l < 20; l++)
+                {
+                    LedTable[letterW[l][0]][letterW[l][1]] = textColor;
+                }
+                break;
+            case 'X':
+                for (l = 0; l < 17; l++)
+                {
+                    LedTable[letterX[l][0]][letterX[l][1]] = textColor;
+                }
+                break;
+            case 'Y':
+                for (l = 0; l < 13; l++)
+                {
+                    LedTable[letterY[l][0]][letterY[l][1]] = textColor;
+                }
+                break;
+            case 'Z':
+                for (l = 0; l < 16; l++)
+                {
+                    LedTable[letterZ[l][0]][letterZ[l][1]] = textColor;
+                }
+                break;
+            case '!':
+                for (l = 0; l < 7; l++)
+                {
+                    LedTable[exclamation[l][0]][exclamation[l][1]] = textColor;
+                }
+                break;
+            default:
+                break;
             }
-        }
 
-        switch (texte[i]){
-        case 'A' :
-            for (l = 0; l < 22; l++){
-                LedTable[letterA[l][0]][letterA[l][1]] = textColor;
-            }
-            break;
-        case 'B' :
-            for (l = 0; l < 21; l++){
-                LedTable[letterB[l][0]][letterB[l][1]] = textColor;
-            }
-            break;
-        case 'C' :
-            for (l = 0; l < 15; l++){
-                LedTable[letterC[l][0]][letterC[l][1]] = textColor;
-            }
-            break;
-        case 'D' :
-            for (l = 0; l < 20; l++){
-                LedTable[letterD[l][0]][letterD[l][1]] = textColor;
-            }
-            break;
-        case 'E' :
-            for (l = 0; l < 17; l++){
-                LedTable[letterE[l][0]][letterE[l][1]] = textColor;
-            }
-            break;
-        case 'F' :
-            for (l = 0; l < 14; l++){
-                LedTable[letterF[l][0]][letterF[l][1]] = textColor;
-            }
-            break;
-        case 'G' :
-            for (l = 0; l < 20; l++){
-                LedTable[letterG[l][0]][letterG[l][1]] = textColor;
-            }
-            break;
-        case 'H' :
-            for (l = 0; l < 20; l++){
-                LedTable[letterH[l][0]][letterH[l][1]] = textColor;
-            }
-            break;
-        case 'I' :
-            for (l = 0; l < 7; l++){
-                LedTable[letterI[l][0]][letterI[l][1]] = textColor;
-            }
-            break;
-        case 'J' :
-            for (l = 0; l < 13; l++){
-                LedTable[letterJ[l][0]][letterJ[l][1]] = textColor;
-            }
-            break;
-        case 'K' :
-            for (l = 0; l < 18; l++){
-                LedTable[letterK[l][0]][letterK[l][1]] = textColor;
-            }
-            break;
-        case 'L' :
-            for (l = 0; l < 12; l++){
-                LedTable[letterL[l][0]][letterL[l][1]] = textColor;
-            }
-            break;
-        case 'M' :
-            for (l = 0; l < 21; l++){
-                LedTable[letterM[l][0]][letterM[l][1]] = textColor;
-            }
-            break;
-        case 'N' :
-            for (l = 0; l < 22; l++){
-                LedTable[letterN[l][0]][letterN[l][1]] = textColor;
-            }
-            break;
-        case 'O' :
-            for (l = 0; l < 22; l++){
-                LedTable[letterO[l][0]][letterO[l][1]] = textColor;
-            }
-            break;
-        case 'P' :
-            for (l = 0; l < 18; l++){
-                LedTable[letterP[l][0]][letterP[l][1]] = textColor;
-            }
-            break;
-        case 'Q' :
-            for (l = 0; l < 24; l++){
-                LedTable[letterQ[l][0]][letterQ[l][1]] = textColor;
-            }
-            break;
-        case 'R' :
-            for (l = 0; l < 22; l++){
-                LedTable[letterR[l][0]][letterR[l][1]] = textColor;
-            }
-            break;
-        case 'S' :
-            for (l = 0; l < 14; l++){
-                LedTable[letterS[l][0]][letterS[l][1]] = textColor;
-            }
-            break;
-        case 'T' :
-            for (l = 0; l < 13; l++){
-                LedTable[letterT[l][0]][letterT[l][1]] = textColor;
-            }
-            break;
-        case 'U' :
-            for (l = 0; l < 20; l++){
-                LedTable[letterU[l][0]][letterU[l][1]] = textColor;
-            }
-            break;
-        case 'V' :
-            for (l = 0; l < 18; l++){
-                LedTable[letterV[l][0]][letterV[l][1]] = textColor;
-            }
-            break;
-        case 'W' :
-            for (l = 0; l < 20; l++){
-                LedTable[letterW[l][0]][letterW[l][1]] = textColor;
-            }
-            break;
-        case 'X' :
-            for (l = 0; l < 17; l++){
-                LedTable[letterX[l][0]][letterX[l][1]] = textColor;
-            }
-            break;
-        case 'Y' :
-            for (l = 0; l < 13; l++){
-                LedTable[letterY[l][0]][letterY[l][1]] = textColor;
-            }
-            break;
-        case 'Z' :
-            for (l = 0; l < 16; l++){
-                LedTable[letterZ[l][0]][letterZ[l][1]] = textColor;
-            }
-            break;
-        case '!' :
-            for (l = 0; l < 7; l++){
-                LedTable[exclamation[l][0]][exclamation[l][1]] = textColor;
-            }
-            break;
-        default :
-            break;
-        }
-
-        array2Vector(LedTable,LEDS);
-        sendFrame(LEDS);
-        for(j=0 ; j<speed ; j++){
-            __bis_SR_register(LPM0_bits + GIE);
-            antiAliasGPIO(userOption, 1);
-            if(userOption[0] != USER_NO_OPTION){
-                return userOption[0];
+            array2Vector(LedTable, LEDS);
+            sendFrame(LEDS);
+            for (j = 0; j < speed; j++)
+            {
+                __bis_SR_register(LPM0_bits + GIE);
+                antiAliasGPIO(userOption, ANTI_BOUNCE);
+                if (userOption[0] != USER_NO_OPTION)
+                {
+                    return userOption[0];
+                }
             }
         }
     }
-   return 0;
 }
 

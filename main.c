@@ -75,7 +75,7 @@ int main(void){
   initGPIO();
 
   //Set and start Timer
-  setTimerA0(TIMERA0_1SEC/40);
+  setTimerA0(TIMERA0_1SEC/200);
   startTimerA0();
 
   //Begin State Machine
