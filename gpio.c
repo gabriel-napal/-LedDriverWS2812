@@ -53,17 +53,17 @@ void initGPIO(void){
 /*
  * readGPIO function
  *
- * Returns a byte that holds the input switches status
+ * Returns a byte that holds the input Buttons status
  *
- * Switch OFF   --> Bit = 0
- * Switch ON    --> Bit = 1
+ * Button OFF   --> Bit = 0
+ * Button ON    --> Bit = 1
  *
- * Switches are mapped as follows
+ * Buttons are mapped as follows
  *
- * GPIO_Status bit 0    --> P4.0
- * GPIO_Status bit 1    --> P4.1
- * GPIO_Status bit 2    --> P1.0
- * GPIO_Status bit 3    --> P1.1
+ * GPIO_Status bit 0    --> P1.2
+ * GPIO_Status bit 1    --> P1.3
+ * GPIO_Status bit 2    --> P1.4
+ * GPIO_Status bit 3    --> P1.5
  *
  *
  */
