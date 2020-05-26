@@ -25,6 +25,11 @@
 
 #define TRUE    1
 #define FALSE   0
+#define READ_OVERFLOW_TRUE  1
+#define READ_OVERFLOW_FALSE 0
+
+#define MAIN_SCREEN_REFRESH 40
+#define SNAKE_INITIAL_SPEED 40
 
 
 #endif /* CONSTANT_H_ */

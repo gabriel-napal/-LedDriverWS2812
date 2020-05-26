@@ -248,12 +248,14 @@ void looser(color_t LEDS[PIXELS]){
 }
 
 
-unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor){
+unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor, unsigned int stringIndex){
 
-    unsigned int i;
-    unsigned int j;
-    unsigned int x;
+    unsigned int i;     //Iteration index for string
+    unsigned int j;     //Iteraton index for speed
+
+    unsigned int x;     //Coordinates at LedTable Array
     unsigned int y;
+
     unsigned int l;
 
     unsigned char userOption [KEYBOARD_BUFFER]  = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
@@ -288,10 +290,14 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
     unsigned char letterZ [16][2]= {{3,12},{4,12},{5,12},{6,12},{3,4},{4,4},{5,4},{6,4},{6,11},{6,10},{5,10},{5,9},{4,8},{4,7},{3,6},{3,5}};
     unsigned char exclamation [7][2]= {{4,12},{4,11},{4,10},{4,9},{4,8},{4,7},{4,4}};
 
-    while(1){
+   /* while(1){
         for (i = 0; i < textLength; i++)
         {
-            // sets the screen frame
+        */
+    if (stringIndex >= textLength)
+        return READ_OVERFLOW_TRUE;
+
+            // sets the screen background
             for (x = 0; x < LENGTH; x++)
             {
                 for (y = 0; y < HEIGHT; y++)
@@ -299,8 +305,8 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
                     LedTable[x][y] = frameColor;
                 }
             }
-
-            switch (texte[i])
+            //Improvement idea :use the ASCII value of each letter to look inside a coordinate array.
+            switch (texte[stringIndex])
             {
             case 'A':
                 for (l = 0; l < 22; l++)
@@ -470,7 +476,9 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
 
             array2Vector(LedTable, LEDS);
             sendFrame(LEDS);
-            for (j = 0; j < speed; j++)
+
+            return READ_OVERFLOW_FALSE;
+           /* for (j = 0; j < speed; j++)
             {
                 __bis_SR_register(LPM0_bits + GIE);
                 antiAliasGPIO(userOption, ANTI_BOUNCE);
@@ -480,6 +488,6 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
                 }
             }
         }
-    }
+    }*/
 }
 
