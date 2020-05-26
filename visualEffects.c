@@ -474,9 +474,9 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
             {
                 __bis_SR_register(LPM0_bits + GIE);
                 antiAliasGPIO(userOption, ANTI_BOUNCE);
-                if (userOption[0] != USER_NO_OPTION)
+                if (userOptionMain != USER_NO_OPTION)
                 {
-                    return userOption[0];
+                    return userOptionMain;
                 }
             }
         }

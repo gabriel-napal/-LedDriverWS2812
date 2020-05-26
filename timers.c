@@ -7,6 +7,7 @@
 
 
 #include "timers.h"
+#include "gpio.h"
 
 // Timer0 A0 interrupt service routine
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
@@ -18,6 +19,14 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) TIMER0_A0_ISR (void)
 #error Compiler not supported!
 #endif
 {
+    static unsigned char pollGPIOCount = 0;
+    ++pollGPIOCount;
+
+    if (pollGPIOCount == GPIO_POLL_TH){
+        userOptionMain = readGPIO();
+        pollGPIOCount = 0;
+    }
+
     __bic_SR_register_on_exit(CPUOFF);// Wake up
 }
 

@@ -56,6 +56,8 @@
 #define VISUALEFFECTS    1
 #define GAMES   2
 
+
+
 int main(void){
 
   color_t LEDS[PIXELS] ;
@@ -64,6 +66,9 @@ int main(void){
   volatile unsigned int j;
   unsigned char userOption = 0;
   volatile unsigned int GPIO_Status;
+
+  unsigned char zeroCross = FALSE;
+
 
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. Its mandatory!
 
@@ -85,10 +90,11 @@ int main(void){
      userOption = displayText(LEDS, "BONJOUR  ", 9, 5, red_medium_1, yellow_dark_1);
      menu = INIT ;
 
-     switch (userOption){
+     switch (userOptionMain){
      case P1_BLUE:
          userOption = displayText(LEDS, "VISUAL EFFECTS  ", 16, 5, green_medium_1, orange_dark_1);
          menu = VISUALEFFECTS;
+         zeroCross = FALSE;
          break;
      case P1_YELLOW:
          userOption = displayText(LEDS, "GAMES  ", 7, 5, blue_dark_3, cyan_bright_1);
@@ -99,25 +105,30 @@ int main(void){
          break;
      }
 
-     if (menu==VISUALEFFECTS){
-        switch (userOption){
+     if ( (menu==VISUALEFFECTS) && (zeroCross == TRUE)){
+        switch (userOptionMain){
         case P1_RED:
             menu = INIT;
+            zeroCross = FALSE;
             break;
         case P1_BLUE:
             menu = INIT;
+            zeroCross = FALSE;
             cozy(LEDS);
             break;
         case P1_YELLOW:
             menu = INIT;
+            zeroCross = FALSE;
             waterEffect(LEDS);
             break;
         case P1_GREEN:
             menu = INIT;
             break;
+        default:
+            break;
         }
      }
-     else if (menu==GAMES){
+     else if ( (menu==GAMES)  && (zeroCross == TRUE) ){
         switch (userOption){
         case P1_RED:
             menu = INIT;
@@ -132,10 +143,13 @@ int main(void){
         case P1_GREEN:
             menu = INIT;
             break;
+        default:
+            break;
         }
      }
 
       __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+      zeroCross = TRUE;
   }
 
 }
