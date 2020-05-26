@@ -13,7 +13,7 @@
 #include <visualEffects.h>
 #include <pseudoRandom.h>
 
-
+extern unsigned char readGPIO_Flag;
 
 
 //Main objectif of this game : make move a small snake and eat apples
@@ -22,7 +22,8 @@ void snake(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     color_t LedTable[LENGTH][HEIGHT];
-    unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
+    //unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
+    unsigned char userOption = USER_NO_OPTION;
     unsigned char exit = 0;
 
     //Represent x and y for the head of the snake
@@ -31,12 +32,18 @@ void snake(color_t LEDS[PIXELS]){
     unsigned int i;
     unsigned int newApple = 0;
     unsigned int testApple = 0;
+    unsigned int appleCounter = 0;
 
     unsigned int snakeLength = 3;
     unsigned int turnCommand = USER_NO_TURN;
     unsigned int direction = DIRECTION_X_INCREASING;
     unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};
     unsigned int apple[3] = {(LENGTH-1),(HEIGHT-1),RED_APPLE};
+
+    unsigned char speedTh = SNAKE_INITIAL_SPEED;
+    unsigned char speed_counter = SNAKE_INITIAL_SPEED;
+
+    unsigned char zeroCross = FALSE;
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -62,153 +69,201 @@ void snake(color_t LEDS[PIXELS]){
 
     while (exit!=1){
 
-        switch (userOption[0]){
-        case P1_RED:
-        //exit effect / game
-            exit = 1;
-            break;
-        case P1_GREEN:
-            //exit effect / game
-            exit = 1;
-            break;
-        case P1_YELLOW: // To go right
-            turnCommand = USER_GO_RIGHT;
-            break;
-        case P1_BLUE: // To go left
-            turnCommand = USER_GO_LEFT;
-            break;
-        }
 
-        // Erases the used option (shift left the buffer)
+
+
+
+       /* // Erases the used option (shift left the buffer)
         for (i = 0; i < KEYBOARD_BUFFER-1 ; i++){
             userOption[i]=userOption[i+1];
         }
         userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
+*/
 
-        if (turnCommand == USER_GO_RIGHT) {
-            switch (direction){
-            case DIRECTION_X_INCREASING:
-                direction = DIRECTION_Y_DECREASING;
+        //Gets the user option and makes the decision
+            if (readGPIO_Flag == TRUE){ //Time to read the User Options
+                   readGPIO_Flag = FALSE;
+                   userOption = readGPIO();
+
+                   if(userOption == USER_NO_OPTION)
+                       zeroCross = TRUE;
+            }
+
+            switch(userOption){
+            case P1_RED:
+            //exit effect / game
+                exit = 1;
                 break;
-            case DIRECTION_Y_INCREASING:
-                direction = DIRECTION_X_INCREASING;
+            case P1_GREEN:
+                //exit effect / game
+                exit = 1;
                 break;
-            case DIRECTION_X_DECREASING:
-                direction = DIRECTION_Y_INCREASING;
+            case P1_YELLOW: // To go right
+                turnCommand = USER_GO_RIGHT;
                 break;
-            case DIRECTION_Y_DECREASING:
-                direction = DIRECTION_X_DECREASING;
+            case P1_BLUE: // To go left
+                turnCommand = USER_GO_LEFT;
                 break;
             }
-        }
-        else if (turnCommand == USER_GO_LEFT) {
-            switch (direction){
-            case DIRECTION_X_INCREASING:
-                direction = DIRECTION_Y_INCREASING;
-                break;
-            case DIRECTION_Y_INCREASING:
-                direction = DIRECTION_X_DECREASING;
-                break;
-            case DIRECTION_X_DECREASING:
-                direction = DIRECTION_Y_DECREASING;
-                break;
-            case DIRECTION_Y_DECREASING:
-                direction = DIRECTION_X_INCREASING;
-                break;
-            }
-        }
 
-        // change the position of the snake head
-        switch (direction){
+        if (speed_counter == 0){
+            speed_counter = speedTh;
+
+            if (turnCommand == USER_GO_RIGHT)
+            {
+                switch (direction)
+                {
+                case DIRECTION_X_INCREASING:
+                    direction = DIRECTION_Y_DECREASING;
+                    break;
+                case DIRECTION_Y_INCREASING:
+                    direction = DIRECTION_X_INCREASING;
+                    break;
+                case DIRECTION_X_DECREASING:
+                    direction = DIRECTION_Y_INCREASING;
+                    break;
+                case DIRECTION_Y_DECREASING:
+                    direction = DIRECTION_X_DECREASING;
+                    break;
+                }
+            }
+            else if (turnCommand == USER_GO_LEFT)
+            {
+                switch (direction)
+                {
+                case DIRECTION_X_INCREASING:
+                    direction = DIRECTION_Y_INCREASING;
+                    break;
+                case DIRECTION_Y_INCREASING:
+                    direction = DIRECTION_X_DECREASING;
+                    break;
+                case DIRECTION_X_DECREASING:
+                    direction = DIRECTION_Y_DECREASING;
+                    break;
+                case DIRECTION_Y_DECREASING:
+                    direction = DIRECTION_X_INCREASING;
+                    break;
+                }
+            }
+            turnCommand = USER_NO_TURN;
+            // change the position of the snake head
+            switch (direction)
+            {
             case DIRECTION_X_INCREASING:
-                if( (x+1) < LENGTH)
+                if ((x + 1) < LENGTH)
                     x++;
                 else
                     x = 0;
                 break;
             case DIRECTION_Y_INCREASING:
-                if( (y+1) < HEIGHT)
-                     y++;
+                if ((y + 1) < HEIGHT)
+                    y++;
                 else
                     y = 0;
                 break;
             case DIRECTION_X_DECREASING:
-                if( x > 0)
+                if (x > 0)
                     x--;
                 else
                     x = LENGTH - 1;
                 break;
             case DIRECTION_Y_DECREASING:
-                if( y > 0)
+                if (y > 0)
                     y--;
                 else
                     y = HEIGHT - 1;
                 break;
-        }
-
-        // Check if the snake is eating itself
-        for (i = 0; i< snakeLength; i++){
-            if ((snake[i][0]== x) && (snake[i][1] == y)){
-                userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
-                //looser(LEDS);
-                exit = 1;
             }
-        }
 
-        //Check if the snake is eating an apple and check the color of the apple
-        if ((x == apple[0]) && (y == apple[1])){
-            if (apple [2] == RED_APPLE){
-                snakeLength = snakeLength + 1;
-            }
-            else {
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Erases the old pixel from the snake tail
-                snakeLength = snakeLength - 1;
-                LedTable [snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Make one pixel smaller the snake
-            }
-            newApple = 1;
-        }
-        else
-            LedTable[snake[snakeLength-1][0]][snake[snakeLength-1][1]] = cyan_bright_1;   //Erases the old pixel from the snake tail
-
-        for (i = (snakeLength - 1); i > 0; i--){
-            snake[i][0] = snake[i-1][0];
-            snake[i][1] = snake[i-1][1];
-        }
-        LedTable[x][y] = purple_medium_1;   //Paints a new pixel
-
-        snake[0][0] = x;
-        snake[0][1] = y;
-
-        // Run aleatory number function to set the new apple.
-        if (newApple == 1){
-            testApple = 0;
-            while (testApple == 0){
-                testApple = 1;
-                apple[0] = rand_range16(LENGTH);
-                apple[1] = rand_range16(HEIGHT);
-                for (i = 0; i< snakeLength; i++){
-                    if ((snake[i][0]== apple[0]) && (snake[i][1] == apple[1])){
-                       testApple = 0;
-                       break;
-                    }
+            // Check if the snake is eating itself
+            for (i = 0; i < snakeLength; i++)
+            {
+                if ((snake[i][0] == x) && (snake[i][1] == y))
+                {
+                    //  userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
+                    //looser(LEDS);
+                    exit = 1;
                 }
             }
 
-            if (rand_range16(100)>75){
-                apple[2] = GREEN_APPLE;
-                LedTable [apple[0]][apple[1]] =  green_medium_1;
+            //Check if the snake is eating an apple and check the color of the apple
+            if ((x == apple[0]) && (y == apple[1]))
+            {
+                appleCounter++;
+                if (apple[2] == RED_APPLE)
+                {
+                    snakeLength = snakeLength + 1;
+                }
+                else //Green Apple
+                {
+                    LedTable[snake[snakeLength - 1][0]][snake[snakeLength - 1][1]] =
+                            cyan_bright_1; //Erases the old pixel from the snake tail
+                    snakeLength = snakeLength - 1;
+                    LedTable[snake[snakeLength - 1][0]][snake[snakeLength - 1][1]] =
+                            cyan_bright_1;   //Make one pixel smaller the snake
+                }
+                newApple = 1;
             }
-            else {
-                apple[2] = RED_APPLE;
-                LedTable[apple[0]][apple[1]] =  red_dark_3;
+            else
+                LedTable[snake[snakeLength - 1][0]][snake[snakeLength - 1][1]] =
+                        cyan_bright_1; //Erases the old pixel from the snake tail
+
+            for (i = (snakeLength - 1); i > 0; i--)
+            {
+                snake[i][0] = snake[i - 1][0];
+                snake[i][1] = snake[i - 1][1];
             }
-            newApple = 0 ;
+            LedTable[x][y] = purple_medium_1;   //Paints a new pixel
+
+            snake[0][0] = x;
+            snake[0][1] = y;
+
+            // Run aleatory number function to set the new apple.
+            if (newApple == 1)
+            {
+                testApple = 0;
+                while (testApple == 0)
+                {
+                    testApple = 1;
+                    apple[0] = rand_range16(LENGTH);
+                    apple[1] = rand_range16(HEIGHT);
+                    for (i = 0; i < snakeLength; i++)
+                    {
+                        if ((snake[i][0] == apple[0])
+                                && (snake[i][1] == apple[1]))
+                        {
+                            testApple = 0;
+                            break;
+                        }
+                    }
+                }
+
+                if (rand_range16(100) > 75)
+                {
+                    apple[2] = GREEN_APPLE;
+                    LedTable[apple[0]][apple[1]] = green_medium_1;
+                }
+                else
+                {
+                    apple[2] = RED_APPLE;
+                    LedTable[apple[0]][apple[1]] = red_dark_3;
+                }
+                newApple = 0;
+            }
+
         }
+        speed_counter--;
+
+        if( ((appleCounter!=0) && (appleCounter % 5)==0) && (speedTh>1)){
+            speedTh--;
+            appleCounter =0;
+        }
+        userOption = USER_NO_OPTION;
         if (exit != 1){
             array2Vector(LedTable,LEDS);
             sendFrame(LEDS);
-            antiAliasGPIO(userOption, 5);
-            turnCommand = USER_NO_TURN;
+           // antiAliasGPIO(userOption, 5);
+          //  turnCommand = USER_NO_TURN;
         }
     }
 
@@ -304,8 +359,7 @@ void tetris(color_t LEDS[PIXELS]){
                 if (checkCollision(LedTable, (*tempPoint).x, (*tempPoint).y,
                                    &background, &block) == FALSE)
                 {
-                    userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2,
-                                                red_dark_3, color_off);
+                    //userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2,red_dark_3, color_off);
                     //looser(LEDS);
                     exit = 1;
                     break;
@@ -445,7 +499,7 @@ void tetris(color_t LEDS[PIXELS]){
                        }
                        // Check if the player loses
                        if ((block.point1.y == HEIGHT) || (block.point2.y == HEIGHT) ||(block.point3.y == HEIGHT) ||(block.point4.y == HEIGHT)){
-                           userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
+                         //  userOption[0] = displayText(LEDS, "PERDU ! !", 7, 2, red_dark_3, color_off);
                            //looser(LEDS);
                            exit = 1;
                        }
