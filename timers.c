@@ -9,6 +9,8 @@
 #include "timers.h"
 #include "gpio.h"
 
+
+
 // Timer0 A0 interrupt service routine
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=TIMER0_A0_VECTOR
@@ -19,11 +21,12 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) TIMER0_A0_ISR (void)
 #error Compiler not supported!
 #endif
 {
-    static unsigned char pollGPIOCount = 0;
+    static unsigned int pollGPIOCount = 0;
     ++pollGPIOCount;
 
     if (pollGPIOCount == GPIO_POLL_TH){
-        userOptionMain = readGPIO();
+        //userOptionMain = readGPIO();
+        readGPIO_Flag = TRUE;
         pollGPIOCount = 0;
     }
 
