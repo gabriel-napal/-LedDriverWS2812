@@ -46,5 +46,6 @@ unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, i
 #define GREEN_APPLE                 0
 #define RED_APPLE                   1
 #define SNAKE_INITIAL_SPEED         30
+#define NEXT_LEVEL_TH               5
 
 #endif /* EASYGAME_H_ */

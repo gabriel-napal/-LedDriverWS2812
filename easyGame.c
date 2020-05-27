@@ -69,17 +69,6 @@ void snake(color_t LEDS[PIXELS]){
 
     while (exit!=1){
 
-
-
-
-
-       /* // Erases the used option (shift left the buffer)
-        for (i = 0; i < KEYBOARD_BUFFER-1 ; i++){
-            userOption[i]=userOption[i+1];
-        }
-        userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
-*/
-
         //Gets the user option and makes the decision
             if (readGPIO_Flag == TRUE){ //Time to read the User Options
                    readGPIO_Flag = FALSE;
@@ -109,7 +98,7 @@ void snake(color_t LEDS[PIXELS]){
         if (speed_counter == 0){
             speed_counter = speedTh;
 
-            if (turnCommand == USER_GO_RIGHT)
+            if ( (turnCommand == USER_GO_RIGHT) && (zeroCross == TRUE))
             {
                 switch (direction)
                 {
@@ -126,8 +115,9 @@ void snake(color_t LEDS[PIXELS]){
                     direction = DIRECTION_X_DECREASING;
                     break;
                 }
+                zeroCross = FALSE;
             }
-            else if (turnCommand == USER_GO_LEFT)
+            else if ((turnCommand == USER_GO_LEFT)&& (zeroCross == TRUE))
             {
                 switch (direction)
                 {
@@ -144,7 +134,9 @@ void snake(color_t LEDS[PIXELS]){
                     direction = DIRECTION_X_INCREASING;
                     break;
                 }
+                zeroCross = FALSE;
             }
+            //Dismiss command
             turnCommand = USER_NO_TURN;
             // change the position of the snake head
             switch (direction)
@@ -218,7 +210,7 @@ void snake(color_t LEDS[PIXELS]){
             snake[0][0] = x;
             snake[0][1] = y;
 
-            // Run aleatory number function to set the new apple.
+            // Run random number function to set the new apple.
             if (newApple == 1)
             {
                 testApple = 0;
@@ -250,11 +242,11 @@ void snake(color_t LEDS[PIXELS]){
                 }
                 newApple = 0;
             }
-
         }
-        speed_counter--;
 
-        if( ((appleCounter!=0) && (appleCounter % 5)==0) && (speedTh>1)){
+        speed_counter--;
+        //Increase speed every NEXT_LEVEL_TH
+        if( ((appleCounter!=0) && (appleCounter % NEXT_LEVEL_TH)==0) && (speedTh>1)){
             speedTh--;
             appleCounter =0;
         }
@@ -262,8 +254,6 @@ void snake(color_t LEDS[PIXELS]){
         if (exit != 1){
             array2Vector(LedTable,LEDS);
             sendFrame(LEDS);
-           // antiAliasGPIO(userOption, 5);
-          //  turnCommand = USER_NO_TURN;
         }
     }
 

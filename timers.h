@@ -11,9 +11,9 @@
 #include <msp430.h>
 #include "constant.h"
 
-#define GPIO_POLL_TH        30  // Polls every (8420 / 100)/8420 * 20 = 200ms
-
+#define GPIO_POLL_TH        25  // Polls every (8420 / 100)/8420 * 25 = 200ms
 #define TIMERA0_1SEC 8420
+
 void initTimerA0 (void);
 void setTimerA0 (unsigned int counts);
 void startTimerA0(void);
