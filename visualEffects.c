@@ -250,15 +250,15 @@ void looser(color_t LEDS[PIXELS]){
 
 unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor, unsigned int stringIndex){
 
-    unsigned int i;     //Iteration index for string
-    unsigned int j;     //Iteraton index for speed
+   // unsigned int i;     //Iteration index for string
+   // unsigned int j;     //Iteraton index for speed
 
     unsigned int x;     //Coordinates at LedTable Array
     unsigned int y;
 
     unsigned int l;
 
-    unsigned char userOption [KEYBOARD_BUFFER]  = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
+   // unsigned char userOption [KEYBOARD_BUFFER]  = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
 
     color_t LedTable[LENGTH][HEIGHT];
 
@@ -474,20 +474,8 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
                 break;
             }
 
-            array2Vector(LedTable, LEDS);
-            sendFrame(LEDS);
-
+            updateLedTable(LedTable,LEDS);
             return READ_OVERFLOW_FALSE;
-           /* for (j = 0; j < speed; j++)
-            {
-                __bis_SR_register(LPM0_bits + GIE);
-                antiAliasGPIO(userOption, ANTI_BOUNCE);
-                if (userOptionMain != USER_NO_OPTION)
-                {
-                    return userOptionMain;
-                }
-            }
-        }
-    }*/
+
 }
 

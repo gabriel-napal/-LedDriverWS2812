@@ -70,7 +70,6 @@ int main(void){
 
   color_t LEDS[PIXELS] ;
   volatile unsigned int i;
-  //unsigned int menu = INIT;
   volatile unsigned int j;
 
   volatile unsigned int GPIO_Status;

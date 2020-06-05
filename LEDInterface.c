@@ -81,6 +81,45 @@ void setPixel(unsigned char LedTable[LENGTH][HEIGHT][3], unsigned char x, unsign
     LedTable[x][y][2] = b;
 
 }
+/*
+ * updateLedTable
+ *
+ * Updates each LED on the table.
+ *
+ * inputArray : 2-D input Array containing the RGB for each element
+ * outputVector : 1-D output vector that will be sended via SPI
+ */
+
+void updateLedTable(color_t inputArray[LENGTH][HEIGHT],color_t outputVector[PIXELS]){
+    unsigned int i;
+
+    //Coordinates to loop over arrays
+    unsigned int x;
+    unsigned int y;
+    unsigned int l;
+
+    //Translate the 2-D array into an 1-D LED Strip vector
+    // Translate odd columns
+    for(x = 0 ; x < LENGTH ; x++ ){
+        for( y = 0 ; y < HEIGHT ; y++ ){
+            l = y + x * HEIGHT;
+            outputVector[l] = inputArray[x][y];
+        }
+        x++;
+    }
+
+    // Then, translate even columns
+    for(x = 1 ; x < LENGTH ; x++ ){
+        for( y = 0 ; y < HEIGHT ; y++ ){
+            l = HEIGHT - 1 - y + x * HEIGHT;
+            outputVector[l] = inputArray[x][y];
+        }
+        x++;
+    }
+
+    for ( i=PIXELS; i> 0 ;i--)              // Using a count down pixel to reduce the number of assembly instructions
+        sendPixel(outputVector[PIXELS-i]);
+}
 
 
 

@@ -67,8 +67,8 @@ void snake(color_t LEDS[PIXELS]){
     LedTable[apple[0]][apple[1]] = red_dark_3;
 
     //Translates the 3D Array into a 2D Array
-    array2Vector(LedTable,LEDS);
-    sendFrame(LEDS);
+    updateLedTable(LedTable,LEDS);
+
 
     while (exit!=1){
 
@@ -505,8 +505,7 @@ void tetris(color_t LEDS[PIXELS]){
                }
         }
         if (exit != 1){
-            array2Vector(LedTable,LEDS);
-            sendFrame(LEDS);
+            updateLedTable(LedTable,LEDS);
             antiAliasGPIO(userOption, ANTI_BOUNCE);
             time_count++;
             turnCommand = USER_NO_TURN;
