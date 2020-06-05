@@ -36,7 +36,7 @@ void snake(color_t LEDS[PIXELS]){
     unsigned int appleCounter = 0;
 
     unsigned int snakeLength = 3;                               //Initial snake length
-    unsigned int turnCommand = USER_NO_TURN;
+    //unsigned int turnCommand = USER_NO_TURN;                  // Not used anymore
     unsigned int direction = DIRECTION_X_INCREASING;
 
 
@@ -82,66 +82,29 @@ void snake(color_t LEDS[PIXELS]){
                        zeroCross = TRUE;
             }
 
-            switch(userOption){
-            case P1_RED:
-            //exit effect / game
-                exit = 1;
-                break;
-            case P1_GREEN:
-                //exit effect / game
-                exit = 1;
-                break;
-            case P1_YELLOW: // To go right
-                turnCommand = USER_GO_RIGHT;
-                break;
-            case P1_BLUE: // To go left
-                turnCommand = USER_GO_LEFT;
-                break;
-            }
-
         if (speed_counter == 0){
             speed_counter = speedTh;
 
-            if ( (turnCommand == USER_GO_RIGHT) && (zeroCross == TRUE))
+            if (zeroCross == TRUE)
             {
-                switch (direction)
+                switch (userOption)
                 {
-                case DIRECTION_X_INCREASING:
+                case P1_BLUE:
                     direction = DIRECTION_Y_DECREASING;
                     break;
-                case DIRECTION_Y_INCREASING:
+                case P1_GREEN:
                     direction = DIRECTION_X_INCREASING;
                     break;
-                case DIRECTION_X_DECREASING:
+                case P1_YELLOW:
                     direction = DIRECTION_Y_INCREASING;
                     break;
-                case DIRECTION_Y_DECREASING:
+                case P1_RED:
                     direction = DIRECTION_X_DECREASING;
                     break;
                 }
                 zeroCross = FALSE;
             }
-            else if ((turnCommand == USER_GO_LEFT)&& (zeroCross == TRUE))
-            {
-                switch (direction)
-                {
-                case DIRECTION_X_INCREASING:
-                    direction = DIRECTION_Y_INCREASING;
-                    break;
-                case DIRECTION_Y_INCREASING:
-                    direction = DIRECTION_X_DECREASING;
-                    break;
-                case DIRECTION_X_DECREASING:
-                    direction = DIRECTION_Y_DECREASING;
-                    break;
-                case DIRECTION_Y_DECREASING:
-                    direction = DIRECTION_X_INCREASING;
-                    break;
-                }
-                zeroCross = FALSE;
-            }
-            //Dismiss command
-            turnCommand = USER_NO_TURN;
+
             // change the position of the snake head
             switch (direction)
             {
