@@ -299,7 +299,7 @@ void tetris(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     color_t LedTable[LENGTH][HEIGHT];
-    unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
+    unsigned char userOption = USER_NO_OPTION;
     unsigned char exit = 0;
     coordinates *tempPoint;
 
@@ -316,7 +316,7 @@ void tetris(color_t LEDS[PIXELS]){
     // To be used for choosing the next object
     unsigned int randomObject = 0;
 
-    unsigned int speed = 10;
+    unsigned int speed = 50;
     unsigned int time_count = 0;
     unsigned int nbObject = 0;
     unsigned int nbRotation = 0;
@@ -324,6 +324,7 @@ void tetris(color_t LEDS[PIXELS]){
     color_t background = color_off;
 
     unsigned int turnCommand = USER_NO_TURN;
+    unsigned char zeroCross = FALSE;
 
     //Initializes array
 
@@ -334,8 +335,20 @@ void tetris(color_t LEDS[PIXELS]){
 
     // Begin the game
     while (exit!=1){
+
+
+        //Gets the user option and makes the decision
+        if (readGPIO_Flag == TRUE)
+        { //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+
+            if (userOption == USER_NO_OPTION)
+                zeroCross = TRUE;
+        }
+
         // Creates object
-        if (newObject == TRUE) {
+        if (newObject == TRUE) { //test
             nbRotation = 0;
             randomObject = pseudoRandomLCG(7);
             switch (randomObject)
@@ -396,7 +409,7 @@ void tetris(color_t LEDS[PIXELS]){
             newObject = FALSE;
         }
         else if (newObject == FALSE){
-                switch (userOption[0]){
+                switch (userOption){
                 case P1_YELLOW:
                     //To turn the position of the object
                     turnCommand = USER_TURN_OBJECT;
@@ -411,11 +424,6 @@ void tetris(color_t LEDS[PIXELS]){
                     turnCommand = USER_GO_LEFT;
                     break;
                 }
-                // Erases the used option (shift left the buffer)
-                for (i = 0; i < KEYBOARD_BUFFER-1 ; i++){
-                    userOption[i]=userOption[i+1];
-                }
-                userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
 
                if (turnCommand != USER_NO_OPTION){
                    switch (turnCommand){
@@ -432,6 +440,9 @@ void tetris(color_t LEDS[PIXELS]){
                        }
                        if (checkNextBlock==TRUE)        //Movement is valid, then erase the old block position
                            moveTetrisObject(LedTable, &block, -1, 0, &background);
+
+   //                    turnCommand = USER_NO_TURN;
+                       userOption = USER_NO_OPTION;
                        break;
 
                    case USER_GO_RIGHT :
@@ -449,7 +460,8 @@ void tetris(color_t LEDS[PIXELS]){
                        break;
 
                    case USER_TURN_OBJECT :
-                       nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
+                       if(zeroCross == TRUE)
+                           nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
                        break;
 
                    case USER_GO_DOWN:
@@ -466,6 +478,8 @@ void tetris(color_t LEDS[PIXELS]){
                            moveTetrisObject(LedTable, &block, 0, -1, &background);
                        break;
                    }
+
+                   zeroCross = FALSE;
                }
                // If it's time, the screen is refreshed
                if (time_count == speed){
@@ -522,7 +536,7 @@ void tetris(color_t LEDS[PIXELS]){
         }
         if (exit != 1){
             updateLedTable(LedTable,LEDS);
-            antiAliasGPIO(userOption, ANTI_BOUNCE);
+           // antiAliasGPIO(userOption, ANTI_BOUNCE);
             time_count++;
             turnCommand = USER_NO_TURN;
         }
