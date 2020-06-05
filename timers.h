@@ -12,7 +12,7 @@
 #include "constant.h"
 
 
-#define GPIO_POLL_TH        15  // Polls every (8420 / 100)/8420 * 15 = 75ms
+#define GPIO_POLL_TH        15  // Polls every (8420 / 100)/8420 * 15 = 75ms (works good with both tetris and snake)
 
 #define TIMERA0_1SEC 8420
 

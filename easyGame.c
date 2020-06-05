@@ -80,28 +80,22 @@ void snake(color_t LEDS[PIXELS]){
 
             }
 
-
-
-
                 switch (userOption)
                 {
                 case P1_BLUE:
                     direction = DIRECTION_Y_DECREASING;
-                    userOption = USER_NO_OPTION;
                     break;
                 case P1_GREEN:
                     direction = DIRECTION_X_INCREASING;
-                    userOption = USER_NO_OPTION;
                     break;
                 case P1_YELLOW:
                     direction = DIRECTION_Y_INCREASING;
-                    userOption = USER_NO_OPTION;
                     break;
                 case P1_RED:
                     direction = DIRECTION_X_DECREASING;
-                    userOption = USER_NO_OPTION;
                     break;
                 }
+                userOption = USER_NO_OPTION;
 
         if (speed_counter == 0)
         {
