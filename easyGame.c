@@ -279,9 +279,6 @@ void snake(color_t LEDS[PIXELS]){
     }
 }
 
-/** KNOWN BUGS TO BE FIXED :
-> Turn object function rotates very fast
- */
 
 void tetris(color_t LEDS[PIXELS]){
 
@@ -317,7 +314,7 @@ void tetris(color_t LEDS[PIXELS]){
     unsigned int randomObject = 0;
 
     unsigned int speed = 50;
-    unsigned int time_count = 0;
+    unsigned int speed_counter = 0;
     unsigned int nbObject = 0;
     unsigned int nbRotation = 0;
 
@@ -325,6 +322,8 @@ void tetris(color_t LEDS[PIXELS]){
 
     unsigned int turnCommand = USER_NO_TURN;
     unsigned char zeroCross = FALSE;
+
+    unsigned char stringIndex = 0;
 
     //Initializes array
 
@@ -335,7 +334,6 @@ void tetris(color_t LEDS[PIXELS]){
 
     // Begin the game
     while (exit!=1){
-
 
         //Gets the user option and makes the decision
         if (readGPIO_Flag == TRUE)
@@ -440,9 +438,6 @@ void tetris(color_t LEDS[PIXELS]){
                        }
                        if (checkNextBlock==TRUE)        //Movement is valid, then erase the old block position
                            moveTetrisObject(LedTable, &block, -1, 0, &background);
-
-   //                    turnCommand = USER_NO_TURN;
-                       userOption = USER_NO_OPTION;
                        break;
 
                    case USER_GO_RIGHT :
@@ -478,11 +473,11 @@ void tetris(color_t LEDS[PIXELS]){
                            moveTetrisObject(LedTable, &block, 0, -1, &background);
                        break;
                    }
-
+                   userOption = USER_NO_OPTION;
                    zeroCross = FALSE;
                }
                // If it's time, the screen is refreshed
-               if (time_count == speed){
+               if (speed_counter == speed){
                    checkNextBlock = TRUE ;
                    tempPoint = &block.point1;
                    for (i = 0; i < 4; i++){
@@ -531,15 +526,29 @@ void tetris(color_t LEDS[PIXELS]){
                        else
                            newObject = TRUE;
                    }
-                   time_count = 0;
+                   speed_counter = 0;
                }
         }
         if (exit != 1){
             updateLedTable(LedTable,LEDS);
-           // antiAliasGPIO(userOption, ANTI_BOUNCE);
-            time_count++;
+            speed_counter++;
             turnCommand = USER_NO_TURN;
         }
+    }
+    //Game ending
+
+    speed_counter = GAME_ENDING_SPEED;
+    exit = FALSE;
+    while(exit == FALSE){
+
+        if (speed_counter == 0){
+            if( displayText(LEDS, "PERDU  ", 7, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                exit = TRUE;
+            stringIndex++;
+            speed_counter = GAME_ENDING_SPEED;
+        }
+        speed_counter--;
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
 }
