@@ -206,6 +206,7 @@ int main(void){
                     tetris(LEDS);
                     stringIndex = 0;
                     speedCounter = MAIN_SCREEN_REFRESH;
+                    userOption = USER_NO_OPTION;        //Disregards the last option
                 }
 
 
@@ -215,6 +216,7 @@ int main(void){
                     snake(LEDS);
                     stringIndex = 0;
                     speedCounter = MAIN_SCREEN_REFRESH;
+                    userOption = USER_NO_OPTION;
                 }
                 break;
             }

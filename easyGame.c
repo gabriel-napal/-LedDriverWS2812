@@ -47,6 +47,7 @@ void snake(color_t LEDS[PIXELS]){
     unsigned char speed_counter = SNAKE_INITIAL_SPEED;
 
     unsigned char zeroCross = FALSE;                            //Flag used to avoid turning if the user keeps a button pushed
+    unsigned char stringIndex = 0;
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -261,6 +262,21 @@ void snake(color_t LEDS[PIXELS]){
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
+    //Game ending
+
+    speed_counter = GAME_ENDING_SPEED;
+    exit = FALSE;
+    while(exit == FALSE){
+
+        if (speed_counter == 0){
+            if( displayText(LEDS, "PERDU  ", 7, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                exit = TRUE;
+            stringIndex++;
+            speed_counter = GAME_ENDING_SPEED;
+        }
+        speed_counter--;
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+    }
 }
 
 /** KNOWN BUGS TO BE FIXED :
