@@ -11,7 +11,9 @@
 #include <msp430.h>
 #include "constant.h"
 
-#define GPIO_POLL_TH        20  // Polls every 5ms * GPIO_POLL_TH  . Good results at "snake" with GPIO_POLL_TH = 20
+
+#define GPIO_POLL_TH        15  // Polls every (8420 / 100)/8420 * 15 = 75ms
+
 #define TIMERA0_1SEC 8420
 
 void initTimerA0 (void);

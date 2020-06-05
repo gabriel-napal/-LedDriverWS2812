@@ -244,9 +244,6 @@ void snake(color_t LEDS[PIXELS]){
     }
 }
 
-/** KNOWN BUGS TO BE FIXED :
-> Turn object function rotates very fast
- */
 
 void tetris(color_t LEDS[PIXELS]){
 
@@ -264,7 +261,7 @@ void tetris(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     color_t LedTable[LENGTH][HEIGHT];
-    unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
+    unsigned char userOption = USER_NO_OPTION;
     unsigned char exit = 0;
     coordinates *tempPoint;
 
@@ -281,14 +278,17 @@ void tetris(color_t LEDS[PIXELS]){
     // To be used for choosing the next object
     unsigned int randomObject = 0;
 
-    unsigned int speed = 10;
-    unsigned int time_count = 0;
+    unsigned int speed = 50;
+    unsigned int speed_counter = 0;
     unsigned int nbObject = 0;
     unsigned int nbRotation = 0;
 
     color_t background = color_off;
 
     unsigned int turnCommand = USER_NO_TURN;
+    unsigned char zeroCross = FALSE;
+
+    unsigned char stringIndex = 0;
 
     //Initializes array
 
@@ -299,8 +299,19 @@ void tetris(color_t LEDS[PIXELS]){
 
     // Begin the game
     while (exit!=1){
+
+        //Gets the user option and makes the decision
+        if (readGPIO_Flag == TRUE)
+        { //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+
+            if (userOption == USER_NO_OPTION)
+                zeroCross = TRUE;
+        }
+
         // Creates object
-        if (newObject == TRUE) {
+        if (newObject == TRUE) { //test
             nbRotation = 0;
             randomObject = pseudoRandomLCG(7);
             switch (randomObject)
@@ -361,7 +372,7 @@ void tetris(color_t LEDS[PIXELS]){
             newObject = FALSE;
         }
         else if (newObject == FALSE){
-                switch (userOption[0]){
+                switch (userOption){
                 case P1_YELLOW:
                     //To turn the position of the object
                     turnCommand = USER_TURN_OBJECT;
@@ -376,11 +387,6 @@ void tetris(color_t LEDS[PIXELS]){
                     turnCommand = USER_GO_LEFT;
                     break;
                 }
-                // Erases the used option (shift left the buffer)
-                for (i = 0; i < KEYBOARD_BUFFER-1 ; i++){
-                    userOption[i]=userOption[i+1];
-                }
-                userOption[KEYBOARD_BUFFER-1] = USER_NO_OPTION;
 
                if (turnCommand != USER_NO_OPTION){
                    switch (turnCommand){
@@ -414,7 +420,8 @@ void tetris(color_t LEDS[PIXELS]){
                        break;
 
                    case USER_TURN_OBJECT :
-                       nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
+                       if(zeroCross == TRUE)
+                           nbRotation = rotateTetrisObject(LedTable, &block, randomObject, &background, nbRotation);
                        break;
 
                    case USER_GO_DOWN:
@@ -431,9 +438,11 @@ void tetris(color_t LEDS[PIXELS]){
                            moveTetrisObject(LedTable, &block, 0, -1, &background);
                        break;
                    }
+                   userOption = USER_NO_OPTION;
+                   zeroCross = FALSE;
                }
                // If it's time, the screen is refreshed
-               if (time_count == speed){
+               if (speed_counter == speed){
                    checkNextBlock = TRUE ;
                    tempPoint = &block.point1;
                    for (i = 0; i < 4; i++){
@@ -482,15 +491,29 @@ void tetris(color_t LEDS[PIXELS]){
                        else
                            newObject = TRUE;
                    }
-                   time_count = 0;
+                   speed_counter = 0;
                }
         }
         if (exit != 1){
             updateLedTable(LedTable,LEDS);
-            antiAliasGPIO(userOption, ANTI_BOUNCE);
-            time_count++;
+            speed_counter++;
             turnCommand = USER_NO_TURN;
         }
+    }
+    //Game ending
+
+    speed_counter = GAME_ENDING_SPEED;
+    exit = FALSE;
+    while(exit == FALSE){
+
+        if (speed_counter == 0){
+            if( displayText(LEDS, "PERDU  ", 7, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                exit = TRUE;
+            stringIndex++;
+            speed_counter = GAME_ENDING_SPEED;
+        }
+        speed_counter--;
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
 }
