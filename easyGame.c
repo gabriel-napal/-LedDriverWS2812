@@ -246,7 +246,7 @@ void snake(color_t LEDS[PIXELS]){
 
         speed_counter--;
         //Increase speed every NEXT_LEVEL_TH
-        if( ((appleCounter!=0) && (appleCounter % NEXT_LEVEL_TH)==0) && (speedTh>1)){
+        if( ((appleCounter!=0) && (appleCounter % NEXT_LEVEL_TH)==0) && (speedTh>SNAKE_MAX_SPEED)){
             speedTh--;
             appleCounter =0;
         }
@@ -255,6 +255,7 @@ void snake(color_t LEDS[PIXELS]){
             array2Vector(LedTable,LEDS);
             sendFrame(LEDS);
         }
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
 }
