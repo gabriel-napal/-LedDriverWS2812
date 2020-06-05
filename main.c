@@ -28,12 +28,17 @@
 //                |             P1.4|<- P1_YELLOW
 //                |                 |
 //                |             P1.5|<- P1_GREEN
+//                |                 |
+//                |             P2.0|<- P2_RED
+//                |                 |
+//                |             P2.2|<- P2_BLUE
+//                |                 |
+//                |             P2.4|<- P2_YELLOW
+//                |                 |
+//                |             P2.5|<- P2_GREEN
  *
  *
- *
- *
- *
- *  TimerA0 : uses a 8.42kHz clock. Its internal counter can be used to increase or reduce the main loop frequency
+ *  TimerA0 : uses a 8.192kHz clock. Its internal counter can be used to increase or reduce the main loop frequency
  *          Since we're using LPM and Timer interruptions, code is currently Non-Blocking --> cool :)
  *
  */
@@ -65,7 +70,7 @@ int main(void){
 
   color_t LEDS[PIXELS] ;
   volatile unsigned int i;
-  unsigned int menu = INIT;
+  //unsigned int menu = INIT;
   volatile unsigned int j;
 
   volatile unsigned int GPIO_Status;
@@ -78,7 +83,7 @@ int main(void){
 
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer. It's good for you!
 
-  //Peripherals initiaization
+  //Peripherals initialization
   ucsInit();
   spiInit();
   lightsOff(LEDS);
@@ -89,20 +94,19 @@ int main(void){
   setTimerA0(TIMERA0_1SEC/200);         //Timer interrupts every 1second/NUMBER (if number = 200 --> interrupts every 5ms)
   startTimerA0();
 
-  //Begin State Machine
-
+  //Program starts
   while(1){
 
-     //userOption = displayText(LEDS, "BONJOUR  ", 9, 5, red_medium_1, yellow_dark_1,stringIndex);
-     //menu = INIT ;
-
-     if (readGPIO_Flag == TRUE){ //Time to read the User Options
+      //Check if the its time to poll the buttons user interface
+     if (readGPIO_Flag == TRUE){
          readGPIO_Flag = FALSE;
          userOption = readGPIO();
 
          if(userOption == USER_NO_OPTION)
              zeroCross = TRUE;
      }
+
+     //Begin State Machine
      switch(stateMachine){
      case INIT:
 
@@ -125,14 +129,14 @@ int main(void){
              stateMachine = VISUAL_EFFECTS;
              stringIndex = 0;
              speedCounter = MAIN_SCREEN_REFRESH;
-             zeroCross = FALSE;                     //Avois passing through options if the user keeps pushing the button
+             zeroCross = FALSE;                     //Avoids passing through options if the user keeps pushing the button
 
              break;
          case P1_YELLOW:
              stateMachine = GAMES;
              stringIndex = 0;
              speedCounter = MAIN_SCREEN_REFRESH;
-             zeroCross = FALSE;                     //Avois passing through options if the user keeps pushing the button
+             zeroCross = FALSE;
              break;
          }
 

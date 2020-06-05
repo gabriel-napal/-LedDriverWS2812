@@ -29,7 +29,7 @@
 #define READ_OVERFLOW_FALSE 0
 
 #define MAIN_SCREEN_REFRESH 40
-#define SNAKE_INITIAL_SPEED 40
+
 
 
 #endif /* CONSTANT_H_ */

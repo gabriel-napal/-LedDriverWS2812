@@ -16,34 +16,37 @@
 extern unsigned char readGPIO_Flag;
 
 
-//Main objectif of this game : make move a small snake and eat apples
+//Main objective of this game : make move a small snake and eat apples
 
 void snake(color_t LEDS[PIXELS]){
 
     // Define a matrix that contains the RGB color code for each pair (x,y)
     color_t LedTable[LENGTH][HEIGHT];
-    //unsigned char userOption[KEYBOARD_BUFFER] = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
     unsigned char userOption = USER_NO_OPTION;
     unsigned char exit = 0;
 
-    //Represent x and y for the head of the snake
+    //Represents x and y for the head of the snake
     unsigned int x;
     unsigned int y;
+
     unsigned int i;
+
     unsigned int newApple = 0;
     unsigned int testApple = 0;
     unsigned int appleCounter = 0;
 
-    unsigned int snakeLength = 3;
+    unsigned int snakeLength = 3;                               //Initial snake length
     unsigned int turnCommand = USER_NO_TURN;
     unsigned int direction = DIRECTION_X_INCREASING;
-    unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};
-    unsigned int apple[3] = {(LENGTH-1),(HEIGHT-1),RED_APPLE};
+
+
+    unsigned int snake[30][2] = {{2,0},{1,0},{1,0}};            //Snake coordinates
+    unsigned int apple[3] = {(LENGTH-1),(HEIGHT-1),RED_APPLE};  //Apple coordinates
 
     unsigned char speedTh = SNAKE_INITIAL_SPEED;
     unsigned char speed_counter = SNAKE_INITIAL_SPEED;
 
-    unsigned char zeroCross = FALSE;
+    unsigned char zeroCross = FALSE;                            //Flag used to avoid turning if the user keeps a button pushed
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -261,7 +264,7 @@ void snake(color_t LEDS[PIXELS]){
 }
 
 /** KNOWN BUGS TO BE FIXED :
-> Turn object function is partially available
+> Turn object function rotates very fast
  */
 
 void tetris(color_t LEDS[PIXELS]){
