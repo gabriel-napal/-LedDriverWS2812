@@ -78,32 +78,34 @@ void snake(color_t LEDS[PIXELS]){
                    readGPIO_Flag = FALSE;
                    userOption = readGPIO();
 
-                   if(userOption == USER_NO_OPTION)
-                       zeroCross = TRUE;
             }
 
-        if (speed_counter == 0){
-            speed_counter = speedTh;
 
-            if (zeroCross == TRUE)
-            {
+
+
                 switch (userOption)
                 {
                 case P1_BLUE:
                     direction = DIRECTION_Y_DECREASING;
+                    userOption = USER_NO_OPTION;
                     break;
                 case P1_GREEN:
                     direction = DIRECTION_X_INCREASING;
+                    userOption = USER_NO_OPTION;
                     break;
                 case P1_YELLOW:
                     direction = DIRECTION_Y_INCREASING;
+                    userOption = USER_NO_OPTION;
                     break;
                 case P1_RED:
                     direction = DIRECTION_X_DECREASING;
+                    userOption = USER_NO_OPTION;
                     break;
                 }
-                zeroCross = FALSE;
-            }
+
+        if (speed_counter == 0)
+        {
+            speed_counter = speedTh;
 
             // change the position of the snake head
             switch (direction)
@@ -217,7 +219,7 @@ void snake(color_t LEDS[PIXELS]){
             speedTh--;
             appleCounter =0;
         }
-        userOption = USER_NO_OPTION;
+
         if (exit != 1){
             array2Vector(LedTable,LEDS);
             sendFrame(LEDS);
