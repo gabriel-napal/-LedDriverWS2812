@@ -22,4 +22,5 @@ void looser(color_t LEDS[PIXELS]);
 
 unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor, unsigned int stringIndex);
 
+
 #endif /* VISUALEFFECTS_H_ */
