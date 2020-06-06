@@ -20,7 +20,9 @@ unsigned char waveInit(color_t LEDS[PIXELS], unsigned int theme);
 void looser(color_t LEDS[PIXELS]);
 
 
-unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor, unsigned int stringIndex);
+unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, color_t frameColor, color_t textColor, unsigned int stringIndex);
+unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* texte, unsigned char textLength, color_t frameColor, color_t textColor);
 
+#define NUMBER_MAX_LENGTH   3
 
 #endif /* VISUALEFFECTS_H_ */

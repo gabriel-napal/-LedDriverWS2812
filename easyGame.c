@@ -49,7 +49,7 @@ void snake(color_t LEDS[PIXELS]){
     unsigned char zeroCross = FALSE;                            //Flag used to avoid turning if the user keeps a button pushed
     unsigned char stringIndex = 0;
 
-    char score[10] = {"APPLES 000"};
+    char score[3] = {"000"};
 
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
@@ -228,12 +228,12 @@ void snake(color_t LEDS[PIXELS]){
     speed_counter = GAME_ENDING_SPEED;
     exit = FALSE;
 
-    // Shows final score
-    num2string(appleCounter, score,7);
+    // Shows Text
+
     while(exit == FALSE){
 
         if (speed_counter == 0){
-            if( displayText(LEDS,score, 10, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            if( displayText(LEDS,"APPLES", 6, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
                 exit = TRUE;
             stringIndex++;
             speed_counter = GAME_ENDING_SPEED;
@@ -241,6 +241,26 @@ void snake(color_t LEDS[PIXELS]){
         speed_counter--;
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
+
+    //Then the score
+    num2string(appleCounter, score,0);
+    exit = FALSE;
+    displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
+
+    while(exit == FALSE){
+
+        //Gets the user option and makes the decision
+        if (readGPIO_Flag == TRUE)
+        { //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+        }
+        if (userOption != USER_NO_OPTION)
+            exit = TRUE;
+
+    __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+    }
+
 }
 
 
@@ -505,22 +525,38 @@ void tetris(color_t LEDS[PIXELS]){
     }
     //Game ending
 
-    speed_counter = GAME_ENDING_SPEED;
+
     exit = FALSE;
 
-    // Shows final score
-       num2string(lineCounter, score,6);
-
+    // Shows final text
     while(exit == FALSE){
 
         if (speed_counter == 0){
-            if( displayText(LEDS, score, 9, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            if( displayText(LEDS, "LINES", 5, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
                 exit = TRUE;
             stringIndex++;
             speed_counter = GAME_ENDING_SPEED;
         }
         speed_counter--;
         __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+    }
+
+    //Then the score
+    num2string(lineCounter, score,0);
+    exit = FALSE;
+    displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
+
+    while(exit == FALSE){
+        //Gets the user option and makes the decision
+        if (readGPIO_Flag == TRUE)
+        { //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+        }
+        if (userOption != USER_NO_OPTION)
+            exit = TRUE;
+
+    __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
 
 }

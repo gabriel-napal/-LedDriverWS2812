@@ -248,18 +248,12 @@ void looser(color_t LEDS[PIXELS]){
 }
 
 
-unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, unsigned char speed, color_t frameColor, color_t textColor, unsigned int stringIndex){
-
-   // unsigned int i;     //Iteration index for string
-   // unsigned int j;     //Iteraton index for speed
+unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, color_t frameColor, color_t textColor, unsigned int stringIndex){
 
     unsigned int x;     //Coordinates at LedTable Array
     unsigned int y;
 
     unsigned int l;
-
-   // unsigned char userOption [KEYBOARD_BUFFER]  = {USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION, USER_NO_OPTION};
-
     color_t LedTable[LENGTH][HEIGHT];
 
     const unsigned char letterA [22][2]= {{4,12},{5,12},{3,11},{6,11},{3,10},{6,10},{3,9},{6,9},{2,8},{7,8},{2,7},{7,7},{2,6},{7,6},{1,5},{8,5},{1,4},{8,4},{3,8},{4,8},{5,8},{6,8}};
@@ -628,3 +622,154 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
 
 }
 
+unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, unsigned char textLength, color_t frameColor, color_t textColor){
+
+    unsigned int x;     //Coordinates at LedTable Array
+    unsigned int y;
+    unsigned int stringIndex;
+    unsigned int l;
+    color_t LedTable[LENGTH][HEIGHT];
+        //Numbers
+    const unsigned char number1 [5][2]= { {3,3},
+                                          {4,3},
+                                          {5,3},
+                                          {6,3},
+                                          {7,3}};
+
+    const unsigned char number2 [11][2]= { {3,2},{3,3},{3,4},
+                                                      {4,4},
+                                          {5,2},{5,3},{5,4},
+                                          {6,2},
+                                          {7,2},{7,3},{7,4}};
+
+    const unsigned char number3 [11][2]= { {3,2},{3,3},{3,4},
+                                                      {4,4},
+                                          {5,2},{5,3},{5,4},
+                                                      {6,4},
+                                          {7,2},{7,3},{7,4}};
+
+    const unsigned char number4 [9][2]= { {3,2},      {3,4},
+                                          {4,2},      {4,4},
+                                          {5,2},{5,3},{5,4},
+                                                      {6,4},
+                                                      {7,4}};
+
+    const unsigned char number5 [11][2]= {{3,2},{3,3},{3,4},
+                                          {4,2},
+                                          {5,2},{5,3},{5,4},
+                                                      {6,4},
+                                          {7,2},{7,3},{7,4}};
+
+    const unsigned char number6 [12][2]= { {3,2},{3,3},{3,4},
+                                          {4,2},
+                                          {5,2},{5,3},{5,4},
+                                          {6,2},      {6,4},
+                                          {7,2},{7,3},{7,4}};
+
+    const unsigned char number7 [7][2]= { {3,2},{3,3},{3,4},
+                                                       {4,4},
+                                                       {5,4},
+                                                       {6,4},
+                                                       {7,4}};
+
+    const unsigned char number8 [13][2]= { {3,2},{3,3},{3,4},
+                                           {4,2},      {4,4},
+                                           {5,2},{5,3},{5,4},
+                                           {6,2},       {6,4},
+                                           {7,2},{7,3},{7,4}};
+
+    const unsigned char number9 [12][2]= { {3,2},{3,3},{3,4},
+                                           {4,2},      {4,4},
+                                           {5,2},{5,3},{5,4},
+                                                       {6,4},
+                                           {7,2},{7,3},{7,4}};
+
+    const unsigned char number0 [12][2]= { {3,2},{3,3},{3,4},
+                                           {4,2},      {4,4},
+                                           {5,2},      {5,4},
+                                           {6,2},       {6,4},
+                                           {7,2},{7,3},{7,4}};
+
+
+    // sets the screen background
+    for (x = 0; x < LENGTH; x++)
+    {
+        for (y = 0; y < HEIGHT; y++)
+        {
+            LedTable[x][y] = frameColor;
+        }
+    }
+
+    for (stringIndex = 0; stringIndex < NUMBER_MAX_LENGTH; stringIndex++)
+    {
+        switch (stringNumber[stringIndex])
+        {
+        case '1':
+            for (l = 0; l < sizeof(number1) / 2; l++)
+            {
+                LedTable[number1[l][0]][number1[l][1] + 4 * stringIndex ] = textColor;
+            }
+            break;
+        case '2':
+            for (l = 0; l < sizeof(number2) / 2; l++)
+            {
+                LedTable[number2[l][0]][number2[l][1] + 4 * stringIndex ] = textColor;
+            }
+            break;
+
+    case '3':
+        for (l = 0; l < sizeof(number3) / 2; l++)
+        {
+            LedTable[number3[l][0]][number3[l][1]+ 4 * stringIndex ] = textColor;
+        }
+        break;
+    case '4':
+        for (l = 0; l < sizeof(number4) / 2; l++)
+        {
+            LedTable[number4[l][0]][number4[l][1] + 4 * stringIndex] = textColor;
+        }
+        break;
+    case '5':
+        for (l = 0; l < sizeof(number5) / 2; l++)
+        {
+            LedTable[number5[l][0]][number5[l][1] + 4 * stringIndex] = textColor;
+        }
+        break;
+    case '6':
+        for (l = 0; l < sizeof(number6) / 2; l++)
+        {
+            LedTable[number6[l][0]][number6[l][1] + 4 * stringIndex] = textColor;
+        }
+        break;
+    case '7':
+        for (l = 0; l < sizeof(number7) / 2; l++)
+        {
+            LedTable[number7[l][0]][number7[l][1]] = textColor;
+        }
+        break;
+    case '8':
+        for (l = 0; l < sizeof(number8) / 2; l++)
+        {
+            LedTable[number8[l][0]][number8[l][1]+ 4 * stringIndex] = textColor;
+        }
+        break;
+    case '9':
+        for (l = 0; l < sizeof(number9) / 2; l++)
+        {
+            LedTable[number9[l][0]][number9[l][1]+ 4 * stringIndex] = textColor;
+        }
+        break;
+    case '0':
+        for (l = 0; l < sizeof(number0) / 2; l++)
+        {
+            LedTable[number0[l][0]][number0[l][1]+ 4 * stringIndex] = textColor;
+        }
+        break;
+    default:
+        break;
+    }
+    }
+    updateLedTable(LedTable, LEDS);
+    return READ_OVERFLOW_FALSE;
+
+}
