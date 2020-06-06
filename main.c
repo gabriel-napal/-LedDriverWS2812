@@ -111,7 +111,7 @@ int main(void){
 
          if(speedCounter == 0){
 
-                if (displayText(LEDS, "BONJOUR  ", 9, 5, red_medium_1,
+                if (displayText(LEDS, "BONJOUR  ", 9, red_medium_1,
                                 yellow_dark_1,
                                 stringIndex) == READ_OVERFLOW_TRUE)
                     stringIndex = 0;
@@ -145,7 +145,7 @@ int main(void){
             //Update the screen with animation
             if (speedCounter == 0)
             {
-                if (displayText(LEDS, "VISUAL EFFECTS  ", 16, 5, green_medium_1,
+                if (displayText(LEDS, "VISUAL EFFECTS  ", 16, green_medium_1,
                                 orange_dark_1,
                                 stringIndex) == READ_OVERFLOW_TRUE)
                     stringIndex = 0;
@@ -185,7 +185,7 @@ int main(void){
             //Update the screen with animation
             if (speedCounter == 0)
             {
-                if (displayText(LEDS, "GAMES  ", 7, 5, blue_dark_3,
+                if (displayText(LEDS, "GAMES  ", 7, blue_dark_3,
                                              cyan_bright_1,
                                              stringIndex) == READ_OVERFLOW_TRUE)
                     stringIndex = 0;
@@ -217,6 +217,7 @@ int main(void){
                     stringIndex = 0;
                     speedCounter = MAIN_SCREEN_REFRESH;
                     userOption = USER_NO_OPTION;
+                    zeroCross = FALSE;
                 }
                 break;
             }
