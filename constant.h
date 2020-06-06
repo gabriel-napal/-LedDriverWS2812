@@ -30,6 +30,7 @@
 
 #define MAIN_SCREEN_REFRESH 40
 
+#define ASCII_0             48
 
 
 #endif /* CONSTANT_H_ */

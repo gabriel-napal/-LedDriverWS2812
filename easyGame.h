@@ -28,6 +28,8 @@ void tetris(color_t LEDS[PIXELS]);
 void moveTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, signed int movX, signed int movY, color_t* background);
 unsigned int rotateTetrisObject(color_t LedTable[LENGTH][HEIGHT], objectTetris* block, int randomObject, color_t* background, unsigned int nbOfRotation);
 unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, int yCoordinate, color_t *background,objectTetris *block);
+void num2string ( unsigned int number, char *string, unsigned int offset);
+
 
 #define DIRECTION_X_INCREASING      0
 #define DIRECTION_Y_INCREASING      1

@@ -49,6 +49,8 @@ void snake(color_t LEDS[PIXELS]){
     unsigned char zeroCross = FALSE;                            //Flag used to avoid turning if the user keeps a button pushed
     unsigned char stringIndex = 0;
 
+    char score[10] = {"APPLES 000"};
+
     //Initializes array
     for (x = 0 ; x < LENGTH ; x++){
         for (y = 0 ; y < HEIGHT ; y++){
@@ -225,10 +227,13 @@ void snake(color_t LEDS[PIXELS]){
 
     speed_counter = GAME_ENDING_SPEED;
     exit = FALSE;
+
+    // Shows final score
+    num2string(appleCounter, score,7);
     while(exit == FALSE){
 
         if (speed_counter == 0){
-            if( displayText(LEDS, "PERDU  ", 7, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            if( displayText(LEDS,score, 10, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
                 exit = TRUE;
             stringIndex++;
             speed_counter = GAME_ENDING_SPEED;
@@ -283,6 +288,9 @@ void tetris(color_t LEDS[PIXELS]){
     unsigned char zeroCross = FALSE;
 
     unsigned char stringIndex = 0;
+    unsigned char lineCounter = 0;
+
+    char score[9] = "LINES 000";
 
     //Initializes array
 
@@ -473,6 +481,7 @@ void tetris(color_t LEDS[PIXELS]){
                                    LedTable[x][HEIGHT-1] = background;
                                }
                                y--;
+                               lineCounter++;
                            }
                        }
                        // Check if the player loses
@@ -498,10 +507,14 @@ void tetris(color_t LEDS[PIXELS]){
 
     speed_counter = GAME_ENDING_SPEED;
     exit = FALSE;
+
+    // Shows final score
+       num2string(lineCounter, score,6);
+
     while(exit == FALSE){
 
         if (speed_counter == 0){
-            if( displayText(LEDS, "PERDU  ", 7, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            if( displayText(LEDS, score, 9, 2, red_dark_3, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
                 exit = TRUE;
             stringIndex++;
             speed_counter = GAME_ENDING_SPEED;
@@ -736,3 +749,40 @@ else // Rotation lays outside the x-Space, or below the floor. It cannot be done
     return FALSE;
 }
 
+
+/*
+ * num2string
+ *
+ * INPUTS:
+ * unsigned int number : integer to be converter
+ * unsigned char *string : array that will contain the ascii characters representing the number
+ * unsigned char offset : offset inside the array. This is useful is there's text before the number
+
+ *
+ */
+
+void num2string ( unsigned int number,  char *string, unsigned int offset){
+
+    unsigned int hundreds;
+    unsigned int tens;
+    unsigned int units;
+
+    //Maximum number possible is 999
+    if (number > 1000){
+        string[offset + 0] = 9 + ASCII_0;
+        string[offset + 1] = 9 + ASCII_0;
+        string[offset + 2] = 9 + ASCII_0;
+
+        return;
+    }
+
+    hundreds = (number/100);
+    tens = (number - hundreds * 100)/10;
+    units = (number - hundreds * 100 - tens *10);
+
+
+    string[offset + 0] = hundreds + ASCII_0;
+    string[offset + 1] = tens + ASCII_0;
+    string[offset + 2] = units + ASCII_0;
+
+}
