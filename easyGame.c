@@ -248,7 +248,7 @@ void snake(color_t LEDS[PIXELS]){
     //Then the score
     num2string(appleCounter, score,0);
     exit = FALSE;
-    displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
+    displayTextHorizontal(LEDS,score, 3, green_dark_1, color_off, yellow_dark_1, 1);
 
     while(exit == FALSE){
 
@@ -547,7 +547,7 @@ void tetris(color_t LEDS[PIXELS]){
     //Then the score
     num2string(lineCounter, score,0);
     exit = FALSE;
-    displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
+    displayTextHorizontal(LEDS,score, 3, green_dark_1, color_off, yellow_dark_1, 1);
 
     while(exit == FALSE){
         //Gets the user option and makes the decision

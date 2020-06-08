@@ -21,7 +21,7 @@ void looser(color_t LEDS[PIXELS]);
 
 
 unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textLength, color_t frameColor, color_t textColor, unsigned int stringIndex);
-unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* texte, unsigned char textLength, color_t frameColor, color_t textColor);
+unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, unsigned char textLength, color_t frameColor, color_t frameColor2, color_t textColor, unsigned char nbOfPlayers);
 
 #define NUMBER_MAX_LENGTH   3
 
