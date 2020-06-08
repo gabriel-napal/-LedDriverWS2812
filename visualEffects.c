@@ -744,7 +744,7 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
     case '7':
         for (l = 0; l < sizeof(number7) / 2; l++)
         {
-            LedTable[number7[l][0]][number7[l][1]] = textColor;
+            LedTable[number7[l][0]][number7[l][1]+ 4 * stringIndex] = textColor;
         }
         break;
     case '8':
