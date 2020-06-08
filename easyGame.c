@@ -825,3 +825,222 @@ void num2string ( unsigned int number,  char *string, unsigned int offset){
     string[offset + 2] = units + ASCII_0;
 
 }
+
+// Simple memory game for one or two players. Main objective is to repeat color patterns.
+
+void memory(color_t LEDS[PIXELS]){
+
+    unsigned int x;
+    unsigned int y;
+    unsigned int i;
+    color_t LedTable[LENGTH][HEIGHT];
+    color_t background = color_off;
+    color_t color;
+    unsigned char userOption = USER_NO_OPTION;
+
+    unsigned int nbOfPlayers;
+    unsigned int levelPlayer [2] = {0,0};
+    unsigned int playerOnGame [2] = {FALSE, FALSE};
+
+    unsigned char speed;
+    unsigned char speed_counter;
+
+    /* As we only need 4 colors, the table are only define with unsigned int,
+    the translation with the color are defined in the code */
+    unsigned int tableColorPlayer [2][30];
+    unsigned int colorUser;
+
+    for (x = LENGTH; x > 0 ; x--){
+        for (y = HEIGHT ; y > 0 ; y--)
+            LedTable[LENGTH - x][HEIGHT - y] = background;
+    }
+
+    array2Vector(LedTable,LEDS);
+    sendFrame(LEDS);
+
+    ////// First part initializes all information needed for the game (nb of player, color patterns and speed) /////
+    // First need to know if there is one or two players
+    while ((userOption != P1_RED) && (userOption != P1_BLUE)) {
+        if (readGPIO_Flag == TRUE){ //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+        }
+    }
+
+    if (userOption == P1_RED){
+        nbOfPlayers = 1;
+        playerOnGame[0] = TRUE;
+    }
+    else if (userOption == P1_BLUE){
+        nbOfPlayers = 2;
+        playerOnGame[0] = TRUE;
+        playerOnGame[1] = TRUE;
+    }
+
+    // Initialization of the colors arrays for all players
+    for (x = 30; x > 0 ; x--) {
+        tableColorPlayer[0][x] = pseudoRandomLCG(4);
+    }
+    if (nbOfPlayers == 2) {
+        for (x = 30; x > 0 ; x--) {
+            tableColorPlayer[1][x] = pseudoRandomLCG(4);
+        }
+    }
+
+   while ((userOption != P1_RED) && (userOption != P1_BLUE) && (userOption != P1_YELLOW)) {
+       if (readGPIO_Flag == TRUE){ //Time to read the User Options
+           readGPIO_Flag = FALSE;
+           userOption = readGPIO();
+       }
+   }
+
+   switch (userOption){
+   case P1_RED :
+       speed = SPEED_EASY;
+       break;
+   case P1_BLUE :
+       speed = SPEED_MEDIUM;
+       break;
+   case P1_YELLOW :
+       speed = SPEED_DIFFICULT;
+       break;
+   }
+
+   speed_counter = speed;
+
+    ////// Game's running until both players loose /////
+   while ((playerOnGame[0] == TRUE) || (playerOnGame[1] == TRUE)){
+       for (i = 0; i < 2 ; i ++) {
+           for (x = LENGTH; x > 0 ; x--){
+                for (y = HEIGHT; y > HEIGHT ; y--)
+                    LedTable[LENGTH - x][HEIGHT - y] = background;
+            }
+            if (playerOnGame[i] == TRUE){
+                // First display colors
+                x = 0;
+                while (x < levelPlayer[i] ){
+                    if (speed_counter == 0 ){
+                        speed_counter = speed;
+                        switch (tableColorPlayer[i][x]){
+                        case RED :
+                            color = red_medium_3;
+                            break;
+                        case BLUE :
+                            color = blue_medium_3;
+                            break;
+                        case YELLOW :
+                            color = yellow_dark_1;
+                            break;
+                        case GREEN :
+                            color = green_medium_1;
+                            break;
+                        }
+                        if (i == 0){
+                            if (nbOfPlayers == 2){
+                                for (x = LENGTH; x > 0 ; x--){
+                                    for (y = HEIGHT/2; y > 0 ; y--)
+                                        LedTable[LENGTH - x][HEIGHT - y] = color;
+                                }
+                            }
+                            else {
+                                for (x = LENGTH; x > 0 ; x--){
+                                    for (y = HEIGHT; y > 0 ; y--)
+                                        LedTable[LENGTH - x][HEIGHT - y] = color;
+                                }
+                            }
+                        }
+                        else {
+                            for (x = LENGTH; x > 0 ; x--){
+                                for (y = HEIGHT; y > HEIGHT/2 ; y--)
+                                    LedTable[LENGTH - x][HEIGHT - y] = color;
+                            }
+                        }
+                        x++;
+                        array2Vector(LedTable,LEDS);
+                        sendFrame(LEDS);
+                    }
+                    speed_counter--;
+                }
+                // Then check if it's OK.
+                x = 0;
+                while (x < levelPlayer[i] ){
+                    colorUser = NO_COLOR;
+                    if (readGPIO_Flag == TRUE){ //Time to read the User Options
+                        readGPIO_Flag = FALSE;
+                        userOption = readGPIO();
+                    }
+                    if (i==0){
+                        switch (userOption){
+                        case P1_RED :
+                            colorUser = RED ;
+                            break;
+                        case P1_BLUE :
+                            colorUser = BLUE ;
+                            break;
+                        case P1_YELLOW :
+                            colorUser = YELLOW ;
+                            break;
+                        case P1_GREEN :
+                            colorUser = GREEN ;
+                            break;
+                        }
+                    }
+                    else {
+                        switch (userOption){
+                        case P2_RED :
+                            colorUser = RED ;
+                            break;
+                        case P2_BLUE :
+                            colorUser = BLUE ;
+                            break;
+                        case P2_YELLOW :
+                            colorUser = YELLOW ;
+                            break;
+                        case P2_GREEN :
+                            colorUser = GREEN ;
+                            break;
+                        }
+                    }
+                    if (colorUser != NO_COLOR){
+                        if (colorUser != tableColorPlayer[i][x]){
+                            playerOnGame[i] = FALSE;
+                            break;
+                        }
+                        x++;
+                    }
+                }
+                if (playerOnGame[i] == FALSE){
+                    for (x = LENGTH; x > 0 ; x--){
+                        for (y = HEIGHT; y > 0 ; y--)
+                            LedTable[LENGTH - x][HEIGHT - y] = purple_medium_1;
+                            array2Vector(LedTable,LEDS);
+                            sendFrame(LEDS);
+                    }
+                }
+                else
+                    levelPlayer[i] ++;
+            }
+       }
+    }
+
+    ////// Displaying the final score before living the game /////
+    //  Need to check how to display score up to 30 for each player !
+
+        /*num2string(appleCounter, score,0);
+        exit = FALSE;
+        displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
+
+        while(exit == FALSE){
+
+            //Gets the user option and makes the decision
+            if (readGPIO_Flag == TRUE)
+            { //Time to read the User Options
+                readGPIO_Flag = FALSE;
+                userOption = readGPIO();
+            }
+            if (userOption != USER_NO_OPTION)
+                exit = TRUE;
+
+        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+        }*/
+}
