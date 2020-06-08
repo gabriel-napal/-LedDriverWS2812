@@ -79,22 +79,25 @@ void snake(color_t LEDS[PIXELS]){
             if (readGPIO_Flag == TRUE){ //Time to read the User Options
                    readGPIO_Flag = FALSE;
                    userOption = readGPIO();
-
             }
 
                 switch (userOption)
                 {
                 case P1_BLUE:
-                    direction = DIRECTION_Y_DECREASING;
+                    if (direction != DIRECTION_Y_INCREASING)
+                        direction = DIRECTION_Y_DECREASING;
                     break;
                 case P1_GREEN:
-                    direction = DIRECTION_X_INCREASING;
+                    if (direction != DIRECTION_X_DECREASING)
+                        direction = DIRECTION_X_INCREASING;
                     break;
                 case P1_YELLOW:
-                    direction = DIRECTION_Y_INCREASING;
+                    if (direction != DIRECTION_Y_DECREASING)
+                        direction = DIRECTION_Y_INCREASING;
                     break;
                 case P1_RED:
-                    direction = DIRECTION_X_DECREASING;
+                    if (direction != DIRECTION_X_INCREASING)
+                        direction = DIRECTION_X_DECREASING;
                     break;
                 }
                 userOption = USER_NO_OPTION;
