@@ -622,7 +622,7 @@ unsigned char displayText(color_t LEDS[PIXELS], char* texte, unsigned char textL
 
 }
 
-unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, unsigned char textLength, color_t frameColor, color_t textColor){
+unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, unsigned char textLength, color_t frameColor, color_t frameColor2, color_t textColor, unsigned char nbOfPlayers){
 
     unsigned int x;     //Coordinates at LedTable Array
     unsigned int y;
@@ -630,77 +630,93 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
     unsigned int l;
     color_t LedTable[LENGTH][HEIGHT];
         //Numbers
-    const unsigned char number1 [5][2]= { {3,3},
-                                          {4,3},
-                                          {5,3},
-                                          {6,3},
-                                          {7,3}};
+    const unsigned char number1 [5][2]= { {3,1},
+                                          {4,1},
+                                          {5,1},
+                                          {6,1},
+                                          {7,1}};
 
-    const unsigned char number2 [11][2]= { {3,2},{3,3},{3,4},
-                                                      {4,4},
-                                          {5,2},{5,3},{5,4},
-                                          {6,2},
-                                          {7,2},{7,3},{7,4}};
+    const unsigned char number2 [11][2]= { {3,0},{3,1},{3,2},
+                                                      {4,2},
+                                          {5,0},{5,1},{5,2},
+                                          {6,0},
+                                          {7,0},{7,1},{7,2}};
 
-    const unsigned char number3 [11][2]= { {3,2},{3,3},{3,4},
-                                                      {4,4},
-                                          {5,2},{5,3},{5,4},
-                                                      {6,4},
-                                          {7,2},{7,3},{7,4}};
+    const unsigned char number3 [11][2]= { {3,0},{3,1},{3,2},
+                                                      {4,2},
+                                          {5,0},{5,1},{5,2},
+                                                      {6,2},
+                                          {7,0},{7,1},{7,2}};
 
-    const unsigned char number4 [9][2]= { {3,2},      {3,4},
-                                          {4,2},      {4,4},
-                                          {5,2},{5,3},{5,4},
-                                                      {6,4},
-                                                      {7,4}};
+    const unsigned char number4 [9][2]= { {3,0},      {3,2},
+                                          {4,0},      {4,2},
+                                          {5,0},{5,1},{5,2},
+                                                      {6,2},
+                                                      {7,2}};
 
-    const unsigned char number5 [11][2]= {{3,2},{3,3},{3,4},
-                                          {4,2},
-                                          {5,2},{5,3},{5,4},
-                                                      {6,4},
-                                          {7,2},{7,3},{7,4}};
+    const unsigned char number5 [11][2]= {{3,0},{3,1},{3,2},
+                                          {4,0},
+                                          {5,0},{5,1},{5,2},
+                                                      {6,2},
+                                          {7,0},{7,1},{7,2}};
 
-    const unsigned char number6 [12][2]= { {3,2},{3,3},{3,4},
-                                          {4,2},
-                                          {5,2},{5,3},{5,4},
-                                          {6,2},      {6,4},
-                                          {7,2},{7,3},{7,4}};
+    const unsigned char number6 [12][2]= { {3,0},{3,1},{3,2},
+                                          {4,0},
+                                          {5,0},{5,1},{5,2},
+                                          {6,0},      {6,2},
+                                          {7,0},{7,1},{7,2}};
 
-    const unsigned char number7 [7][2]= { {3,2},{3,3},{3,4},
-                                                       {4,4},
-                                                       {5,4},
-                                                       {6,4},
-                                                       {7,4}};
+    const unsigned char number7 [7][2]= { {3,0},{3,1},{3,2},
+                                                       {4,2},
+                                                       {5,2},
+                                                       {6,2},
+                                                       {7,2}};
 
-    const unsigned char number8 [13][2]= { {3,2},{3,3},{3,4},
-                                           {4,2},      {4,4},
-                                           {5,2},{5,3},{5,4},
-                                           {6,2},       {6,4},
-                                           {7,2},{7,3},{7,4}};
+    const unsigned char number8 [13][2]= { {3,0},{3,1},{3,2},
+                                           {4,0},      {4,2},
+                                           {5,0},{5,1},{5,2},
+                                           {6,0},       {6,2},
+                                           {7,0},{7,1},{7,2}};
 
-    const unsigned char number9 [12][2]= { {3,2},{3,3},{3,4},
-                                           {4,2},      {4,4},
-                                           {5,2},{5,3},{5,4},
-                                                       {6,4},
-                                           {7,2},{7,3},{7,4}};
+    const unsigned char number9 [12][2]= { {3,0},{3,1},{3,2},
+                                           {4,0},      {4,2},
+                                           {5,0},{5,1},{5,2},
+                                                       {6,2},
+                                           {7,0},{7,1},{7,2}};
 
-    const unsigned char number0 [12][2]= { {3,2},{3,3},{3,4},
-                                           {4,2},      {4,4},
-                                           {5,2},      {5,4},
-                                           {6,2},       {6,4},
-                                           {7,2},{7,3},{7,4}};
+    const unsigned char number0 [12][2]= { {3,0},{3,1},{3,2},
+                                           {4,0},      {4,2},
+                                           {5,0},      {5,2},
+                                           {6,0},       {6,2},
+                                           {7,0},{7,1},{7,2}};
 
 
     // sets the screen background
-    for (x = 0; x < LENGTH; x++)
-    {
-        for (y = 0; y < HEIGHT; y++)
+    if (nbOfPlayers == 1){
+        for (x = 0; x < LENGTH; x++)
         {
-            LedTable[x][y] = frameColor;
+            for (y = 0; y < HEIGHT; y++)
+            {
+                LedTable[x][y] = frameColor;
+            }
+        }
+    }
+    else {
+        for (x = 0; x < LENGTH; x++)
+        {
+            for (y = 0; y < HEIGHT/2; y++)
+            {
+                LedTable[x][y] = frameColor;
+            }
+            for (y = HEIGHT/2; y < HEIGHT; y++)
+            {
+                LedTable[x][y] = frameColor2;
+            }
         }
     }
 
-    for (stringIndex = 0; stringIndex < NUMBER_MAX_LENGTH; stringIndex++)
+
+    for (stringIndex = 0; stringIndex < textLength; stringIndex++)
     {
         switch (stringNumber[stringIndex])
         {
