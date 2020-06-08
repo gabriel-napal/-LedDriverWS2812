@@ -826,6 +826,35 @@ void num2string ( unsigned int number,  char *string, unsigned int offset){
 
 }
 
+void num2string2Players ( unsigned int number1, unsigned int number2, char *string){
+
+    unsigned int tens1;
+    unsigned int units1;
+    unsigned int tens2;
+    unsigned int units2;
+
+    //Maximum number possible is 99 for each players
+    if ((number1 > 100)||(number2 > 100)){
+        string[0] = 9 + ASCII_0;
+        string[1] = 9 + ASCII_0;
+        string[2] = 9 + ASCII_0;
+        string[3] = 9 + ASCII_0;
+        return;
+    }
+
+    tens1 = (number1 /10);
+    units1 = (number1 - tens1 * 10);
+    tens2 = (number2 /10);
+    units2 = (number2 - tens2 *10);
+
+
+    string[0] = tens1 + ASCII_0;
+    string[1] = units1 + ASCII_0;
+    string[2] = tens2 + ASCII_0;
+    string[2] = units2 + ASCII_0;
+
+}
+
 // Simple memory game for one or two players. Main objective is to repeat color patterns.
 
 void memory(color_t LEDS[PIXELS]){
@@ -837,10 +866,12 @@ void memory(color_t LEDS[PIXELS]){
     color_t background = color_off;
     color_t color;
     unsigned char userOption = USER_NO_OPTION;
+    unsigned char exit;
 
     unsigned int nbOfPlayers;
     unsigned int levelPlayer [2] = {0,0};
     unsigned int playerOnGame [2] = {FALSE, FALSE};
+    char scoreTotal[4] = {"0000"};
 
     unsigned char speed;
     unsigned char speed_counter;
@@ -1024,23 +1055,27 @@ void memory(color_t LEDS[PIXELS]){
     }
 
     ////// Displaying the final score before living the game /////
-    //  Need to check how to display score up to 30 for each player !
+   if (nbOfPlayers==2){
+       num2string2Players(levelPlayer[0],levelPlayer[1], scoreTotal);
+       displayTextHorizontal(LEDS,scoreTotal, 4, green_dark_1, blue_dark_1, yellow_dark_1, 2);
+   }
+   else {
+       num2string(levelPlayer[0], scoreTotal,0);
+       displayTextHorizontal(LEDS,scoreTotal, 3, green_dark_1, color_off, yellow_dark_1, 1);
+   }
 
-        /*num2string(appleCounter, score,0);
-        exit = FALSE;
-        displayTextHorizontal(LEDS,score, 3, green_dark_1, yellow_dark_1);
 
-        while(exit == FALSE){
+   exit = FALSE;
+   while(exit == FALSE){
+       //Gets the user option and makes the decision
+       if (readGPIO_Flag == TRUE)
+       { //Time to read the User Options
+           readGPIO_Flag = FALSE;
+           userOption = readGPIO();
+       }
+       if (userOption != USER_NO_OPTION)
+           exit = TRUE;
 
-            //Gets the user option and makes the decision
-            if (readGPIO_Flag == TRUE)
-            { //Time to read the User Options
-                readGPIO_Flag = FALSE;
-                userOption = readGPIO();
-            }
-            if (userOption != USER_NO_OPTION)
-                exit = TRUE;
-
-        __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
-        }*/
+   __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+   }
 }

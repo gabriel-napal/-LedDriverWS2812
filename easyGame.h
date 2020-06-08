@@ -36,6 +36,7 @@ unsigned int checkCollision(color_t LedTable[LENGTH][HEIGHT], int xCoordinate, i
 void memory(color_t LEDS[PIXELS]);
 
 void num2string ( unsigned int number, char *string, unsigned int offset);
+void num2string2Players ( unsigned int number1, unsigned int number2, char *string);
 
 
 #define DIRECTION_X_INCREASING      0
