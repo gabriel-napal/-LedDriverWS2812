@@ -220,6 +220,16 @@ int main(void){
                     zeroCross = FALSE;
                 }
                 break;
+            case P1_GREEN:
+                if (zeroCross == TRUE)
+                {
+                    memory(LEDS);
+                    stringIndex = 0;
+                    speedCounter = MAIN_SCREEN_REFRESH;
+                    userOption = USER_NO_OPTION;
+                    zeroCross = FALSE;
+                }
+                break;
             }
 
             break;

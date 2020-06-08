@@ -21,6 +21,12 @@
 #define P1_YELLOW           0x04
 #define P1_GREEN            0x08
 
+#define P2_RED              0x10
+#define P2_BLUE             0x20
+#define P2_YELLOW           0x40
+#define P2_GREEN            0x80
+
+
 #define KEYBOARD_BUFFER     5
 
 #define TRUE    1
