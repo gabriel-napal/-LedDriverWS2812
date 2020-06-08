@@ -42,6 +42,11 @@ void initGPIO(void){
     P1REN |= (BIT2 + BIT3 + BIT4 + BIT5) ;             //Configure pull up resitors
     P1OUT |= (BIT2 + BIT3 + BIT4 + BIT5) ;
 
+    P2DIR &= ~(BIT0 + BIT2 + BIT4 + BIT5) ;             //Ports 2.0, 2.2, 2.4, 2.5 to OUTPUT
+    P2SEL &= ~(BIT0 + BIT2 + BIT4 + BIT5) ;
+
+    P2REN |= (BIT0 + BIT2 + BIT4 + BIT5) ;             //Configure pull up resitors
+    P2OUT |= (BIT0 + BIT2 + BIT4 + BIT5) ;
 /*
 //    P1IE = 0x00;
     P1DIR &= (BIT0 + BIT1);                            //Set P1.0 and P1.1 to input direction, pull up resistor
@@ -74,7 +79,7 @@ unsigned char readGPIO(void){
 
     //GPIO_Status = (P4IN & BIT0) + ( P4IN & BIT1 ) + (P1IN & BIT0)<<2 +  (P1IN & BIT1)<<3;
 
-
+    // Port 1
     if (P1IN & BIT2)
         GPIO_Status &= ~BIT0;
     else
@@ -95,8 +100,30 @@ unsigned char readGPIO(void){
     else
         GPIO_Status |= BIT3;
 
+    //Port 2
+    if (P2IN & BIT0)
+        GPIO_Status &= ~BIT4;
+    else
+        GPIO_Status |= BIT4;
 
-    return (GPIO_Status & 0x0F);
+    if (P2IN & BIT2)
+        GPIO_Status &= ~BIT5;
+    else
+        GPIO_Status |= BIT5;
+
+    if (P2IN & BIT4)
+        GPIO_Status &= ~BIT6;
+    else
+        GPIO_Status |= BIT6;
+
+    if (P2IN & BIT5)
+        GPIO_Status &= ~BIT7;
+    else
+        GPIO_Status |= BIT7;
+
+
+
+    return GPIO_Status;
 }
 
 /*
