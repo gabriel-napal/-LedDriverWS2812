@@ -869,6 +869,7 @@ void memory(color_t LEDS[PIXELS]){
     color_t color;
     unsigned char userOption = USER_NO_OPTION;
     unsigned char exit;
+    unsigned char light_off;
 
     unsigned int nbOfPlayers;
     unsigned int levelPlayer [2] = {1,1};
@@ -876,8 +877,9 @@ void memory(color_t LEDS[PIXELS]){
     unsigned int playerOnGame [2] = {FALSE, FALSE};
     char scoreTotal[4] = {"0000"};
 
-    unsigned char speed;
-    unsigned char speed_counter;
+    unsigned int speed;
+    unsigned int speed_counter;
+    unsigned int stringIndex = 0;
 
     /* As we only need 4 colors, the table are only define with unsigned int,
     the translation with the color are defined in the code */
@@ -895,7 +897,7 @@ void memory(color_t LEDS[PIXELS]){
     ////// First part initializes all information needed for the game (nb of player, color patterns and speed) /////
     // First need to know if there is one or two players
 	
-    displayTextHorizontal(LEDS,"12", 2, red_dark_1, blue_dark_1, color_off, 2);
+    displayTextHorizontal(LEDS,"0102", 4, red_dark_1, blue_dark_1, color_off, 2);
 
     while ((userOption != P1_RED) && (userOption != P1_BLUE)) {
         if (readGPIO_Flag == TRUE){ //Time to read the User Options
@@ -908,29 +910,51 @@ void memory(color_t LEDS[PIXELS]){
     if (userOption == P1_RED){
         nbOfPlayers = 1;
         playerOnGame[0] = TRUE;
-		if( displayText(LEDS,"1 PLAYER", 8, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
-            exit = TRUE;
+        speed_counter = GAME_ENDING_SPEED;
+        exit = FALSE;
+        while (exit != TRUE){
+            if (speed_counter == 0){
+                if( displayText(LEDS,"1 PLAYER", 8, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                    exit = TRUE;
+                stringIndex++;
+                speed_counter = GAME_ENDING_SPEED;
+            }
+            speed_counter--;
+            __bis_SR_register(LPM0_bits + GIE);
+        }
+        exit = FALSE ;
     }
     else if (userOption == P1_BLUE){
         nbOfPlayers = 2;
         playerOnGame[0] = TRUE;
         playerOnGame[1] = TRUE;
-		if( displayText(LEDS,"2 PLAYERS", 9, blue_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
-            exit = TRUE;
+        speed_counter = GAME_ENDING_SPEED;
+        exit = FALSE ;
+        while (exit != TRUE){
+            if (speed_counter == 0){
+                if( displayText(LEDS,"2 PLAYERS", 9, blue_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                    exit = TRUE;
+                stringIndex++;
+                speed_counter = GAME_ENDING_SPEED;
+            }
+            speed_counter--;
+            __bis_SR_register(LPM0_bits + GIE);
+        }
+        exit = FALSE ;
     }
     userOption = USER_NO_OPTION;
-	// Need an update ! 
-	displayTextHorizontal(LEDS,"123", 3, red_dark_1, blue_dark_1, yellow_dark_1, 3);
 
     // Initialization of the colors arrays for all players
     for (x = 30; x > 0 ; x--) {
-        tableColorPlayer[0][x] = pseudoRandomLCG(4);
+        tableColorPlayer[0][x-1] = pseudoRandomLCG(4);
     }
     if (nbOfPlayers == 2) {
         for (x = 30; x > 0 ; x--) {
-            tableColorPlayer[1][x] = pseudoRandomLCG(4);
+            tableColorPlayer[1][x-1] = pseudoRandomLCG(4);
         }
     }
+
+    displayTextHorizontal(LEDS,"1230", 4, red_dark_1, blue_dark_1, yellow_dark_1, 3);
 
     while ((userOption != P1_RED) && (userOption != P1_BLUE) && (userOption != P1_YELLOW)) {
        if (readGPIO_Flag == TRUE){ //Time to read the User Options
@@ -943,19 +967,54 @@ void memory(color_t LEDS[PIXELS]){
    switch (userOption){
    case P1_RED :
        speed = SPEED_EASY;
-	   if( displayText(LEDS,"EASY", 4, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
-            exit = TRUE;
+       speed_counter = GAME_ENDING_SPEED;
+       exit = FALSE ;
+       stringIndex = 0;
+       while (exit != TRUE){
+           if (speed_counter == 0){
+               if( displayText(LEDS,"EASY", 4, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                   exit = TRUE;
+               stringIndex++;
+               speed_counter = GAME_ENDING_SPEED;
+           }
+           speed_counter--;
+           __bis_SR_register(LPM0_bits + GIE);
+       }
+       exit = FALSE ;
        break;
    case P1_BLUE :
        speed = SPEED_MEDIUM;
-	   if( displayText(LEDS,"MEDIUM", 6, yellow_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
-            exit = TRUE;
+       speed_counter = GAME_ENDING_SPEED;
+       exit = FALSE ;
+       stringIndex = 0;
+       while (exit != TRUE){
+           if (speed_counter == 0){
+               if( displayText(LEDS,"MEDIUM", 6, blue_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                   exit = TRUE;
+               stringIndex++;
+               speed_counter = GAME_ENDING_SPEED;
+           }
+           speed_counter--;
+           __bis_SR_register(LPM0_bits + GIE);
+       }
+       exit = FALSE ;
        break;
    case P1_YELLOW :
        speed = SPEED_DIFFICULT;
-	   if( displayText(LEDS,"HARD", 4, yellow_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
-            exit = TRUE;
-       break;
+       speed_counter = GAME_ENDING_SPEED;
+       exit = FALSE ;
+       stringIndex = 0;
+       while (exit != TRUE){
+           if (speed_counter == 0){
+               if( displayText(LEDS,"HARD", 4, yellow_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+                   exit = TRUE;
+               stringIndex++;
+               speed_counter = GAME_ENDING_SPEED;
+           }
+           speed_counter--;
+           __bis_SR_register(LPM0_bits + GIE);
+       }
+       exit = FALSE ;
    }
    userOption = USER_NO_OPTION;
 
@@ -964,55 +1023,75 @@ void memory(color_t LEDS[PIXELS]){
     ////// Game's running until both players loose /////
    while ((playerOnGame[0] == TRUE) || (playerOnGame[1] == TRUE)){
        for (i = 0; i < 2 ; i ++) {
-           for (x = LENGTH; x > 0 ; x--){
-                for (y = HEIGHT; y > HEIGHT ; y--)
-                    LedTable[LENGTH - x][HEIGHT - y] = background;
-            }
             if (playerOnGame[i] == TRUE){
-                // First display colors
+                // First turn off the screen
+                for (x = LENGTH; x > 0 ; x--){
+                     for (y = HEIGHT; y > HEIGHT ; y--)
+                         LedTable[LENGTH - x][HEIGHT - y] = background;
+                 }
+                 array2Vector(LedTable,LEDS);
+                 sendFrame(LEDS);
+                 light_off = TRUE;
+
+                // Then display colors
+                // Probleme de synchro et de display
                 level = 1;
                 while (level < (levelPlayer[i] + 1)){
                     if (speed_counter == 0 ){
                         speed_counter = speed;
-                        switch (tableColorPlayer[i][level-1]){
-                        case RED :
-                            color = red_medium_3;
-                            break;
-                        case BLUE :
-                            color = blue_dark_2;
-                            break;
-                        case YELLOW :
-                            color = yellow_dark_1;
-                            break;
-                        case GREEN :
-                            color = green_medium_1;
-                            break;
-                        }
-                        if (i == 0){
-                            if (nbOfPlayers == 2){
-                                for (x = LENGTH; x > 0 ; x--){
-                                    for (y = HEIGHT/2; y > 0 ; y--)
-                                        LedTable[LENGTH - x][HEIGHT - y] = color;
+                        if (light_off == TRUE) {
+                            switch (tableColorPlayer[i][level-1]){
+                            case RED :
+                                color = red_medium_3;
+                                break;
+                            case BLUE :
+                                color = blue_dark_2;
+                                break;
+                            case YELLOW :
+                                color = yellow_dark_1;
+                                break;
+                            case GREEN :
+                                color = green_medium_1;
+                                break;
+                            }
+                            if (i == 0){
+                                if (nbOfPlayers == 2){
+                                    for (x = LENGTH; x > 0 ; x--){
+                                        for (y = HEIGHT/2; y > 0 ; y--)
+                                            LedTable[LENGTH - x][HEIGHT - y] = color;
+                                    }
+                                }
+                                else {
+                                    for (x = LENGTH; x > 0 ; x--){
+                                        for (y = HEIGHT; y > 0 ; y--)
+                                            LedTable[LENGTH - x][HEIGHT - y] = color;
+                                    }
                                 }
                             }
                             else {
                                 for (x = LENGTH; x > 0 ; x--){
-                                    for (y = HEIGHT; y > 0 ; y--)
+                                    for (y = HEIGHT; y > HEIGHT/2 ; y--)
                                         LedTable[LENGTH - x][HEIGHT - y] = color;
                                 }
                             }
+                            level++;
+                            light_off = FALSE;
                         }
-                        else {
+                        else
+                        {
                             for (x = LENGTH; x > 0 ; x--){
-                                for (y = HEIGHT; y > HEIGHT/2 ; y--)
-                                    LedTable[LENGTH - x][HEIGHT - y] = color;
+                                for (y = HEIGHT; y > HEIGHT ; y--)
+                                    LedTable[LENGTH - x][HEIGHT - y] = background;
                             }
+                            array2Vector(LedTable,LEDS);
+                            sendFrame(LEDS);
+                            light_off = TRUE;
                         }
-                        level++;
                         array2Vector(LedTable,LEDS);
                         sendFrame(LEDS);
                     }
                     speed_counter--;
+                    __bis_SR_register(LPM0_bits + GIE);
                 }
                 // Then check if it's OK.
                 level = 1;
