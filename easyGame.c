@@ -1102,3 +1102,201 @@ void memory(color_t LEDS[PIXELS]){
    __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
    }
 }
+
+
+/*
+// Pong Game, 2 players game. First to 5, win.
+
+void pong(color_t LEDS[PIXELS]){
+	
+	unsigned int x;
+    unsigned int y;
+    unsigned int i;
+    color_t LedTable[LENGTH][HEIGHT];
+    color_t background = color_off;
+    color_t color;
+    unsigned char userOption = USER_NO_OPTION;
+    unsigned char exit = 0;
+	unsigned int newBall = TRUE;
+	unsigned int serviceSide = 1;
+	unsigned int checkPosition;
+	unsigned int turnCommand1 = USER_NO_TURN;
+	unsigned int turnCommand2 = USER_NO_TURN;
+	
+	// 3 informations correspond to x, y and the angle of the ball trayectory
+	unsigned int ball[3] = {0,0,0};
+	
+	unsigned int score [2] = {0,0};
+	unsigned int racket1[4] = {3,4,5,6};  
+	unsigned int racket2[4] = {6,5,4,3}; 
+	
+	unsigned char speed;
+    unsigned char speed_counter;
+	
+	// set the background off
+	for (x = LENGTH; x > 0 ; x--){
+        for (y = HEIGHT ; y > 0 ; y--)
+            LedTable[LENGTH - x][HEIGHT - y] = background;
+    }
+	
+	// creating the two rackets
+	for (i == 4; i>0;i++)
+		LedTable[racket1(i-1)][0] = yellow_dark_1;
+		LedTable[racket2(i-1)][HEIGHT] = yellow_dark_1;
+	}
+	
+	array2Vector(LedTable,LEDS);
+    sendFrame(LEDS);
+	
+    // Game's running until one of the two players get to 5 
+   // Begin the game
+    while (exit!=1){
+
+        //Gets the user option and makes the decision
+        if (readGPIO_Flag == TRUE)
+        { //Time to read the User Options
+            readGPIO_Flag = FALSE;
+            userOption = readGPIO();
+
+            if (userOption == USER_NO_OPTION)
+                zeroCross = TRUE;
+        }
+
+        // Creates object
+        if (newBall == TRUE) { 
+            if (serviceSide == 1){				
+				checkPosition = FALSE; 
+				while (checkPosition != TRUE){
+					checkPosition = TRUE; 
+					randomPosition = pseudoRandomLCG(10);
+					for (i == 4; i>0; i++){
+						if (randomPosition == racket1(i-1))
+							checkPosition = FALSE; 
+					}
+				}
+				
+				ball[0]= randomPosition;
+				ball[1]= 1;
+				ball[2]= pseudoRandomLCG(5);
+			}
+			else {
+				checkPosition = FALSE; 
+				while (checkPosition != TRUE){
+					checkPosition = TRUE; 
+					randomPosition = pseudoRandomLCG(10);
+					for (i == 4; i>0; i++){
+						if (randomPosition == racket2(i-1))
+							checkPosition = FALSE; 
+					}
+				}
+				
+				ball[0]= randomPosition;
+				ball[1]= HEIGHT-1;
+				ball[2]= pseudoRandomLCG(5);
+			}
+			
+			LedTable[ball(0)][ball(1)] = red_dark_1;	
+			newBall = FALSE; 			
+		}
+		
+        else if (newBall == FALSE){			
+			switch (userOption){
+			case P1_GREEN: // To go right
+				turnCommand1 = USER_GO_RIGHT;
+				break;
+			case P1_RED: // To go left
+				turnCommand1 = USER_GO_LEFT;
+				break;
+			case P2_GREEN: // To go right
+				turnCommand2 = USER_GO_RIGHT;
+				break;
+			case P2_RED: // To go left
+				turnCommand2 = USER_GO_LEFT;
+				break;
+			}
+
+		   if (turnCommand1 != USER_NO_OPTION){
+			   switch (turnCommand1){
+			   case USER_GO_LEFT :
+					if (racket1[0] != 0){
+						for (i = 0; i < 4; i++){
+							racket1[i] = racket1[i] - 1 
+						}
+					}
+			   break;
+			   case USER_GO_RIGHT :
+				   if (racket1[3] < LENGTH - 1){
+						for (i = 0; i < 4; i++){
+							racket1[i] = racket1[i] + 1 
+						}
+				   }
+				   break;
+			   }
+               userOption = USER_NO_OPTION;           
+			}
+			if (turnCommand2 != USER_NO_OPTION){
+			   switch (turnCommand2){
+			   case USER_GO_LEFT :
+					if (racket1[0] < LENGTH - 1){
+						for (i = 0; i < 4; i++){
+							racket1[i] = racket1[i] + 1 
+						}
+					}
+			   break;
+			   case USER_GO_RIGHT :
+				   if (racket1[3] != 0){
+						for (i = 0; i < 4; i++){
+							racket1[i] = racket1[i] - 1 
+						}
+				   }
+				break;
+			   }
+               userOption = USER_NO_OPTION;
+			}
+
+
+			// If it's time, the screen is refreshed
+			if (speed_counter == speed){
+				
+				//game
+
+			   // Check if one of the players loses
+			   if (ball[1] == HEIGHT){
+				   score [0] ++; 
+				   newBall == TRUE; 
+				   if (score [0] == 5)
+						exit = 1;
+			   }
+			   else if (ball[1] == 0){
+				   score [1] ++; 
+				   newBall == TRUE; 
+				   if (score [1] == 5)
+						exit = 1;
+			   }
+			}
+
+        }
+        if (exit != 1){
+            updateLedTable(LedTable,LEDS);
+            turnCommand = USER_NO_TURN;
+        }
+    }
+    //Game ending
+
+    num2string2Players(score[0],score[1], scoreTotal);
+    displayTextHorizontal(LEDS,scoreTotal, 4, green_dark_1, blue_dark_1, yellow_dark_1, 2);
+
+   exit = FALSE;
+   while(exit == FALSE){
+       //Gets the user option and makes the decision
+       if (readGPIO_Flag == TRUE)
+       { //Time to read the User Options
+           readGPIO_Flag = FALSE;
+           userOption = readGPIO();
+       }
+       if (userOption != USER_NO_OPTION)
+           exit = TRUE;
+
+   __bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
+   }
+} */
