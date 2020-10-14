@@ -34,6 +34,7 @@ void snake(color_t LEDS[PIXELS]){
     unsigned int newApple = 0;
     unsigned int testApple = 0;
     unsigned int appleCounter = 0;
+    unsigned int appleScore = 0;
 
     unsigned int snakeLength = 3;                               //Initial snake length
     //unsigned int turnCommand = USER_NO_TURN;                  // Not used anymore
@@ -150,6 +151,7 @@ void snake(color_t LEDS[PIXELS]){
             if ((x == apple[0]) && (y == apple[1]))
             {
                 appleCounter++;
+                appleScore++;
                 if (apple[2] == RED_APPLE)
                 {
                     snakeLength = snakeLength + 1;
@@ -246,7 +248,7 @@ void snake(color_t LEDS[PIXELS]){
     }
 
     //Then the score
-    num2string(appleCounter, score,0);
+    num2string(appleScore, score,0);
     exit = FALSE;
     displayTextHorizontal(LEDS,score, 3, green_dark_1, color_off, yellow_dark_1, 1);
 
