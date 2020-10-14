@@ -872,6 +872,7 @@ void memory(color_t LEDS[PIXELS]){
 
     unsigned int nbOfPlayers;
     unsigned int levelPlayer [2] = {1,1};
+	unsigned int level; 
     unsigned int playerOnGame [2] = {FALSE, FALSE};
     char scoreTotal[4] = {"0000"};
 
@@ -893,6 +894,9 @@ void memory(color_t LEDS[PIXELS]){
 
     ////// First part initializes all information needed for the game (nb of player, color patterns and speed) /////
     // First need to know if there is one or two players
+	
+    displayTextHorizontal(LEDS,"12", 2, red_dark_1, blue_dark_1, color_off, 2);
+
     while ((userOption != P1_RED) && (userOption != P1_BLUE)) {
         if (readGPIO_Flag == TRUE){ //Time to read the User Options
             readGPIO_Flag = FALSE;
@@ -904,13 +908,19 @@ void memory(color_t LEDS[PIXELS]){
     if (userOption == P1_RED){
         nbOfPlayers = 1;
         playerOnGame[0] = TRUE;
+		if( displayText(LEDS,"1 PLAYER", 8, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            exit = TRUE;
     }
     else if (userOption == P1_BLUE){
         nbOfPlayers = 2;
         playerOnGame[0] = TRUE;
         playerOnGame[1] = TRUE;
+		if( displayText(LEDS,"2 PLAYERS", 9, blue_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            exit = TRUE;
     }
     userOption = USER_NO_OPTION;
+	// Need an update ! 
+	displayTextHorizontal(LEDS,"123", 3, red_dark_1, blue_dark_1, yellow_dark_1, 3);
 
     // Initialization of the colors arrays for all players
     for (x = 30; x > 0 ; x--) {
@@ -922,7 +932,7 @@ void memory(color_t LEDS[PIXELS]){
         }
     }
 
-   while ((userOption != P1_RED) && (userOption != P1_BLUE) && (userOption != P1_YELLOW)) {
+    while ((userOption != P1_RED) && (userOption != P1_BLUE) && (userOption != P1_YELLOW)) {
        if (readGPIO_Flag == TRUE){ //Time to read the User Options
            readGPIO_Flag = FALSE;
            userOption = readGPIO();
@@ -933,12 +943,18 @@ void memory(color_t LEDS[PIXELS]){
    switch (userOption){
    case P1_RED :
        speed = SPEED_EASY;
+	   if( displayText(LEDS,"EASY", 4, red_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            exit = TRUE;
        break;
    case P1_BLUE :
        speed = SPEED_MEDIUM;
+	   if( displayText(LEDS,"MEDIUM", 6, yellow_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            exit = TRUE;
        break;
    case P1_YELLOW :
        speed = SPEED_DIFFICULT;
+	   if( displayText(LEDS,"HARD", 4, yellow_dark_1, color_off, stringIndex)  == READ_OVERFLOW_TRUE)
+            exit = TRUE;
        break;
    }
    userOption = USER_NO_OPTION;
@@ -954,11 +970,11 @@ void memory(color_t LEDS[PIXELS]){
             }
             if (playerOnGame[i] == TRUE){
                 // First display colors
-                x = 0;
-                while (x < levelPlayer[i] ){
+                level = 1;
+                while (level < (levelPlayer[i] + 1)){
                     if (speed_counter == 0 ){
                         speed_counter = speed;
-                        switch (tableColorPlayer[i][x-1]){
+                        switch (tableColorPlayer[i][level-1]){
                         case RED :
                             color = red_medium_3;
                             break;
@@ -992,15 +1008,15 @@ void memory(color_t LEDS[PIXELS]){
                                     LedTable[LENGTH - x][HEIGHT - y] = color;
                             }
                         }
-                        x++;
+                        level++;
                         array2Vector(LedTable,LEDS);
                         sendFrame(LEDS);
                     }
                     speed_counter--;
                 }
                 // Then check if it's OK.
-                x = 0;
-                while (x < levelPlayer[i] ){
+                level = 1;
+                while (level < (levelPlayer[i] + 1)){
                     colorUser = NO_COLOR;
                     if (readGPIO_Flag == TRUE){ //Time to read the User Options
                         readGPIO_Flag = FALSE;
@@ -1040,11 +1056,11 @@ void memory(color_t LEDS[PIXELS]){
                     }
                     userOption = USER_NO_OPTION;
                     if (colorUser != NO_COLOR){
-                        if (colorUser != tableColorPlayer[i][x-1]){
+                        if (colorUser != tableColorPlayer[i][level-1]){
                             playerOnGame[i] = FALSE;
                             break;
                         }
-                        x++;
+                        level++;
                     }
                 }
                 if (playerOnGame[i] == FALSE){
