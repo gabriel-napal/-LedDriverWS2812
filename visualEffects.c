@@ -701,7 +701,7 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
             }
         }
     }
-    else {
+    else if (nbOfPlayers == 2) {
         for (x = 0; x < LENGTH; x++)
         {
             for (y = 0; y < HEIGHT/2; y++)
@@ -713,6 +713,27 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
                 LedTable[x][y] = frameColor2;
             }
         }
+    }
+    else {
+       for (x = 0; x < LENGTH; x++)
+        {
+            for (y = 0; y < HEIGHT/4; y++)
+            {
+                LedTable[x][y] = frameColor;
+            }
+            for (y = HEIGHT/4; y < HEIGHT/2; y++)
+            {
+                LedTable[x][y] = frameColor2;
+            }
+           for (y = HEIGHT/2; y < HEIGHT*3/4; y++)
+            {
+                LedTable[x][y] = textColor;
+            }
+            for (y = HEIGHT*3/4; y < HEIGHT; y++)
+            {
+                LedTable[x][y] = color_off;
+            }
+        } 
     }
 
 
