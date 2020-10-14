@@ -629,6 +629,7 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
     unsigned int stringIndex;
     unsigned int l;
     color_t LedTable[LENGTH][HEIGHT];
+    color_t frameColor3;
         //Numbers
     const unsigned char number1 [5][2]= { {3,1},
                                           {4,1},
@@ -715,6 +716,8 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
         }
     }
     else {
+       frameColor3 = textColor;
+       textColor = color_off;
        for (x = 0; x < LENGTH; x++)
         {
             for (y = 0; y < HEIGHT/4; y++)
@@ -727,13 +730,14 @@ unsigned char displayTextHorizontal(color_t LEDS[PIXELS], char* stringNumber, un
             }
            for (y = HEIGHT/2; y < HEIGHT*3/4; y++)
             {
-                LedTable[x][y] = textColor;
+                LedTable[x][y] = frameColor3;
             }
             for (y = HEIGHT*3/4; y < HEIGHT; y++)
             {
                 LedTable[x][y] = color_off;
             }
         } 
+
     }
 
 
