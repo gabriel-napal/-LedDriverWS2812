@@ -1279,6 +1279,12 @@ void pong(color_t LEDS[PIXELS]){
 			newBall = FALSE; 			
 		}
 		
+		// creating the two rackets
+		for (i == 4; i>0;i++)
+			LedTable[racket1(i-1)][0] = color_off;
+			LedTable[racket2(i-1)][HEIGHT] = color_off;
+		}
+		
         else if (newBall == FALSE){			
 			switch (userOption){
 			case P1_GREEN: // To go right
@@ -1334,11 +1340,19 @@ void pong(color_t LEDS[PIXELS]){
                userOption = USER_NO_OPTION;
 			}
 
-
+			// moving the two rackets
+			for (i == 4; i>0;i++)
+				LedTable[racket1(i-1)][0] = yellow_dark_1;
+				LedTable[racket2(i-1)][HEIGHT] = yellow_dark_1;
+			}
+			
+			
 			// If it's time, the screen is refreshed
 			if (speed_counter == speed){
-				
+				speed_counter = 0; 
 				//game
+				
+				
 
 			   // Check if one of the players loses
 			   if (ball[1] == HEIGHT){
@@ -1354,12 +1368,17 @@ void pong(color_t LEDS[PIXELS]){
 						exit = 1;
 			   }
 			}
+			
+			speed_counter ++;
 
         }
+		
         if (exit != 1){
             updateLedTable(LedTable,LEDS);
-            turnCommand = USER_NO_TURN;
+            turnCommand1 = USER_NO_TURN;
+			turnCommand2 = USER_NO_TURN;
         }
+		__bis_SR_register(LPM0_bits + GIE);      // CPU off, enable interrupts
     }
     //Game ending
 
